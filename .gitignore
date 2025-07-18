@@ -54,3 +54,4 @@ bay-view-memorial-api/
 bayview-chapel-database/
 bayview-forms-database/
 bayview-memorial-garden/
+.env*.local

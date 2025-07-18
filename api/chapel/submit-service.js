@@ -48,7 +48,7 @@ export default async function handler(req, res) {
     const { formType, data } = req.body;
     
     // Validate form type
-    if (!['wedding', 'memorial-funeral-service'].includes(formType)) {
+    if (!['wedding', 'memorial-funeral-service', 'baptism', 'general-use'].includes(formType)) {
       return res.status(400).json({ error: 'Invalid form type' });
     }
 
@@ -78,6 +78,8 @@ export default async function handler(req, res) {
       `;
       
       const applicationType = formType === 'wedding' ? 'wedding' : 
+        formType === 'baptism' ? 'baptism' :
+        formType === 'general-use' ? 'general_use' :
         (data.serviceType || 'memorial');
       
       const applicationValues = [
@@ -155,7 +157,7 @@ export default async function handler(req, res) {
           isMember,
           weddingFee
         ]);
-      } else {
+      } else if (formType === 'memorial-funeral-service') {
         // Memorial/Funeral service
         const memorialQuery = `
           INSERT INTO crouse_chapel.memorial_details (
@@ -173,6 +175,52 @@ export default async function handler(req, res) {
           data.memorialGarden === 'yes',
           data.placementDate || null,
           data.placementTime || null
+        ]);
+      } else if (formType === 'baptism') {
+        // Baptism service
+        const baptismQuery = `
+          INSERT INTO crouse_chapel.baptism_details (
+            application_id,
+            baptism_candidate_name,
+            baptism_date,
+            parents_names,
+            witnesses,
+            baptism_type
+          ) VALUES ($1, $2, $3, $4, $5, $6)
+        `;
+        
+        await pgClient.query(baptismQuery, [
+          applicationId,
+          data.baptismPersonName,
+          data.baptismDate || data.serviceDate,
+          data.parentsNames || null,
+          data.witnesses || null,
+          data.baptismType || 'infant'
+        ]);
+      } else if (formType === 'general-use') {
+        // General use application
+        const generalQuery = `
+          INSERT INTO crouse_chapel.general_use_details (
+            application_id,
+            event_type,
+            organization_name,
+            event_description,
+            expected_attendance,
+            setup_time,
+            cleanup_time,
+            fee_amount
+          ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+        `;
+        
+        await pgClient.query(generalQuery, [
+          applicationId,
+          data.eventType || 'other',
+          data.organizationName || null,
+          data.eventDescription || null,
+          data.expectedAttendance ? parseInt(data.expectedAttendance) : null,
+          data.setupTime || null,
+          data.cleanupTime || null,
+          data.feeAmount ? parseFloat(data.feeAmount) : null
         ]);
       }
       
@@ -299,7 +347,7 @@ export default async function handler(req, res) {
             'Contact Name': toNotionProperty(data.contactName, 'rich_text'),
             'Contact Email': toNotionProperty(data.contactEmail, 'email'),
             'Contact Phone': toNotionProperty(data.contactPhone, 'phone_number'),
-            'Bay View Member': toNotionProperty(data.memberName, 'rich_text'),
+            'Bay View Member': toNotionProperty(data.bayViewMember, 'rich_text'),
             'Status': toNotionProperty('Pending', 'select'),
             'Submitted': toNotionProperty(new Date().toISOString(), 'date'),
             'Clergy Name': toNotionProperty(data.clergyName, 'rich_text'),
@@ -313,10 +361,21 @@ export default async function handler(req, res) {
             notionProperties['Couple Names'] = toNotionProperty(data.coupleNames, 'rich_text');
             notionProperties['Guest Count'] = toNotionProperty(parseInt(data.guestCount), 'number');
             notionProperties['Wedding Fee'] = toNotionProperty(weddingFee, 'number');
-            notionProperties['Bride Arrival Time'] = toNotionProperty(data.brideArrival, 'rich_text');
-          } else {
+            notionProperties['Rehearsal Date'] = toNotionProperty(data.rehearsalDate, 'date');
+            notionProperties['Rehearsal Time'] = toNotionProperty(data.rehearsalTime, 'rich_text');
+          } else if (formType === 'memorial-funeral-service') {
             notionProperties['Deceased Name'] = toNotionProperty(data.deceasedName, 'rich_text');
             notionProperties['Memorial Garden Placement'] = toNotionProperty(data.memorialGarden === 'yes', 'checkbox');
+          } else if (formType === 'baptism') {
+            notionProperties['Baptism Candidate Name'] = toNotionProperty(data.baptismPersonName, 'rich_text');
+            notionProperties['Baptism Date'] = toNotionProperty(data.baptismDate || data.serviceDate, 'date');
+            notionProperties['Parents Names'] = toNotionProperty(data.parentsNames, 'rich_text');
+            notionProperties['Witnesses'] = toNotionProperty(data.witnesses, 'rich_text');
+          } else if (formType === 'general-use') {
+            notionProperties['Event Type'] = toNotionProperty(data.eventType, 'rich_text');
+            notionProperties['Organization Name'] = toNotionProperty(data.organizationName, 'rich_text');
+            notionProperties['Event Description'] = toNotionProperty(data.eventDescription, 'rich_text');
+            notionProperties['Expected Attendance'] = toNotionProperty(parseInt(data.expectedAttendance || 0), 'number');
           }
           
           // Add music fields
@@ -326,13 +385,18 @@ export default async function handler(req, res) {
             notionProperties['Needs Organ'] = toNotionProperty(data.needsOrgan || false, 'checkbox');
           }
           
-          // Add equipment fields
-          notionProperties['Stand Microphone'] = toNotionProperty(data.standMic || false, 'checkbox');
-          notionProperties['Wireless Microphone'] = toNotionProperty(data.wirelessMic || false, 'checkbox');
-          notionProperties['CD Player'] = toNotionProperty(data.cdPlayer || false, 'checkbox');
-          notionProperties['Communion Service'] = toNotionProperty(data.communion || false, 'checkbox');
-          notionProperties['Guest Book Stand'] = toNotionProperty(data.guestBookStand || false, 'checkbox');
-          notionProperties['Roped Seating'] = toNotionProperty(data.ropedSeating || false, 'checkbox');
+          // Add equipment needs as a combined field since Notion doesn't have individual equipment fields
+          const equipmentNeeds = [];
+          if (data.standMic) equipmentNeeds.push('Stand Microphone');
+          if (data.wirelessMic) equipmentNeeds.push('Wireless Microphone');
+          if (data.cdPlayer) equipmentNeeds.push('CD Player');
+          if (data.communion) equipmentNeeds.push('Communion Service');
+          if (data.guestBookStand) equipmentNeeds.push('Guest Book Stand');
+          if (data.ropedSeating) equipmentNeeds.push(`Roped Seating (${data.rowsLeft || 0} left, ${data.rowsRight || 0} right)`);
+          
+          if (equipmentNeeds.length > 0) {
+            notionProperties['Equipment Needs'] = toNotionProperty(equipmentNeeds.join(', '), 'rich_text');
+          }
           
           // Create the Notion page
           const notionPage = await createNotionPage(NOTION_DATABASE_ID, notionProperties);

@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crouse Chapel Services - Bay View Association</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .intro {
+            background-color: #e8f4fd;
+            border: 1px solid #b8e0fb;
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .intro h2 {
+            color: #34495e;
+            margin-bottom: 10px;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .service-card {
+            background-color: #f8f9fa;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-color: #3498db;
+        }
+        
+        .service-icon {
+            font-size: 3rem;
+            margin-bottom: 15px;
+        }
+        
+        .service-card h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+        
+        .service-card p {
+            color: #666;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .info-section {
+            margin-top: 50px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+        }
+        
+        .info-section h2 {
+            color: #34495e;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .info-item {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .info-item h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .info-item p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+        
+        .contact-section {
+            background-color: #e8f4fd;
+            border: 1px solid #b8e0fb;
+            border-radius: 8px;
+            padding: 30px;
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        .contact-section h2 {
+            color: #34495e;
+            margin-bottom: 15px;
+        }
+        
+        .contact-section p {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .button {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 12px 30px;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-top: 15px;
+            transition: background-color 0.3s;
+        }
+        
+        .button:hover {
+            background-color: #2980b9;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Crouse Memorial Chapel</h1>
+            <p>Bay View Association</p>
+        </div>
+        
+        <div class="intro">
+            <h2>Welcome to Crouse Chapel Services</h2>
+            <p>Select the appropriate application form for your chapel service needs.<br>
+            All services require sponsorship by a Bay View Association member in good standing.</p>
+        </div>
+        
+        <div class="services-grid">
+            <a href="chapel-wedding.html" class="service-card">
+                <div class="service-icon">💒</div>
+                <h3>Wedding Application</h3>
+                <p>Plan your special day at historic Crouse Chapel. Available May through September for members and their sponsored guests.</p>
+            </a>
+            
+            <a href="chapel-baptism.html" class="service-card">
+                <div class="service-icon">💧</div>
+                <h3>Baptism Application</h3>
+                <p>Celebrate baptisms in our beautiful chapel. Perfect for infant dedications and adult baptisms alike.</p>
+            </a>
+            
+            <a href="chapel-memorial.html" class="service-card">
+                <div class="service-icon">🕊️</div>
+                <h3>Memorial & Funeral Services</h3>
+                <p>Honor your loved ones with a meaningful service. Includes options for Bay View Memorial Garden placement.</p>
+            </a>
+            
+            <a href="chapel-general-use.html" class="service-card">
+                <div class="service-icon">⛪</div>
+                <h3>General Chapel Use</h3>
+                <p>For concerts, lectures, and other non-traditional uses of the chapel space.</p>
+            </a>
+        </div>
+        
+        <div class="info-section">
+            <h2>Important Information</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <h3>Chapel Capacity</h3>
+                    <p>Crouse Chapel seats approximately 300 guests comfortably.</p>
+                </div>
+                <div class="info-item">
+                    <h3>Season</h3>
+                    <p>The chapel is available for services from May through September.</p>
+                </div>
+                <div class="info-item">
+                    <h3>Member Sponsorship</h3>
+                    <p>All services require sponsorship by a Bay View member in good standing.</p>
+                </div>
+                <div class="info-item">
+                    <h3>Clergy Approval</h3>
+                    <p>All officiating clergy must be approved by the Director of Worship.</p>
+                </div>
+                <div class="info-item">
+                    <h3>Fees</h3>
+                    <p>Weddings: $300 (members) / $750 (non-members). Other services vary.</p>
+                </div>
+                <div class="info-item">
+                    <h3>Payment</h3>
+                    <p>Full payment is required to secure your date.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="contact-section">
+            <h2>Questions?</h2>
+            <p>For more information about chapel services and availability,<br>
+            please contact the Bay View Association office.</p>
+            <p><strong>Office Hours:</strong> Monday - Friday, 9:00 AM - 5:00 PM</p>
+            <p><strong>Phone:</strong> (231) 347-6225</p>
+            <p><strong>Email:</strong> office@bayviewassociation.org</p>
+            <a href="https://www.bayviewassociation.org" class="button">Visit Bay View Website</a>
+        </div>
+    </div>
+</body>
+</html>

@@ -15,7 +15,10 @@
     "insert-forms": "node scripts/forms/insert-all-forms.js",
     "list-forms": "node scripts/forms/list-all-forms.js",
     "forms-summary": "node scripts/forms/forms-summary.js",
-    "check-duplicates": "node scripts/forms/check-duplicates.js"
+    "check-duplicates": "node scripts/forms/check-duplicates.js",
+    "migrate-chapel-baptism": "node scripts/chapel/run-baptism-general-migration.js",
+    "update-notion-chapel": "node scripts/chapel/update-notion-schema.js",
+    "test-all-chapel-forms": "node scripts/chapel/test-all-forms.js"
   },
   "keywords": [
     "bay-view",
