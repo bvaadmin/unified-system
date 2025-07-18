@@ -316,8 +316,8 @@ export default async function handler(req, res) {
       const serviceTime = data.ceremonyTime || data.serviceTime;
       
       const availabilityCheck = await pgClient.query(
-        'SELECT crouse_chapel.is_chapel_available($1, $2) as available',
-        [serviceDate, serviceTime]
+        'SELECT crouse_chapel.is_chapel_available($1, $2, $3) as available',
+        [serviceDate, serviceTime, applicationType]
       );
       
       if (!availabilityCheck.rows[0].available) {
