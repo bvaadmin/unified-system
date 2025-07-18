@@ -37,10 +37,10 @@ jobs:
       - name: Create deployment structure
         run: |
           # Create deployment directory
-          mkdir -p _site/unified-system
+          mkdir -p _site
           
-          # Copy forms directory
-          cp -r forms _site/unified-system/
+          # Copy forms directory to root
+          cp -r forms _site/
           
           # Create root index.html that redirects to forms
           cat > _site/index.html << 'EOF'
@@ -57,20 +57,11 @@ jobs:
           </html>
           EOF
           
-          # Create unified-system index
-          cat > _site/unified-system/index.html << 'EOF'
-          <!DOCTYPE html>
-          <html>
-          <head>
-              <meta charset="UTF-8">
-              <title>Bay View Association Unified System</title>
-              <meta http-equiv="refresh" content="0; url=/unified-system/forms/">
-          </head>
-          <body>
-              <p>Redirecting to <a href="/unified-system/forms/">Bay View Association Forms</a>...</p>
-          </body>
-          </html>
-          EOF
+          # Debug: Show structure
+          echo "Deployment structure:"
+          ls -la _site/
+          echo "Forms directory:"
+          ls -la _site/forms/
           
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
