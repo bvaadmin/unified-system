@@ -18,7 +18,11 @@
     "check-duplicates": "node scripts/forms/check-duplicates.js",
     "migrate-chapel-baptism": "node scripts/chapel/run-baptism-general-migration.js",
     "update-notion-chapel": "node scripts/chapel/update-notion-schema.js",
-    "test-all-chapel-forms": "node scripts/chapel/test-all-forms.js"
+    "test-all-chapel-forms": "node scripts/chapel/test-all-forms.js",
+    "add-enhanced-tables": "node scripts/add-enhanced-tables.js",
+    "validate": "node scripts/validate-configuration.js",
+    "update-form-urls": "node scripts/update-form-urls.js",
+    "revert-form-urls": "node scripts/update-form-urls.js revert"
   },
   "keywords": [
     "bay-view",

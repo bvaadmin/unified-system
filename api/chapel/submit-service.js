@@ -371,11 +371,15 @@ export default async function handler(req, res) {
             notionProperties['Baptism Date'] = toNotionProperty(data.baptismDate || data.serviceDate, 'date');
             notionProperties['Parents Names'] = toNotionProperty(data.parentsNames, 'rich_text');
             notionProperties['Witnesses'] = toNotionProperty(data.witnesses, 'rich_text');
+            notionProperties['Baptism Type'] = toNotionProperty(data.baptismType || 'infant', 'select');
           } else if (formType === 'general-use') {
             notionProperties['Event Type'] = toNotionProperty(data.eventType, 'rich_text');
             notionProperties['Organization Name'] = toNotionProperty(data.organizationName, 'rich_text');
             notionProperties['Event Description'] = toNotionProperty(data.eventDescription, 'rich_text');
             notionProperties['Expected Attendance'] = toNotionProperty(parseInt(data.expectedAttendance || 0), 'number');
+            notionProperties['Setup Time'] = toNotionProperty(data.setupTime, 'rich_text');
+            notionProperties['Cleanup Time'] = toNotionProperty(data.cleanupTime, 'rich_text');
+            notionProperties['Event Fee'] = toNotionProperty(parseFloat(data.feeAmount || 0), 'number');
           }
           
           // Add music fields
@@ -383,19 +387,44 @@ export default async function handler(req, res) {
             notionProperties['Has Music'] = toNotionProperty(data.hasMusic || false, 'checkbox');
             notionProperties['Needs Piano'] = toNotionProperty(data.needsPiano || false, 'checkbox');
             notionProperties['Needs Organ'] = toNotionProperty(data.needsOrgan || false, 'checkbox');
+            
+            // Add performance location if music is needed
+            if (data.performSanctuary && data.performBalcony) {
+              notionProperties['Performance Location'] = toNotionProperty('Both', 'select');
+            } else if (data.performSanctuary) {
+              notionProperties['Performance Location'] = toNotionProperty('Sanctuary', 'select');
+            } else if (data.performBalcony) {
+              notionProperties['Performance Location'] = toNotionProperty('Balcony', 'select');
+            }
+            
+            // Add chair details
+            if (data.additionalChairs) {
+              notionProperties['Additional Chairs'] = toNotionProperty(`${data.chairNumber || 0} chairs - ${data.chairPlacement || 'TBD'}`, 'rich_text');
+            }
           }
           
-          // Add equipment needs as a combined field since Notion doesn't have individual equipment fields
-          const equipmentNeeds = [];
-          if (data.standMic) equipmentNeeds.push('Stand Microphone');
-          if (data.wirelessMic) equipmentNeeds.push('Wireless Microphone');
-          if (data.cdPlayer) equipmentNeeds.push('CD Player');
-          if (data.communion) equipmentNeeds.push('Communion Service');
-          if (data.guestBookStand) equipmentNeeds.push('Guest Book Stand');
-          if (data.ropedSeating) equipmentNeeds.push(`Roped Seating (${data.rowsLeft || 0} left, ${data.rowsRight || 0} right)`);
+          // Add musicians list
+          if (data.musicians && data.musicians.length > 0) {
+            notionProperties['Musicians List'] = toNotionProperty(data.musicians.filter(m => m.trim()).join('\n'), 'rich_text');
+          } else if (data.musicianNames) {
+            notionProperties['Musicians List'] = toNotionProperty(data.musicianNames, 'rich_text');
+          }
           
-          if (equipmentNeeds.length > 0) {
-            notionProperties['Equipment Needs'] = toNotionProperty(equipmentNeeds.join(', '), 'rich_text');
+          // Add individual equipment fields
+          notionProperties['Stand Microphone'] = toNotionProperty(data.standMic || false, 'checkbox');
+          notionProperties['Wireless Microphone'] = toNotionProperty(data.wirelessMic || false, 'checkbox');
+          notionProperties['CD Player'] = toNotionProperty(data.cdPlayer || false, 'checkbox');
+          notionProperties['Communion Service'] = toNotionProperty(data.communion || false, 'checkbox');
+          notionProperties['Guest Book Stand'] = toNotionProperty(data.guestBookStand || false, 'checkbox');
+          
+          // Add roped seating details
+          if (data.ropedSeating) {
+            notionProperties['Roped Seating'] = toNotionProperty(`${data.rowsLeft || 0} rows left, ${data.rowsRight || 0} rows right`, 'rich_text');
+          }
+          
+          // Add policy acknowledgment
+          if (data.policyAcknowledgment) {
+            notionProperties['Policy Acknowledged'] = toNotionProperty(true, 'checkbox');
           }
           
           // Create the Notion page
