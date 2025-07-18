@@ -2,6 +2,7 @@
 // API endpoint for Crouse Chapel service applications (wedding, memorial, funeral)
 
 import { Client } from 'pg';
+import { createNotionPage, toNotionProperty } from '../lib/notion.js';
 
 export default async function handler(req, res) {
   // Enable CORS
@@ -288,28 +289,54 @@ export default async function handler(req, res) {
       await pgClient.query('COMMIT');
       
       // 9. Save to Notion (optional, for workflow management)
-      if (NOTION_API_KEY) {
+      if (NOTION_API_KEY && NOTION_DATABASE_ID) {
         try {
-          const notionData = {
-            'Application ID': applicationId.toString(),
-            'Type': applicationType,
-            'Service Date': serviceDate,
-            'Contact Name': data.contactName,
-            'Status': 'Pending Review',
-            'Submitted': new Date().toISOString()
+          const notionProperties = {
+            'Application ID': toNotionProperty(applicationId.toString(), 'title'),
+            'Type': toNotionProperty(applicationType, 'select'),
+            'Service Date': toNotionProperty(serviceDate, 'date'),
+            'Service Time': toNotionProperty(serviceTime, 'rich_text'),
+            'Contact Name': toNotionProperty(data.contactName, 'rich_text'),
+            'Contact Email': toNotionProperty(data.contactEmail, 'email'),
+            'Contact Phone': toNotionProperty(data.contactPhone, 'phone_number'),
+            'Bay View Member': toNotionProperty(data.memberName, 'rich_text'),
+            'Status': toNotionProperty('Pending', 'select'),
+            'Submitted': toNotionProperty(new Date().toISOString(), 'date'),
+            'Clergy Name': toNotionProperty(data.clergyName, 'rich_text'),
+            'Clergy Email': toNotionProperty(data.clergyEmail, 'email'),
+            'Clergy Phone': toNotionProperty(data.clergyPhone, 'phone_number'),
+            'Database ID': toNotionProperty(applicationId.toString(), 'rich_text')
           };
           
           // Add type-specific fields
           if (formType === 'wedding') {
-            notionData['Couple Names'] = data.coupleNames;
-            notionData['Guest Count'] = parseInt(data.guestCount);
+            notionProperties['Couple Names'] = toNotionProperty(data.coupleNames, 'rich_text');
+            notionProperties['Guest Count'] = toNotionProperty(parseInt(data.guestCount), 'number');
+            notionProperties['Wedding Fee'] = toNotionProperty(weddingFee, 'number');
+            notionProperties['Bride Arrival Time'] = toNotionProperty(data.brideArrival, 'rich_text');
           } else {
-            notionData['Deceased Name'] = data.deceasedName;
-            notionData['Memorial Garden'] = data.memorialGarden === 'yes' ? 'Yes' : 'No';
+            notionProperties['Deceased Name'] = toNotionProperty(data.deceasedName, 'rich_text');
+            notionProperties['Memorial Garden Placement'] = toNotionProperty(data.memorialGarden === 'yes', 'checkbox');
           }
           
-          // Call Notion API here if needed
-          // await saveToNotion(notionData);
+          // Add music fields
+          if (data.hasMusic || data.needsPiano || data.needsOrgan) {
+            notionProperties['Has Music'] = toNotionProperty(data.hasMusic || false, 'checkbox');
+            notionProperties['Needs Piano'] = toNotionProperty(data.needsPiano || false, 'checkbox');
+            notionProperties['Needs Organ'] = toNotionProperty(data.needsOrgan || false, 'checkbox');
+          }
+          
+          // Add equipment fields
+          notionProperties['Stand Microphone'] = toNotionProperty(data.standMic || false, 'checkbox');
+          notionProperties['Wireless Microphone'] = toNotionProperty(data.wirelessMic || false, 'checkbox');
+          notionProperties['CD Player'] = toNotionProperty(data.cdPlayer || false, 'checkbox');
+          notionProperties['Communion Service'] = toNotionProperty(data.communion || false, 'checkbox');
+          notionProperties['Guest Book Stand'] = toNotionProperty(data.guestBookStand || false, 'checkbox');
+          notionProperties['Roped Seating'] = toNotionProperty(data.ropedSeating || false, 'checkbox');
+          
+          // Create the Notion page
+          const notionPage = await createNotionPage(NOTION_DATABASE_ID, notionProperties);
+          console.log('Successfully created Notion page:', notionPage.id);
         } catch (notionError) {
           console.error('Notion save failed:', notionError);
           // Don't fail the whole request if Notion fails
