@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Bay View Memorial Garden API Test</title>
+<style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .button-group {
+            margin-top: 30px;
+            display: flex;
+            gap: 10px;
+        }
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #545b62;
+        }
+        .btn-warning {
+            background-color: #ffc107;
+            color: #212529;
+        }
+        .btn-warning:hover {
+            background-color: #e0a800;
+        }
+        .response-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            display: none;
+        }
+        .success {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .error {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .section-header {
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            margin: 20px -15px 15px;
+            border-left: 4px solid #007bff;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+        }
+        .checkbox-group input {
+            width: auto;
+            margin-right: 10px;
+        }
+        #apiEndpoint {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+    </style>
+</head>
+<body><div style="background-color: #00457c; text-align: center; padding: 20px;"><img alt="Bay View Association Logo" src="https://www.bayviewassociation.org/wp-content/uploads/2020/12/new-full-logo-300x62.png" style="max-width: 100%; height: auto;"/></div>
+<div class="container">
+<h1>Bay View Memorial Garden API Test</h1>
+<div id="apiEndpoint">
+<label for="apiUrl">API Endpoint URL:</label>
+<input id="apiUrl" placeholder="Enter your Vercel API URL" type="text" value="https://bay-view-memorial-api.vercel.app/api/submit-memorial-garden"/>
+</div>
+<form id="testForm">
+<div class="section-header">Application Information</div>
+<div class="form-row">
+<div class="form-group">
+<label for="submissionId">Submission ID:</label>
+<input id="submissionId" name="Submission ID" readonly="" type="text"/>
+</div>
+<div class="form-group">
+<label for="submissionDate">Submission Date:</label>
+<input id="submissionDate" name="date:Submission Date:start" type="date"/>
+</div>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="applicationType">Application Type:</label>
+<select id="applicationType" name="Application Type">
+<option value="Immediate Placement">Immediate Placement</option>
+<option value="Prepayment">Prepayment</option>
+</select>
+</div>
+<div class="form-group">
+<label for="status">Status:</label>
+<select id="status" name="Status">
+<option value="Submitted">Submitted</option>
+<option value="Under Review">Under Review</option>
+<option value="Approved">Approved</option>
+<option value="Payment Pending">Payment Pending</option>
+<option value="Completed">Completed</option>
+<option value="Rejected">Rejected</option>
+</select>
+</div>
+</div>
+<div class="section-header">Contact Information</div>
+<div class="form-row">
+<div class="form-group">
+<label for="contactName">Contact Name:</label>
+<input id="contactName" name="Contact Name" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="contactPhone">Contact Phone:</label>
+<input id="contactPhone" name="Contact Phone" type="tel"/>
+</div>
+</div>
+<div class="form-group">
+<label for="contactEmail">Contact Email:</label>
+<input id="contactEmail" name="Contact Email" type="email"/>
+</div>
+<div class="form-group">
+<label for="contactAddress">Contact Address:</label>
+<textarea id="contactAddress" name="Contact Address"></textarea>
+</div>
+<div class="section-header">Memorial Information</div>
+<div class="form-group">
+<label for="deceasedName">Deceased Name:</label>
+<input id="deceasedName" name="Deceased Name" type="text"/>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="serviceDate">Service Date:</label>
+<input id="serviceDate" name="date:Service Date:start" type="date"/>
+</div>
+<div class="form-group">
+<label for="celebrantRequested">Celebrant Requested:</label>
+<select id="celebrantRequested" name="Celebrant Requested">
+<option value="Yes - Bay View celebrant">Yes - Bay View celebrant</option>
+<option value="No - Own celebrant">No - Own celebrant</option>
+<option value="Undecided">Undecided</option>
+</select>
+</div>
+</div>
+<div class="section-header">Bay View Membership</div>
+<div class="form-row">
+<div class="form-group">
+<label for="bayViewMember">Bay View Member:</label>
+<select id="bayViewMember" name="Bay View Member">
+<option value="Yes">Yes</option>
+<option value="No">No</option>
+</select>
+</div>
+<div class="form-group">
+<label for="memberName">Member Name (if not applicant):</label>
+<input id="memberName" name="Member Name" type="text"/>
+</div>
+</div>
+<div class="form-group">
+<label for="memberRelationship">Member Relationship:</label>
+<input id="memberRelationship" name="Member Relationship" placeholder="e.g., Parent, Spouse, Sibling" type="text"/>
+</div>
+<div class="form-group">
+<label for="bayViewHistory">Bay View History:</label>
+<textarea id="bayViewHistory" name="Bay View History" placeholder="Describe the deceased's connection to Bay View..." rows="4"></textarea>
+</div>
+<div class="section-header">Payment Information</div>
+<div class="form-group">
+<label for="feeAmount">Fee Amount ($):</label>
+<input id="feeAmount" min="0" name="Fee Amount" step="0.01" type="number"/>
+</div>
+<div class="form-group">
+<label for="prepaymentNames">Prepayment Names (for Prepayment applications):</label>
+<textarea id="prepaymentNames" name="Prepayment Names" placeholder="Enter names for prepayment, one per line"></textarea>
+</div>
+<div class="form-group checkbox-group">
+<input id="policyAgreement" name="Policy Agreement" type="checkbox" value="__YES__"/>
+<label for="policyAgreement">I agree to the Bay View Memorial Garden policies and terms</label>
+</div>
+<div class="button-group">
+<button class="btn-warning" id="fillRandom" type="button">Fill Random Data</button>
+<button class="btn-secondary" type="reset">Reset Form</button>
+<button class="btn-primary" type="submit">Submit Test</button>
+</div>
+</form>
+<div class="response-box" id="response"></div>
+</div>
+<script>
+        // Random data generators
+        const firstNames = ['James', 'Mary', 'John', 'Patricia', 'Robert', 'Jennifer', 'Michael', 'Linda', 'William', 'Elizabeth'];
+        const lastNames = ['Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez'];
+        const cities = ['Detroit', 'Grand Rapids', 'Ann Arbor', 'Lansing', 'Traverse City', 'Kalamazoo', 'Flint'];
+        
+        // Generate submission ID
+        function generateSubmissionId() {
+            const timestamp = Date.now();
+            return `TEST-${timestamp}`;
+        }
+
+        // Generate random phone
+        function generatePhone() {
+            return `231-555-${Math.floor(1000 + Math.random() * 9000)}`;
+        }
+
+        // Generate random email
+        function generateEmail(firstName, lastName) {
+            const domains = ['example.com', 'test.com', 'email.com'];
+            return `${firstName.toLowerCase()}.${lastName.toLowerCase()}@${domains[Math.floor(Math.random() * domains.length)]}`;
+        }
+
+        // Generate random address
+        function generateAddress() {
+            const streetNum = Math.floor(100 + Math.random() * 9900);
+            const streets = ['Main St', 'Oak Ave', 'Maple Dr', 'Pine Rd', 'Elm St'];
+            const city = cities[Math.floor(Math.random() * cities.length)];
+            const zip = Math.floor(48000 + Math.random() * 2000);
+            return `${streetNum} ${streets[Math.floor(Math.random() * streets.length)]}, ${city}, MI ${zip}`;
+        }
+
+        // Generate Bay View history
+        function generateBayViewHistory(firstName, lastName) {
+            const years = [10, 15, 20, 25, 30, 35, 40];
+            const year = years[Math.floor(Math.random() * years.length)];
+            const activities = [
+                'served on the Program Committee',
+                'was active in the Recreation Club',
+                'participated in the Music Festival',
+                'volunteered for the Children\'s Program',
+                'helped organize the annual regatta'
+            ];
+            const activity = activities[Math.floor(Math.random() * activities.length)];
+            return `${firstName} was a ${year}-year summer resident who ${activity}. The family has been part of Bay View since ${2025 - year - Math.floor(Math.random() * 30)}.`;
+        }
+
+        // Fill form with random data
+        document.getElementById('fillRandom').addEventListener('click', function() {
+            const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+            const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+            const contactFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+            const contactLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+            
+            document.getElementById('submissionId').value = generateSubmissionId();
+            document.getElementById('submissionDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('applicationType').selectedIndex = Math.floor(Math.random() * 2);
+            document.getElementById('status').value = 'Submitted';
+            
+            document.getElementById('contactName').value = `${contactFirstName} ${contactLastName}`;
+            document.getElementById('contactPhone').value = generatePhone();
+            document.getElementById('contactEmail').value = generateEmail(contactFirstName, contactLastName);
+            document.getElementById('contactAddress').value = generateAddress();
+            
+            document.getElementById('deceasedName').value = `${firstName} ${lastName}`;
+            
+            // Service date in the future
+            const futureDate = new Date();
+            futureDate.setDate(futureDate.getDate() + Math.floor(5 + Math.random() * 30));
+            document.getElementById('serviceDate').value = futureDate.toISOString().split('T')[0];
+            
+            document.getElementById('celebrantRequested').selectedIndex = Math.floor(Math.random() * 3);
+            
+            const isMember = Math.random() > 0.3;
+            document.getElementById('bayViewMember').value = isMember ? 'Yes' : 'No';
+            
+            if (!isMember && Math.random() > 0.5) {
+                document.getElementById('memberName').value = `${firstNames[Math.floor(Math.random() * firstNames.length)]} ${lastName}`;
+                document.getElementById('memberRelationship').value = ['Parent', 'Sibling', 'Child', 'Spouse'][Math.floor(Math.random() * 4)];
+            } else {
+                document.getElementById('memberName').value = '';
+                document.getElementById('memberRelationship').value = '';
+            }
+            
+            document.getElementById('bayViewHistory').value = generateBayViewHistory(firstName, lastName);
+            
+            const fees = [400, 600, 800, 1000];
+            document.getElementById('feeAmount').value = fees[Math.floor(Math.random() * fees.length)];
+            
+            if (document.getElementById('applicationType').value === 'Prepayment') {
+                const numNames = Math.floor(1 + Math.random() * 3);
+                const names = [];
+                for (let i = 0; i < numNames; i++) {
+                    names.push(`${firstNames[Math.floor(Math.random() * firstNames.length)]} ${lastNames[Math.floor(Math.random() * lastNames.length)]}`);
+                }
+                document.getElementById('prepaymentNames').value = names.join('\n');
+            } else {
+                document.getElementById('prepaymentNames').value = '';
+            }
+            
+            document.getElementById('policyAgreement').checked = true;
+        });
+
+        // Handle form submission
+        document.getElementById('testForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const apiUrl = document.getElementById('apiUrl').value;
+            if (!apiUrl) {
+                alert('Please enter your API endpoint URL');
+                return;
+            }
+            
+            const formData = new FormData(this);
+            const properties = {};
+            
+            // Convert FormData to properties object
+            for (let [key, value] of formData.entries()) {
+                if (value !== '') {
+                    // Convert numeric fields to numbers
+                    if (key === 'Fee Amount') {
+                        properties[key] = parseFloat(value);
+                    } else if (key === 'Policy Agreement') {
+                        // Checkbox is only in FormData if checked
+                        properties[key] = '__YES__';
+                    } else {
+                        properties[key] = value;
+                    }
+                }
+            }
+            
+            // Handle unchecked checkbox
+            if (!document.getElementById('policyAgreement').checked) {
+                delete properties['Policy Agreement'];
+            }
+            
+            // Show loading
+            const responseDiv = document.getElementById('response');
+            responseDiv.className = 'response-box';
+            responseDiv.innerHTML = 'Submitting...';
+            responseDiv.style.display = 'block';
+            
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ properties })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    responseDiv.className = 'response-box success';
+                    responseDiv.innerHTML = `
+                        <h3>Success!</h3>
+                        <p><strong>Submission ID:</strong> ${data.submissionId}</p>
+                        <p><strong>Notion ID:</strong> ${data.notionId}</p>
+                        <p><strong>URL:</strong> <a href="${data.url}" target="_blank">${data.url}</a></p>
+                        <h4>Submitted Data:</h4>
+                        <pre>${JSON.stringify(properties, null, 2)}</pre>
+                    `;
+                } else {
+                    responseDiv.className = 'response-box error';
+                    responseDiv.innerHTML = `
+                        <h3>Error</h3>
+                        <p><strong>Status:</strong> ${response.status}</p>
+                        <p><strong>Message:</strong> ${data.error || 'Unknown error'}</p>
+                        ${data.details ? `<h4>Details:</h4><pre>${JSON.stringify(data.details, null, 2)}</pre>` : ''}
+                    `;
+                }
+            } catch (error) {
+                responseDiv.className = 'response-box error';
+                responseDiv.innerHTML = `
+                    <h3>Network Error</h3>
+                    <p>${error.message}</p>
+                    <p>Make sure your API endpoint is correct and CORS is properly configured.</p>
+                `;
+            }
+        });
+
+        // Set initial values
+        document.getElementById('submissionDate').value = new Date().toISOString().split('T')[0];
+        document.getElementById('submissionId').value = generateSubmissionId();
+    </script>
+</body>
+</html>

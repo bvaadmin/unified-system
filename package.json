@@ -1,0 +1,45 @@
+{
+  "name": "bvaadmin",
+  "version": "2.0.0",
+  "description": "Unified Bay View Association administrative system for chapel services, memorial garden, and forms management",
+  "main": "api/index.js",
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel",
+    "test-connection": "node scripts/chapel/test-pg-direct.js",
+    "init-chapel-db": "node scripts/chapel/init-database.js",
+    "init-forms-db": "node scripts/forms/init-database.js",
+    "init-memorial-db": "node scripts/memorial/init-database.js",
+    "test-chapel-submission": "node scripts/chapel/test-submission.js",
+    "test-memorial-submission": "node scripts/memorial/test-submission.js",
+    "insert-forms": "node scripts/forms/insert-all-forms.js",
+    "list-forms": "node scripts/forms/list-all-forms.js",
+    "forms-summary": "node scripts/forms/forms-summary.js",
+    "check-duplicates": "node scripts/forms/check-duplicates.js"
+  },
+  "keywords": [
+    "bay-view",
+    "chapel",
+    "memorial-garden",
+    "forms",
+    "database",
+    "postgresql",
+    "notion",
+    "vercel"
+  ],
+  "author": "Bay View Association",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "pg": "^8.11.3"
+  },
+  "devDependencies": {
+    "node-fetch": "^3.3.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bvaadmin/bvaadmin.git"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "functions": {
+    "api/**/*.js": {
+      "maxDuration": 10
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/submit-memorial-garden",
+      "destination": "/api/memorial/submit-garden"
+    },
+    {
+      "source": "/api/submit-chapel-service",
+      "destination": "/api/chapel/submit-service"
+    },
+    {
+      "source": "/api/check-chapel-availability",
+      "destination": "/api/chapel/check-availability"
+    },
+    {
+      "source": "/api/get-chapel-applications",
+      "destination": "/api/chapel/get-applications"
+    },
+    {
+      "source": "/api/update-chapel-application",
+      "destination": "/api/chapel/update-application"
+    },
+    {
+      "source": "/api/chapel-calendar",
+      "destination": "/api/chapel/calendar"
+    },
+    {
+      "source": "/api/db-init",
+      "destination": "/api/admin/db-init"
+    }
+  ]
+}

@@ -1,0 +1,289 @@
+// Data Standardization Framework for Bay View Association
+// Ensures consistent data formatting, validation, and storage across all forms
+
+class BayViewDataStandards {
+  constructor() {
+    // Define standard formats
+    this.formats = {
+      phone: {
+        pattern: /^\(\d{3}\) \d{3}-\d{4}$/,
+        mask: '(999) 999-9999',
+        placeholder: '(231) 555-1234',
+        formatter: this.formatPhone
+      },
+      
+      email: {
+        pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+        placeholder: 'name@example.com',
+        formatter: (email) => email.toLowerCase().trim()
+      },
+      
+      date: {
+        format: 'YYYY-MM-DD',
+        displayFormat: 'MM/DD/YYYY',
+        minAdvanceDays: 30,
+        formatter: this.formatDate
+      },
+      
+      time: {
+        format: 'HH:mm',
+        displayFormat: '12h',
+        formatter: this.formatTime
+      },
+      
+      currency: {
+        symbol: '$',
+        decimals: 2,
+        formatter: this.formatCurrency
+      },
+      
+      memberNumber: {
+        pattern: /^BV-\d{6}$/,
+        placeholder: 'BV-123456',
+        formatter: (num) => num.toUpperCase()
+      }
+    };
+
+    // Standard field definitions
+    this.fieldDefinitions = {
+      // Personal Information
+      firstName: {
+        type: 'text',
+        label: 'First Name',
+        required: true,
+        maxLength: 50,
+        validator: this.validateName
+      },
+      
+      lastName: {
+        type: 'text',
+        label: 'Last Name',
+        required: true,
+        maxLength: 50,
+        validator: this.validateName
+      },
+      
+      email: {
+        type: 'email',
+        label: 'Email Address',
+        required: true,
+        format: this.formats.email,
+        validator: this.validateEmail
+      },
+      
+      phone: {
+        type: 'tel',
+        label: 'Phone Number',
+        required: true,
+        format: this.formats.phone,
+        validator: this.validatePhone
+      },
+      
+      // Address fields
+      address: {
+        street: {
+          type: 'text',
+          label: 'Street Address',
+          required: true,
+          maxLength: 100
+        },
+        city: {
+          type: 'text',
+          label: 'City',
+          required: true,
+          maxLength: 50
+        },
+        state: {
+          type: 'select',
+          label: 'State',
+          required: true,
+          options: this.getStateOptions()
+        },
+        zip: {
+          type: 'text',
+          label: 'ZIP Code',
+          required: true,
+          pattern: /^\d{5}(-\d{4})?$/,
+          placeholder: '49770'
+        }
+      },
+      
+      // Bay View specific
+      cottageAddress: {
+        type: 'text',
+        label: 'Bay View Cottage Address',
+        placeholder: '123 Woodland Avenue',
+        maxLength: 100
+      },
+      
+      block: {
+        type: 'text',
+        label: 'Block',
+        maxLength: 10,
+        transform: 'uppercase'
+      },
+      
+      lot: {
+        type: 'text',
+        label: 'Lot',
+        maxLength: 10
+      },
+      
+      // Event details
+      eventDate: {
+        type: 'date',
+        label: 'Event Date',
+        required: true,
+        format: this.formats.date,
+        validator: this.validateEventDate
+      },
+      
+      eventTime: {
+        type: 'time',
+        label: 'Event Time',
+        required: true,
+        format: this.formats.time
+      },
+      
+      guestCount: {
+        type: 'number',
+        label: 'Expected Guest Count',
+        required: true,
+        min: 1,
+        max: 200, // Chapel capacity is 80, Evelyn Hall is 110
+        validator: this.validateGuestCount
+      }
+    };
+
+    // Standard data models
+    this.dataModels = {
+      application: {
+        id: { type: 'string', generated: true },
+        formType: { type: 'string', required: true },
+        submissionDate: { type: 'datetime', generated: true },
+        status: { type: 'string', default: 'pending' },
+        version: { type: 'number', default: 1 }
+      },
+      
+      applicant: {
+        firstName: { ref: 'fieldDefinitions.firstName' },
+        lastName: { ref: 'fieldDefinitions.lastName' },
+        email: { ref: 'fieldDefinitions.email' },
+        phone: { ref: 'fieldDefinitions.phone' },
+        address: { ref: 'fieldDefinitions.address' }
+      },
+      
+      member: {
+        memberId: { type: 'string', required: true },
+        memberName: { type: 'string', required: true },
+        relationship: { type: 'string' },
+        verified: { type: 'boolean', default: false }
+      },
+      
+      event: {
+        eventDate: { ref: 'fieldDefinitions.eventDate' },
+        eventTime: { ref: 'fieldDefinitions.eventTime' },
+        facility: { type: 'string', required: true },
+        guestCount: { ref: 'fieldDefinitions.guestCount' }
+      },
+      
+      payment: {
+        amount: { type: 'number', required: true },
+        currency: { type: 'string', default: 'USD' },
+        method: { type: 'string' },
+        status: { type: 'string', default: 'pending' },
+        transactionId: { type: 'string' }
+      }
+    };
+  }
+
+  // Formatting functions
+  formatPhone(phone) {
+    const cleaned = phone.replace(/\D/g, '');
+    const match = cleaned.match(/^(\d{3})(\d{3})(\d{4})$/);
+    if (match) {
+      return `(${match[1]}) ${match[2]}-${match[3]}`;
+    }
+    return phone;
+  }
+
+  formatDate(date, format = 'display') {
+    const d = new Date(date);
+    if (format === 'display') {
+      return d.toLocaleDateString('en-US', {
+        month: '2-digit',
+        day: '2-digit',
+        year: 'numeric'
+      });
+    }
+    return d.toISOString().split('T')[0];
+  }
+
+  formatTime(time, format = '12h') {
+    const [hours, minutes] = time.split(':');
+    const h = parseInt(hours);
+    
+    if (format === '12h') {
+      const period = h >= 12 ? 'PM' : 'AM';
+      const displayHours = h % 12 || 12;
+      return `${displayHours}:${minutes} ${period}`;
+    }
+    
+    return time;
+  }
+
+  formatCurrency(amount) {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD'
+    }).format(amount);
+  }
+
+  formatAddress(address, format = 'single') {
+    if (format === 'single') {
+      return `${address.street}, ${address.city}, ${address.state} ${address.zip}`;
+    }
+    
+    return {
+      line1: address.street,
+      line2: `${address.city}, ${address.state} ${address.zip}`
+    };
+  }
+
+  // Validation functions
+  validateName(name) {
+    if (!name || name.trim().length < 2) {
+      return { valid: false, error: 'Name must be at least 2 characters' };
+    }
+    
+    if (!/^[a-zA-Z\s\-\'\.]+$/.test(name)) {
+      return { valid: false, error: 'Name contains invalid characters' };
+    }
+    
+    return { valid: true };
+  }
+
+  validateEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    if (!emailRegex.test(email)) {
+      return { valid: false, error: 'Invalid email format' };
+    }
+    
+    return { valid: true };
+  }
+
+  validatePhone(phone) {
+    const cleaned = phone.replace(/\D/g, '');
+    
+    if (cleaned.length !== 10) {
+      return { valid: false, error: 'Phone number must be 10 digits' };
+    }
+    
+    return { valid: true };
+  }
+
+  validateEventDate(date, config = {}) {
+    const eventDate = new Date(date);
+    const today = new Date();
+    today.setHours
