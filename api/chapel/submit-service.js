@@ -2,7 +2,7 @@
 // API endpoint for Crouse Chapel service applications (wedding, memorial, funeral)
 
 import { Client } from 'pg';
-import { createNotionPage, toNotionProperty } from '../lib/notion.js';
+import { createNotionPage, toNotionProperty } from '../../lib/notion.js';
 
 export default async function handler(req, res) {
   // Enable CORS
