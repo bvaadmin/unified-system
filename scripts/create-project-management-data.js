@@ -5,8 +5,11 @@
  * Populates the project management database with Bay View projects
  */
 
-const { Client } = require('pg');
-require('dotenv').config();
+import pg from 'pg';
+import dotenv from 'dotenv';
+
+const { Client } = pg;
+dotenv.config();
 
 async function createProjectManagementData() {
   const client = new Client({

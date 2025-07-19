@@ -5,10 +5,17 @@
  * Creates the standalone PM system on DigitalOcean
  */
 
-const { Client } = require('pg');
-const fs = require('fs').promises;
-const path = require('path');
-require('dotenv').config();
+import pg from 'pg';
+import { promises as fs } from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import dotenv from 'dotenv';
+
+const { Client } = pg;
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config();
 
 async function initProjectManagementDB() {
   const client = new Client({
@@ -92,10 +99,8 @@ async function initProjectManagementDB() {
 }
 
 // Run if called directly
-if (require.main === module) {
-  initProjectManagementDB()
-    .then(() => process.exit(0))
-    .catch(() => process.exit(1));
-}
+initProjectManagementDB()
+  .then(() => process.exit(0))
+  .catch(() => process.exit(1));
 
-module.exports = { initProjectManagementDB };
+export { initProjectManagementDB };
