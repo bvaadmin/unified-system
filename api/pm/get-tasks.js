@@ -16,8 +16,22 @@ export default withCors(async (req, res) => {
       priority,
       task_type,
       component,
-      include_archived = false
+      include_archived = false,
+      limit = '50',
+      offset = '0'
     } = req.query;
+    
+    // Validate pagination parameters
+    const limitNum = Math.min(parseInt(limit) || 50, 100);
+    const offsetNum = parseInt(offset) || 0;
+    
+    if (isNaN(limitNum) || limitNum < 1) {
+      return res.status(400).json({ error: 'Invalid limit parameter' });
+    }
+    
+    if (isNaN(offsetNum) || offsetNum < 0) {
+      return res.status(400).json({ error: 'Invalid offset parameter' });
+    }
 
     let query = `
       SELECT 
@@ -50,23 +64,39 @@ export default withCors(async (req, res) => {
 
     // Add filters
     if (project_id) {
+      const projectId = parseInt(project_id);
+      if (isNaN(projectId)) {
+        return res.status(400).json({ error: 'Invalid project_id format' });
+      }
       conditions.push(`t.project_id = $${params.length + 1}`);
-      params.push(parseInt(project_id));
+      params.push(projectId);
     }
 
     if (milestone_id) {
+      const milestoneId = parseInt(milestone_id);
+      if (isNaN(milestoneId)) {
+        return res.status(400).json({ error: 'Invalid milestone_id format' });
+      }
       conditions.push(`t.milestone_id = $${params.length + 1}`);
-      params.push(parseInt(milestone_id));
+      params.push(milestoneId);
     }
 
     if (sprint_id) {
+      const sprintId = parseInt(sprint_id);
+      if (isNaN(sprintId)) {
+        return res.status(400).json({ error: 'Invalid sprint_id format' });
+      }
       conditions.push(`t.sprint_id = $${params.length + 1}`);
-      params.push(parseInt(sprint_id));
+      params.push(sprintId);
     }
 
     if (assignee_id) {
+      const assigneeId = parseInt(assignee_id);
+      if (isNaN(assigneeId)) {
+        return res.status(400).json({ error: 'Invalid assignee_id format' });
+      }
       conditions.push(`t.assignee_id = $${params.length + 1}`);
-      params.push(parseInt(assignee_id));
+      params.push(assigneeId);
     }
 
     if (status) {
@@ -109,8 +139,23 @@ export default withCors(async (req, res) => {
         assignee.name, assignee.email, reviewer.name, creator.name
       ORDER BY t.priority, t.due_date NULLS LAST, t.created_at DESC
     `;
-
-    const result = await client.query(query, params);
+    
+    // Get total count for pagination
+    let countQuery = query.substring(0, query.lastIndexOf('ORDER BY'));
+    countQuery = `SELECT COUNT(*) FROM (${countQuery}) as count_query`;
+    
+    // Add pagination
+    params.push(limitNum);
+    query += ` LIMIT $${params.length}`;
+    params.push(offsetNum);
+    query += ` OFFSET $${params.length}`;
+    
+    const countParams = params.slice(0, -2); // Remove LIMIT and OFFSET params
+    
+    const [result, countResult] = await Promise.all([
+      client.query(query, params),
+      client.query(countQuery, countParams)
+    ]);
 
     // Fetch blocker details if any tasks have blockers
     const tasksWithBlockers = result.rows.filter(t => t.blocker_ids && t.blocker_ids[0] !== null);
@@ -162,10 +207,18 @@ export default withCors(async (req, res) => {
       }
     });
 
+    const totalCount = parseInt(countResult.rows[0].count);
+    
     res.status(200).json({
       success: true,
       tasks: result.rows,
-      stats: stats
+      stats: stats,
+      pagination: {
+        total: totalCount,
+        limit: limitNum,
+        offset: offsetNum,
+        hasMore: offsetNum + result.rows.length < totalCount
+      }
     });
   }, res);
 });

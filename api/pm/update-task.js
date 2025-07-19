@@ -10,10 +10,21 @@ export default withCors(async (req, res) => {
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'Authorization required' });
   }
+  
+  const token = authHeader.replace('Bearer ', '');
+  if (token !== process.env.ADMIN_TOKEN) {
+    return res.status(401).json({ error: 'Invalid authentication token' });
+  }
 
   const { task_id } = req.query;
   if (!task_id) {
     return res.status(400).json({ error: 'task_id is required' });
+  }
+  
+  // Validate task_id is a number
+  const taskId = parseInt(task_id);
+  if (isNaN(taskId)) {
+    return res.status(400).json({ error: 'Invalid task_id format' });
   }
 
   return withDatabase(async (client) => {
@@ -21,7 +32,7 @@ export default withCors(async (req, res) => {
       // Get current task
       const currentTask = await client.query(
         'SELECT * FROM project_mgmt.tasks WHERE id = $1',
-        [parseInt(task_id)]
+        [taskId]
       );
 
       if (currentTask.rows.length === 0) {
@@ -78,7 +89,7 @@ export default withCors(async (req, res) => {
       }
 
       // Update task
-      values.push(parseInt(task_id));
+      values.push(taskId);
       const updateQuery = `
         UPDATE project_mgmt.tasks 
         SET ${updates.join(', ')}, updated_at = CURRENT_TIMESTAMP
@@ -94,16 +105,22 @@ export default withCors(async (req, res) => {
         // Clear existing dependencies
         await client.query(
           'DELETE FROM project_mgmt.task_dependencies WHERE task_id = $1',
-          [parseInt(task_id)]
+          [taskId]
         );
 
         // Add new dependencies
         if (Array.isArray(req.body.dependencies) && req.body.dependencies.length > 0) {
           for (const depId of req.body.dependencies) {
+            // Validate dependency ID
+            const dependencyId = parseInt(depId);
+            if (isNaN(dependencyId)) {
+              throw new Error(`Invalid dependency ID format: ${depId}`);
+            }
+            
             // Check for circular dependency
             const checkCircular = await client.query(
               'SELECT project_mgmt.check_circular_dependency($1, $2) as is_circular',
-              [parseInt(task_id), parseInt(depId)]
+              [taskId, dependencyId]
             );
 
             if (checkCircular.rows[0].is_circular) {
@@ -113,7 +130,7 @@ export default withCors(async (req, res) => {
             await client.query(`
               INSERT INTO project_mgmt.task_dependencies (task_id, depends_on_task_id)
               VALUES ($1, $2)
-            `, [parseInt(task_id), parseInt(depId)]);
+            `, [taskId, dependencyId]);
           }
         }
       }
@@ -143,7 +160,7 @@ export default withCors(async (req, res) => {
         LEFT JOIN project_mgmt.resources assignee ON t.assignee_id = assignee.id
         LEFT JOIN project_mgmt.resources reviewer ON t.reviewer_id = reviewer.id
         WHERE t.id = $1
-      `, [parseInt(task_id)]);
+      `, [taskId]);
 
       res.status(200).json({
         success: true,

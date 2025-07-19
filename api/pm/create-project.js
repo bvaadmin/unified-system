@@ -6,10 +6,15 @@ export default withCors(async (req, res) => {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Simple auth check - in production, use proper authentication
+  // Validate Bearer token against ADMIN_TOKEN
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({ error: 'Authorization required' });
+  }
+  
+  const token = authHeader.replace('Bearer ', '');
+  if (token !== process.env.ADMIN_TOKEN) {
+    return res.status(401).json({ error: 'Invalid authentication token' });
   }
 
   return withDatabase(async (client) => {
@@ -37,6 +42,32 @@ export default withCors(async (req, res) => {
           error: 'Missing required fields: name, phase' 
         });
       }
+      
+      // Validate email formats
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (owner_email && !emailRegex.test(owner_email)) {
+        return res.status(400).json({ error: 'Invalid owner email format' });
+      }
+      
+      // Validate array fields
+      if (!Array.isArray(project_type) || !Array.isArray(related_systems) || !Array.isArray(stakeholder_emails)) {
+        return res.status(400).json({ error: 'project_type, related_systems, and stakeholder_emails must be arrays' });
+      }
+      
+      // Validate stakeholder emails
+      for (const email of stakeholder_emails) {
+        if (!emailRegex.test(email)) {
+          return res.status(400).json({ error: `Invalid stakeholder email format: ${email}` });
+        }
+      }
+      
+      // Validate budget if provided
+      if (budget !== undefined && budget !== null) {
+        const budgetNum = parseFloat(budget);
+        if (isNaN(budgetNum) || budgetNum < 0) {
+          return res.status(400).json({ error: 'Budget must be a positive number' });
+        }
+      }
 
       // Get owner by email
       let owner_id = null;
@@ -50,12 +81,8 @@ export default withCors(async (req, res) => {
         }
       }
 
-      // Get creator (You - the AI assistant)
-      const creatorResult = await client.query(
-        'SELECT id FROM project_mgmt.resources WHERE email = $1',
-        ['assistant@ai.helper']
-      );
-      const created_by = creatorResult.rows[0]?.id || 1;
+      // Get creator - use owner_id if available, otherwise use system user
+      const created_by = owner_id || null;
 
       // Create project
       const projectResult = await client.query(`

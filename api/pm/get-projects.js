@@ -12,8 +12,22 @@ export default withCors(async (req, res) => {
       phase, 
       owner_id,
       include_archived = false,
-      view = 'list' // list, overview, or detailed
+      view = 'list', // list, overview, or detailed
+      limit = '50',
+      offset = '0'
     } = req.query;
+    
+    // Validate pagination parameters
+    const limitNum = Math.min(parseInt(limit) || 50, 100);
+    const offsetNum = parseInt(offset) || 0;
+    
+    if (isNaN(limitNum) || limitNum < 1) {
+      return res.status(400).json({ error: 'Invalid limit parameter' });
+    }
+    
+    if (isNaN(offsetNum) || offsetNum < 0) {
+      return res.status(400).json({ error: 'Invalid offset parameter' });
+    }
 
     let query;
     const params = [];
@@ -81,11 +95,15 @@ export default withCors(async (req, res) => {
     }
 
     if (owner_id) {
+      const ownerId = parseInt(owner_id);
+      if (isNaN(ownerId)) {
+        return res.status(400).json({ error: 'Invalid owner_id format' });
+      }
       conditions.push(`p.owner_id = $${params.length + 1}`);
-      params.push(parseInt(owner_id));
+      params.push(ownerId);
     }
 
-    if (!include_archived || include_archived === 'false') {
+    if (include_archived !== 'true') {
       conditions.push('NOT p.is_archived');
     }
 
@@ -99,8 +117,22 @@ export default withCors(async (req, res) => {
     } else {
       query += ' GROUP BY p.id, r.name ORDER BY p.priority, p.name';
     }
-
-    const result = await client.query(query, params);
+    
+    // Add pagination
+    params.push(limitNum);
+    query += ` LIMIT $${params.length}`;
+    params.push(offsetNum);
+    query += ` OFFSET $${params.length}`;
+    
+    // Get total count for pagination metadata
+    let countQuery = query.substring(0, query.lastIndexOf('ORDER BY'));
+    countQuery = `SELECT COUNT(*) FROM (${countQuery}) as count_query`;
+    const countParams = params.slice(0, -2); // Remove LIMIT and OFFSET params
+    
+    const [result, countResult] = await Promise.all([
+      client.query(query, params),
+      client.query(countQuery, countParams)
+    ]);
 
     // If detailed view requested, fetch additional data
     if (view === 'detailed' && result.rows.length > 0) {
@@ -144,10 +176,18 @@ export default withCors(async (req, res) => {
       });
     }
 
+    const totalCount = parseInt(countResult.rows[0].count);
+    
     res.status(200).json({
       success: true,
       projects: result.rows,
-      count: result.rows.length
+      count: result.rows.length,
+      pagination: {
+        total: totalCount,
+        limit: limitNum,
+        offset: offsetNum,
+        hasMore: offsetNum + result.rows.length < totalCount
+      }
     });
   }, res);
 });
