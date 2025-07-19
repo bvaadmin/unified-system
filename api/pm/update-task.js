@@ -1,7 +1,7 @@
-const { withDatabase, withTransaction } = require('../../lib/db');
-const { withCors } = require('../../lib/cors');
+import { withDatabase, withTransaction } from '../../lib/db.js';
+import { withCors } from '../../lib/cors.js';
 
-module.exports = withCors(async (req, res) => {
+export default withCors(async (req, res) => {
   if (req.method !== 'PUT' && req.method !== 'PATCH') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
