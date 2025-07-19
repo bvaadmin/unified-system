@@ -303,10 +303,8 @@ async function createProjectManagementData() {
 }
 
 // Run if called directly
-if (require.main === module) {
-  createProjectManagementData()
-    .then(() => process.exit(0))
-    .catch(() => process.exit(1));
-}
+createProjectManagementData()
+  .then(() => process.exit(0))
+  .catch(() => process.exit(1));
 
-module.exports = { createProjectManagementData };
+export { createProjectManagementData };

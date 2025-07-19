@@ -1,7 +1,7 @@
-const { withDatabase } = require('../../lib/db');
-const { withCors } = require('../../lib/cors');
+import { withDatabase } from '../../lib/db.js';
+import { withCors } from '../../lib/cors.js';
 
-module.exports = withCors(async (req, res) => {
+export default withCors(async (req, res) => {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
