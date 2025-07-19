@@ -25,7 +25,8 @@
     "update-form-urls": "node scripts/update-form-urls.js",
     "revert-form-urls": "node scripts/update-form-urls.js revert",
     "init-pm-db": "node scripts/init-project-management-db.js",
-    "create-pm-data": "node scripts/create-project-management-data.js"
+    "create-pm-data": "node scripts/create-project-management-data.js",
+    "populate-roadmap": "node scripts/populate-real-roadmap-projects.js"
   },
   "keywords": [
     "bay-view",
