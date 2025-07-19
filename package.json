@@ -3,6 +3,7 @@
   "version": "2.0.0",
   "description": "Unified Bay View Association administrative system for chapel services, memorial garden, and forms management",
   "main": "api/index.js",
+  "type": "module",
   "scripts": {
     "dev": "vercel dev",
     "deploy": "vercel",
@@ -37,6 +38,7 @@
   "author": "Bay View Association",
   "license": "UNLICENSED",
   "dependencies": {
+    "dotenv": "^17.2.0",
     "pg": "^8.11.3"
   },
   "devDependencies": {

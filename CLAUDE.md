@@ -6,24 +6,59 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is the Bay View Association administrative system, managing chapel services and memorial garden applications for a National Historic Landmark in Petoskey, Michigan. The system uses PostgreSQL for data storage and Notion for workflow management, with APIs deployed on Vercel.
 
+### Bay View's Unique Characteristics
+- **150-year-old Chautauqua community** in Petoskey, Michigan - preserving traditions is crucial
+- **Leaseholding, not ownership** - Properties use perpetual leases, not deeds
+- **Block & Lot system** - Properties identified as "Block 12 Lot 7" (authentic to Bay View)
+- **Member sponsorship required** - Non-members need member sponsors for events
+- **Program governance structure** - Directors report to member committees who set vision
+
 ## Repository Structure (Unified)
 
 - **api/** - All Vercel serverless functions
   - **chapel/** - Chapel service endpoints (check-availability, get-applications, submit-service, update-application, calendar)
   - **memorial/** - Memorial garden endpoints (submit-garden)
   - **admin/** - Administrative endpoints (db-init)
+  - **config/** - Configuration management endpoints (get-settings, update-setting, get-history)
   - **test-db.js** - Database connectivity test
 - **scripts/** - Database and utility scripts
   - **chapel/** - Chapel database initialization and testing
   - **forms/** - Forms database management
   - **memorial/** - Memorial garden database scripts
+  - **migrations/** - Database migration files (001-009 completed)
 - **lib/** - Shared utility modules
   - **db.js** - Database connection helpers
   - **cors.js** - CORS configuration and middleware
   - **notion.js** - Notion API helpers
+  - **database/** - Dual-write manager and database utilities
 - **forms/** - Static HTML forms deployed via GitHub Pages
 - **docs/** - Documentation files
 - **data/** - Static data files
+
+## Technical Architecture
+
+### Database Schema Organization
+- `legacy.*` - Original systems (memorial, chapel)
+- `core.*` - Unified persons, members, committees
+- `property.*` - Block/lot system with leaseholds
+- `finance.*` - Accounts, transactions, payments
+- `events.*` - Programs, facilities, bookings
+- `communications.*` - Notifications, announcements
+- `config.*` - Runtime configuration system
+- `migration.*` - Schema version tracking
+
+### Key Architecture Decisions
+- **Dual-write pattern** for safe migration - writes to both legacy and modern systems
+- **Person-centric unified model** - Every person (member/guest/deceased) connects to all systems
+- **PostgreSQL with advanced features** - JSONB, full-text search, exclusion constraints, CTEs
+- **Configuration system** - All budgets, fees, settings now runtime-modifiable with audit trail
+
+### Critical Implementation Details
+- **Members table** uses `membership_type` not `member_type`, no `good_standing` column
+- **Persons table** has `person_type` not `person_status`, no `is_active` column
+- **No unique constraint on committee names** - check existence before insert
+- **btree_gist extension required** for exclusion constraints in events
+- **All timestamps use TIMESTAMP WITH TIME ZONE**
 
 ## API Endpoints & Implementation Details
 
@@ -105,6 +140,28 @@ This is the Bay View Association administrative system, managing chapel services
 - **Auth Required**: `Authorization: Bearer ${ADMIN_TOKEN}`
 - **Purpose**: Initialize database schema
 
+### Configuration Management APIs
+1. **Get Configuration Settings**
+   - Endpoint: `/api/config/get-settings`
+   - Method: GET
+   - Query params: `key`, `category`, `environment`
+   - Returns: Configuration values, categories, or specific setting
+   - Auth: Public read access
+
+2. **Update Configuration Setting**
+   - Endpoint: `/api/config/update-setting`
+   - Method: POST/PUT
+   - Auth Required: `Authorization: Bearer ${ADMIN_TOKEN}`
+   - Body: `key`, `value`, `category`, `reason`, `environment`
+   - Returns: Update confirmation with old/new values
+
+3. **Get Configuration History**
+   - Endpoint: `/api/config/get-history`
+   - Method: GET
+   - Query params: `key`, `category`, `limit`, `offset`, `startDate`, `endDate`
+   - Returns: Change history with pagination
+   - Auth: Public read access
+
 ## Database Schemas
 
 ### Memorial Garden Schema (`bayview.memorials`)
@@ -143,6 +200,20 @@ Core tables:
 
 ### Form Registry Schema (`bayview_forms.forms`)
 Tracks all 48 Bay View forms with metadata, categories, and GitHub URLs.
+
+### Configuration Management Schema (`config.*`)
+Runtime configuration system for modifiable values:
+- **categories** - Configuration categories (FINANCE, PROGRAMS, EVENTS, etc.)
+- **settings** - Configuration values with type safety and validation
+- **setting_history** - Complete audit trail of all changes
+- **environment_overrides** - Environment-specific values (dev/staging/prod)
+
+Key functions:
+- `config.get_value(key, category, environment)` - Get configuration value
+- `config.get_number()`, `config.get_boolean()` - Type-safe getters
+- `config.set_value(key, value, category, changed_by, reason)` - Update with history
+- `events.get_program_budget(area_code)` - Get program budget from config
+- `finance.calculate_payment_fee(amount, provider)` - Calculate fees from config
 
 ## Environment Variables
 ```bash
@@ -361,6 +432,77 @@ Forms are located in `/forms/` directory:
 - Forms use standard HTML with JavaScript fetch() for API submission
 - Styled with inline CSS for self-contained deployment
 
+## Project Status & Completed Phases
+
+### Current State (After Phase 2D + Configuration System)
+
+#### Completed Phases
+1. **Phase 1**: Foundation with dual-write safety and migration architecture
+2. **Phase 2A**: Property (Block/Lot), Financial, Enhanced Membership
+3. **Phase 2B**: Events, Facilities, Programs, Registrations
+4. **Phase 2C**: Communications, Notifications, Member Directory
+5. **Phase 2D**: Program Governance, Payment Integration
+6. **Configuration System**: Runtime-modifiable values with history
+
+#### Sample Data Created
+- 49 persons (members, non-members, deceased)
+- 15 members with voting rights
+- 5 program directors assigned
+- 10 summer 2025 events with pricing
+- 5 payment transactions
+- All budgets/fees in configuration system
+
+#### Key Integration Points
+- **Chapel system** fully integrated with existing tables
+- **Payment providers** configured (Stripe, Square, Venmo, etc.)
+- **Program directors** linked to committees for oversight
+- **Configuration API** with admin authentication
+
+### Next Phase Preparations
+
+Ready for Phase 3+:
+- Analytics & reporting dashboards
+- Financial reconciliation
+- Volunteer management
+- Document management
+- Member portal with self-service
+- Mobile app development
+
+## Working Patterns & Common Issues
+
+### Database Connection Issues
+- Quote escaping in SQL: Use `'Women''s Council'` not `"Women's Council"`
+- Node.js eval strings need careful escaping
+- GIST indexes need btree_gist extension
+- Complex exclusion constraints may need simplification
+
+### File Locations Reference
+- **Migrations**: `/scripts/migrations/00X_*.sql`
+- **API endpoints**: `/api/[category]/[endpoint].js`
+- **Test scripts**: `/scripts/test-*.js`
+- **Sample data**: `/scripts/create-*.js`
+- **Documentation**: `/docs/*.md`
+
+### Testing Without Framework
+- Create custom test scripts for each feature
+- Always create sample data scripts
+- Test dual-write with both legacy and modern queries
+
+## Important Context
+
+### User Preferences
+- User values minimal responses - be concise
+- Configuration should be like env vars - runtime modifiable
+- User provided critical governance requirements mid-session
+- Summer program data exists in PDF chunks at network path
+
+### Key Success Factors
+1. **Preserve Bay View traditions** while modernizing
+2. **Zero data loss** during migration
+3. **Maintain authentic terminology** (leaseholder not owner)
+4. **Everything connects** through unified person model
+5. **Runtime configuration** for operational flexibility
+
 ## SSH Shared Workspace Configuration
 - **Remote Host**: sam@macbook.local
 - **SSH Authentication**: Key-based (already configured)
@@ -388,3 +530,8 @@ Forms are located in `/forms/` directory:
 # Bidirectional sync
 ~/sync-workspace.sh sync
 ```
+# important-instruction-reminders
+Do what has been asked; nothing more, nothing less.
+NEVER create files unless they're absolutely necessary for achieving your goal.
+ALWAYS prefer editing an existing file to creating a new one.
+NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.

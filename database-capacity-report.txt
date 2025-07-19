@@ -1,0 +1,229 @@
+[dotenv@17.2.0] injecting env (7) from .env.local (tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' })
+Database Capacity Analysis for Bay View Association PostgreSQL Database
+=======================================================================
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+1. DATABASE VERSION AND SYSTEM INFORMATION
+------------------------------------------
+PostgreSQL Version: PostgreSQL 16.9 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 14.2.1 20240912 (Red Hat 14.2.1-3), 64-bit
+Current Database: defaultdb
+Current User: doadmin
+
+
+2. DATABASE SIZE INFORMATION
+----------------------------
+Database Size: 9228 kB
+Size in Bytes: 9449955
+
+
+3. SCHEMAS AND TABLES
+---------------------
+Schemas and Table Counts:
+  bayview: 4 tables
+  crouse_chapel: 15 tables
+
+
+4. TABLE DETAILS AND ROW COUNTS
+-------------------------------
+crouse_chapel.service_applications:
+  Rows: 0
+  Size: 96 kB
+bayview.memorials:
+  Rows: 3
+  Size: 64 kB
+crouse_chapel.baptism_details:
+  Rows: 0
+  Size: 48 kB
+crouse_chapel.clergy:
+  Rows: 0
+  Size: 40 kB
+bayview.attachments:
+  Rows: 0
+  Size: 32 kB
+crouse_chapel.service_equipment:
+  Rows: 0
+  Size: 32 kB
+crouse_chapel.wedding_details:
+  Rows: 0
+  Size: 32 kB
+bayview.audit_log:
+  Rows: 0
+  Size: 32 kB
+crouse_chapel.payments:
+  Rows: 0
+  Size: 32 kB
+bayview.memorial_payments:
+  Rows: 0
+  Size: 32 kB
+crouse_chapel.general_use_details:
+  Rows: 0
+  Size: 24 kB
+crouse_chapel.notifications:
+  Rows: 0
+  Size: 24 kB
+crouse_chapel.blackout_dates:
+  Rows: 0
+  Size: 24 kB
+crouse_chapel.policy_acknowledgments:
+  Rows: 0
+  Size: 24 kB
+crouse_chapel.service_musicians:
+  Rows: 0
+  Size: 16 kB
+crouse_chapel.service_music:
+  Rows: 0
+  Size: 16 kB
+crouse_chapel.chapel_availability:
+  Rows: 0
+  Size: 16 kB
+crouse_chapel.service_clergy:
+  Rows: 0
+  Size: 16 kB
+crouse_chapel.memorial_details:
+  Rows: 0
+  Size: 8192 bytes
+
+
+5. STORAGE BY SCHEMA
+--------------------
+crouse_chapel: 448 kB
+bayview: 160 kB
+
+
+6. INDEX ANALYSIS
+-----------------
+Top 20 Largest Indexes:
+  crouse_chapel.service_applications - idx_service_applications_status: 16 kB
+  crouse_chapel.policy_acknowledgments - policy_acknowledgments_pkey: 16 kB
+  crouse_chapel.service_applications - idx_service_applications_date: 16 kB
+  bayview.memorials - idx_memorials_last_name: 16 kB
+  crouse_chapel.service_applications - service_applications_pkey: 16 kB
+  bayview.memorials - idx_memorials_first_name: 16 kB
+  crouse_chapel.service_applications - idx_service_applications_type: 16 kB
+  crouse_chapel.baptism_details - idx_baptism_details_application: 16 kB
+  crouse_chapel.service_applications - service_applications_service_date_service_time_key: 16 kB
+  crouse_chapel.baptism_details - baptism_details_pkey: 16 kB
+  crouse_chapel.wedding_details - wedding_details_pkey: 16 kB
+  bayview.memorials - memorials_pkey: 16 kB
+  crouse_chapel.service_equipment - service_equipment_pkey: 16 kB
+  crouse_chapel.service_musicians - service_musicians_pkey: 8192 bytes
+  crouse_chapel.service_music - service_music_pkey: 8192 bytes
+  crouse_chapel.service_clergy - service_clergy_service_id_clergy_id_key: 8192 bytes
+  crouse_chapel.service_clergy - service_clergy_pkey: 8192 bytes
+  crouse_chapel.notifications - notifications_pkey: 8192 bytes
+  crouse_chapel.blackout_dates - blackout_dates_pkey: 8192 bytes
+  crouse_chapel.chapel_availability - chapel_availability_date_time_slot_key: 8192 bytes
+
+
+7. TABLE AND INDEX SIZE RATIO
+-----------------------------
+Top 10 Tables by Size with Index Ratios:
+  bayview.memorials:
+    Table: 8192 bytes, Indexes: 48 kB, Ratio: 600.00%
+  crouse_chapel.baptism_details:
+    Table: 8192 bytes, Indexes: 32 kB, Ratio: 400.00%
+  crouse_chapel.service_equipment:
+    Table: 8192 bytes, Indexes: 16 kB, Ratio: 200.00%
+  crouse_chapel.wedding_details:
+    Table: 8192 bytes, Indexes: 16 kB, Ratio: 200.00%
+  crouse_chapel.service_applications:
+    Table: 8192 bytes, Indexes: 80 kB, Ratio: 1000.00%
+  crouse_chapel.policy_acknowledgments:
+    Table: 8192 bytes, Indexes: 16 kB, Ratio: 200.00%
+
+
+8. CONNECTION AND ACTIVITY STATISTICS
+------------------------------------
+Total Connections: 2
+Active: 1
+Idle: 0
+Idle in Transaction: 0
+
+
+9. DATABASE STATISTICS
+----------------------
+Transactions Committed: 53993
+Transactions Rolled Back: 10751
+Cache Hit Ratio: 100.00%
+Total Rows Inserted: 2821
+Total Rows Updated: 355
+Total Rows Deleted: 22
+
+
+10. AVAILABLE POSTGRESQL EXTENSIONS
+-----------------------------------
+Installed Extensions:
+  plpgsql (1.0): PL/pgSQL procedural language
+
+
+11. TABLE BLOAT ANALYSIS
+------------------------
+No significant table bloat detected (>20%)
+
+
+12. UNUSED INDEXES
+------------------
+Unused indexes (never scanned):
+  crouse_chapel.service_applications - idx_service_applications_status: 16 kB
+  bayview.memorials - idx_memorials_first_name: 16 kB
+  crouse_chapel.service_equipment - service_equipment_pkey: 16 kB
+  crouse_chapel.policy_acknowledgments - policy_acknowledgments_pkey: 16 kB
+  crouse_chapel.service_applications - service_applications_service_date_service_time_key: 16 kB
+  crouse_chapel.wedding_details - wedding_details_pkey: 16 kB
+  crouse_chapel.baptism_details - baptism_details_pkey: 16 kB
+  bayview.memorials - memorials_pkey: 16 kB
+  bayview.memorials - idx_memorials_last_name: 16 kB
+  crouse_chapel.service_applications - idx_service_applications_type: 16 kB
+
+
+13. TABLES WITH HIGH SEQUENTIAL SCANS
+-------------------------------------
+Tables with high sequential scan activity:
+
+
+14. KEY DATABASE CONFIGURATION
+------------------------------
+autovacuum: on
+  Starts the autovacuum subprocess.
+autovacuum_max_workers: 3
+  Sets the maximum number of simultaneously running autovacuum worker processes.
+checkpoint_completion_target: 0.9
+  Time spent flushing dirty buffers during checkpoint, as fraction of checkpoint interval.
+effective_cache_size: 73472 8kB
+  Sets the planner's assumption about the total size of the data caches.
+effective_io_concurrency: 2
+  Number of simultaneous requests that can be handled efficiently by the disk subsystem.
+maintenance_work_mem: 91136 kB
+  Sets the maximum memory to be used for maintenance operations.
+max_connections: 25
+  Sets the maximum number of concurrent connections.
+max_wal_size: 481 MB
+  Sets the WAL size that triggers a checkpoint.
+min_wal_size: 80 MB
+  Sets the minimum size to shrink the WAL to.
+random_page_cost: 1
+  Sets the planner's estimate of the cost of a nonsequentially fetched disk page.
+shared_buffers: 24448 8kB
+  Sets the number of shared memory buffers used by the server.
+wal_buffers: 764 8kB
+  Sets the number of disk-page buffers in shared memory for WAL.
+work_mem: 2048 kB
+  Sets the maximum memory to be used for query workspaces.
+
+
+15. TABLE CONSTRAINTS SUMMARY
+-----------------------------
+Constraint Types:
+  Primary Key: 19
+  Foreign Key: 14
+  Check: 11
+  Unique: 4
+
+
+SUMMARY AND RECOMMENDATIONS
+===========================
+1. Database is using PostgreSQL on DigitalOcean
+2. Monitor tables with high sequential scan activity for potential index opportunities
+3. Consider removing unused indexes to save space and improve write performance
+4. Tables with significant bloat may benefit from VACUUM FULL or pg_repack
+5. Cache hit ratio should ideally be above 90% for good performance
