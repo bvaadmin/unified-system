@@ -23,7 +23,9 @@
     "add-enhanced-tables": "node scripts/add-enhanced-tables.js",
     "validate": "node scripts/validate-configuration.js",
     "update-form-urls": "node scripts/update-form-urls.js",
-    "revert-form-urls": "node scripts/update-form-urls.js revert"
+    "revert-form-urls": "node scripts/update-form-urls.js revert",
+    "init-pm-db": "node scripts/init-project-management-db.js",
+    "create-pm-data": "node scripts/create-project-management-data.js"
   },
   "keywords": [
     "bay-view",
