@@ -153,8 +153,8 @@ async function handleCreateProject(req, res) {
 
           // Add as stakeholder
           await client.query(
-            'INSERT INTO project_mgmt.project_stakeholders (project_id, stakeholder_id) VALUES ($1, $2)',
-            [project.id, resource_id]
+            'INSERT INTO project_mgmt.project_stakeholders (project_id, resource_id, role) VALUES ($1, $2, $3)',
+            [project.id, resource_id, 'Stakeholder']
           );
         }
       }
@@ -236,17 +236,17 @@ async function handleGetProjects(req, res) {
           COUNT(DISTINCT t.id) FILTER (WHERE t.status = 'Done') as completed_tasks,
           COALESCE(json_agg(DISTINCT 
             jsonb_build_object(
-              'id', s.stakeholder_id,
+              'id', s.resource_id,
               'name', sr.name,
               'email', sr.email
             )
-          ) FILTER (WHERE s.stakeholder_id IS NOT NULL), '[]'::json) as stakeholders
+          ) FILTER (WHERE s.resource_id IS NOT NULL), '[]'::json) as stakeholders
         FROM project_mgmt.projects p
         LEFT JOIN project_mgmt.resources r ON p.owner_id = r.id
         LEFT JOIN project_mgmt.milestones m ON p.id = m.project_id
         LEFT JOIN project_mgmt.tasks t ON p.id = t.project_id
         LEFT JOIN project_mgmt.project_stakeholders s ON p.id = s.project_id
-        LEFT JOIN project_mgmt.resources sr ON s.stakeholder_id = sr.id
+        LEFT JOIN project_mgmt.resources sr ON s.resource_id = sr.id
         WHERE 1=1
       `;
     }
