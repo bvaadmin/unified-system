@@ -23,7 +23,8 @@ async function validateCottageImport() {
     
     console.log('📊 Import Statistics:');
     const s = stats.rows[0];
-    console.log(`  🏠 Total cottages: ${s.total_cottages} / 312 (${Math.round(s.total_cottages/312*100)}% complete)`);
+    const expectedCottages = 536; // Real cottage count from Bay View data
+    console.log(`  🏠 Total cottages: ${s.total_cottages} / ${expectedCottages} (${Math.round(s.total_cottages/expectedCottages*100)}% complete)`);
     console.log(`  📄 Active leaseholds: ${s.active_leaseholds}`);
     console.log(`  👥 Member persons: ${s.member_persons}`);
     console.log(`  👤 Total members: ${s.total_members}`);

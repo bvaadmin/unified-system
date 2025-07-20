@@ -31,10 +31,12 @@ export default async function handler(req, res) {
     console.log(`📊 Received ${blockLotData.length} block-lot records`);
     console.log(`📊 Received ${leasholdData.length} leaseholder records`);
     
-    // Create a map of leaseholder addresses by name
+    // Create a map of leaseholder addresses by name (case-insensitive)
     const addressMap = new Map();
     leasholdData.forEach(record => {
-      const key = `${record['Last name']}_${record['First name']}`.toLowerCase();
+      const lastName = (record['Last name'] || '').trim().toLowerCase();
+      const firstName = (record['First name'] || '').trim().toLowerCase();
+      const key = `${lastName}_${firstName}`;
       addressMap.set(key, {
         street: record['Address line 1'],
         street2: record['Address line 2'],
@@ -73,8 +75,24 @@ export default async function handler(req, res) {
         try {
           const cottageId = record['Client ID'];
           
-          // Get address info
-          const nameKey = `${record['Payer last name']}_${record['Payer first name']}`.toLowerCase();
+          // Input validation for Client ID
+          if (!cottageId || typeof cottageId !== 'string' || !cottageId.trim()) {
+            console.log(`Skipping invalid Client ID: ${cottageId}`);
+            skipped++;
+            continue;
+          }
+          
+          // Validate Client ID format (Block-Lot pattern)
+          if (!/^\d+[-]/.test(cottageId.trim())) {
+            console.log(`Skipping malformed Client ID: ${cottageId}`);
+            skipped++;
+            continue;
+          }
+          
+          // Get address info (case-insensitive matching)
+          const payerLastName = (record['Payer last name'] || '').trim().toLowerCase();
+          const payerFirstName = (record['Payer first name'] || '').trim().toLowerCase();
+          const nameKey = `${payerLastName}_${payerFirstName}`;
           const address = addressMap.get(nameKey) || {};
           
           // Create address string
@@ -243,11 +261,14 @@ export default async function handler(req, res) {
           imported++;
           
         } catch (error) {
-          console.error(`Error with ${record['Client ID']}: ${error.message}`);
+          console.error(`Error with ${record['Client ID']}: ${error.message}`, error.stack);
           errors++;
           errorDetails.push({
             cottageId: record['Client ID'],
-            error: error.message
+            payerName: `${record['Payer first name']} ${record['Payer last name']}`,
+            error: error.message,
+            errorCode: error.code,
+            step: error.step || 'unknown'
           });
         }
       }
@@ -281,7 +302,8 @@ export default async function handler(req, res) {
         imported,
         skipped,
         errors,
-        errorDetails: errorDetails.slice(0, 10), // Return first 10 errors
+        errorDetails: errorDetails, // Return all errors for better debugging
+        totalErrors: errorDetails.length,
         stats: stats.rows[0],
         migrationStatus: hasCottageIdColumn ? 'Migration 013 applied' : 'Migration 013 needed'
       };
