@@ -19,6 +19,13 @@ const anthropic = new Anthropic({
 async function reviewCommit(commitSha) {
   console.log(`🤖 Starting Claude Code review for commit ${commitSha}`);
 
+  // Check for API key
+  if (!process.env.ANTHROPIC_API_KEY) {
+    console.log('⚠️ ANTHROPIC_API_KEY not found. Skipping Claude review.');
+    console.log('📝 To enable Claude reviews, add ANTHROPIC_API_KEY to GitHub secrets.');
+    return;
+  }
+
   try {
     // Get commit information
     const commitMessage = execSync(`git log -1 --format=%s ${commitSha}`, { encoding: 'utf8' }).trim();

@@ -55,6 +55,7 @@
   "author": "Bay View Association",
   "license": "UNLICENSED",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.24.3",
     "dotenv": "^17.2.0",
     "exceljs": "^4.4.0",
     "pg": "^8.11.3"
