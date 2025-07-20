@@ -26,6 +26,9 @@ out/
 *.sublime-project
 *.sublime-workspace
 
+# Claude Code configuration
+.claude/
+
 # Logs
 logs/
 *.log
