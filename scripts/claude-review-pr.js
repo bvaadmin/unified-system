@@ -41,47 +41,81 @@ async function reviewPullRequest(prNumber) {
       }
     }
 
-    // Prepare review prompt
-    const reviewPrompt = `
-Please review this pull request for the Bay View Association unified system project:
+    // Analyze PR type and scope (similar to commit analysis)
+    const isInfrastructure = changedFiles.some(f => 
+      f.includes('.github/workflows/') || 
+      f.includes('package') || 
+      (f.includes('scripts/') && (f.includes('claude-review') || f.includes('validate-constraints') || f.includes('test-')))
+    );
+    
+    const isAPIChange = changedFiles.some(f => f.startsWith('api/'));
+    const isLibChange = changedFiles.some(f => f.startsWith('lib/'));
+    const isConfigChange = changedFiles.some(f => f.includes('config') || f.includes('.env') || f.includes('.json'));
+    
+    const prType = isInfrastructure ? 'infrastructure' : 
+                   isAPIChange ? 'api' : 
+                   isLibChange ? 'library' : 
+                   isConfigChange ? 'configuration' : 'application';
 
-**PR Title:** ${prInfo.title}
+    // Prepare enhanced PR review prompt
+    const reviewPrompt = `
+Review this ${prType} Pull Request for the Bay View Association unified system:
+
+**PR #${prNumber}:** ${prInfo.title}
 **Author:** ${prInfo.author.login}
+**Type:** ${prType.toUpperCase()} (${changedFiles.length} files changed)
+**Files:** ${changedFiles.slice(0, 5).join(', ')}${changedFiles.length > 5 ? ` +${changedFiles.length - 5} more` : ''}
+
 **Description:**
 ${prInfo.body || 'No description provided'}
 
-**Changed Files:**
-${changedFiles.join('\n')}
+**Context:** Bay View Association administrative system - 150-year-old National Historic Landmark Chautauqua community managing chapel services and memorial garden applications.
 
-**Diff:**
+**Diff (first 8000 chars):**
 \`\`\`diff
-${diffOutput.slice(0, 8000)} ${diffOutput.length > 8000 ? '... (truncated)' : ''}
+${diffOutput.slice(0, 8000)}${diffOutput.length > 8000 ? '\n... (truncated for length)' : ''}
 \`\`\`
 
-**Context - Project Overview:**
-This is a PostgreSQL-based administrative system for Bay View Association, a 150-year-old Chautauqua community. The system manages chapel services, memorial garden applications, member records, and financial operations. Key features:
+**Review Focus for ${prType} PR:**
 
-- Dual-write pattern for safe migration from legacy systems
-- PostgreSQL with advanced features (JSONB, exclusion constraints, CTEs)
-- Vercel serverless APIs with CORS configuration
-- Notion integration for workflow management
-- Configuration system for runtime-modifiable values
+${prType === 'infrastructure' ? `
+🔧 **Infrastructure Review:**
+- CI/CD pipeline security and efficiency
+- Deployment safety and rollback capability  
+- Environment configuration correctness
+- Tool integration and automation quality
+` : prType === 'api' ? `
+🌐 **API Review:**
+- Authentication and authorization
+- Input validation and SQL injection prevention
+- Error handling and API design
+- Rate limiting and security headers
+` : `
+💻 **Application Review:**
+- Code quality and maintainability
+- Business logic correctness
+- Data integrity and validation
+- User experience and accessibility
+`}
 
-**Review Focus Areas:**
-1. **Security**: SQL injection prevention, proper authentication, data validation
-2. **Performance**: Database query optimization, API response times
-3. **Bay View Authenticity**: Preserves traditions, uses correct terminology (Block/Lot, leaseholder not owner)
-4. **Architecture**: Follows established patterns, maintains dual-write safety
-5. **Code Quality**: Error handling, documentation, testing
+**Priority Levels:**
+🚨 **CRITICAL** - Security vulnerabilities, data loss risks, breaking changes
+⚠️ **IMPORTANT** - Performance issues, maintainability concerns, architecture violations  
+💡 **SUGGESTION** - Code style, optimizations, best practices
 
-Please provide:
-1. Overall assessment (APPROVE, REQUEST_CHANGES, or COMMENT)
-2. Specific code review comments with line references
-3. Security concerns if any
-4. Performance recommendations
-5. Suggestions for improvement
+**Bay View Specific:**
+- Cultural preservation (leaseholder not owner terminology)
+- Dual-write pattern compliance for migration safety
+- Member vs non-member business rules
+- 150-year heritage considerations
 
-Format your response as a GitHub review comment in markdown.
+**Required Response Format:**
+1. **Overall Recommendation:** APPROVE / REQUEST_CHANGES / COMMENT
+2. **Priority-based feedback** using 🚨⚠️💡 indicators
+3. **Specific actionable improvements** - focus on what to change and why
+4. **Bay View compliance check** - terminology and cultural preservation
+
+Skip generic observations - provide actionable feedback only.
 `;
 
     // Get Claude's review
