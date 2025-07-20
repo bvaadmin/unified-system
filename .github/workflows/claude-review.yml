@@ -4,6 +4,13 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
     branches: [main]
+  push:
+    branches: [main]
+    paths:
+      - 'api/**'
+      - 'lib/**'
+      - 'scripts/**'
+      - 'package*.json'
 
 permissions:
   contents: read
@@ -43,19 +50,21 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
-          # Get PR details
-          PR_NUMBER=${{ github.event.number }}
-          
-          # Get changed files
-          git diff --name-only origin/main...HEAD > changed_files.txt
-          
-          # Get PR description and diff
-          echo "Reviewing PR #$PR_NUMBER"
-          echo "Changed files:"
-          cat changed_files.txt
-          
-          # Create review comment using Claude API
-          node scripts/claude-review-pr.js $PR_NUMBER
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            # PR Review
+            PR_NUMBER=${{ github.event.number }}
+            git diff --name-only origin/main...HEAD > changed_files.txt
+            echo "Reviewing PR #$PR_NUMBER"
+            node scripts/claude-review-pr.js $PR_NUMBER
+          else
+            # Push Review (commit review)
+            COMMIT_SHA=${{ github.sha }}
+            git diff --name-only HEAD~1..HEAD > changed_files.txt
+            echo "Reviewing commit $COMMIT_SHA"
+            echo "Changed files:"
+            cat changed_files.txt
+            node scripts/claude-review-commit.js $COMMIT_SHA
+          fi
 
       - name: Update project management database
         env:
