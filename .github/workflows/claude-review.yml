@@ -48,6 +48,7 @@ jobs:
       - name: Run Claude Code review
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CLAUDE_GITHUB_TOKEN: ${{ secrets.CLAUDE_GITHUB_TOKEN }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           if [ "${{ github.event_name }}" = "pull_request" ]; then
@@ -71,4 +72,8 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           # Check if this PR corresponds to a PMD task
-          node scripts/update-pmd-from-pr.js ${{ github.event.number }}
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            node scripts/update-pmd-from-pr.js ${{ github.event.number }}
+          else
+            echo "ℹ️ Skipping PMD update for direct commit (not applicable)"
+          fi

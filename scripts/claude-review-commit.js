@@ -101,8 +101,11 @@ ${reviewContent}
 ---`;
 
     try {
-      // Post commit comment
-      execSync(`gh api repos/bvaadmin/unified-system/commits/${commitSha}/comments -f body='${commentBody.replace(/'/g, "'\\''")}' --silent`);
+      // Post commit comment using custom token if available
+      const token = process.env.CLAUDE_GITHUB_TOKEN || process.env.GITHUB_TOKEN;
+      execSync(`gh api repos/bvaadmin/unified-system/commits/${commitSha}/comments -f body='${commentBody.replace(/'/g, "'\\''")}' --silent`, {
+        env: { ...process.env, GITHUB_TOKEN: token }
+      });
       console.log(`✅ Posted Claude review for commit ${commitSha}`);
     } catch (error) {
       console.error('Failed to post commit comment:', error.message);
