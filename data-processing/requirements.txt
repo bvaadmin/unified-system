@@ -1,0 +1,17 @@
+# Bay View Data Processing Requirements
+# For processing Excel files and data transformation
+
+# Core data processing
+pandas==2.2.2
+numpy==1.26.4
+
+# Excel file handling
+openpyxl==3.1.2  # For .xlsx files
+xlrd==2.0.1      # For older .xls files (like the 2022 Bay View files)
+
+# Database connectivity
+psycopg2-binary==2.9.9
+sqlalchemy==2.0.30
+
+# Data validation and cleaning
+python-dateutil==2.9.0
