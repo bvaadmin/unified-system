@@ -54,7 +54,7 @@ async function reviewCommit(commitSha) {
     const isInfrastructure = changedFiles.some(f => 
       f.includes('.github/workflows/') || 
       f.includes('package') || 
-      f.includes('scripts/') && (f.includes('claude-review') || f.includes('validate-constraints') || f.includes('test-'))
+      (f.includes('scripts/') && (f.includes('claude-review') || f.includes('validate-constraints') || f.includes('test-')))
     );
     
     const isAPIChange = changedFiles.some(f => f.startsWith('api/'));
