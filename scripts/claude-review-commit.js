@@ -50,33 +50,71 @@ async function reviewCommit(commitSha) {
       }
     }
 
-    // Prepare review prompt
+    // Analyze commit type and context
+    const isInfrastructure = changedFiles.some(f => 
+      f.includes('.github/workflows/') || 
+      f.includes('package') || 
+      f.includes('scripts/') && (f.includes('claude-review') || f.includes('validate-constraints') || f.includes('test-'))
+    );
+    
+    const isAPIChange = changedFiles.some(f => f.startsWith('api/'));
+    const isLibChange = changedFiles.some(f => f.startsWith('lib/'));
+    const isConfigChange = changedFiles.some(f => f.includes('config') || f.includes('.env') || f.includes('.json'));
+    
+    const commitType = isInfrastructure ? 'infrastructure' : 
+                      isAPIChange ? 'api' : 
+                      isLibChange ? 'library' : 
+                      isConfigChange ? 'configuration' : 'application';
+
+    // Prepare enhanced review prompt
     const reviewPrompt = `
-Please review this commit to the Bay View Association unified system project:
+Review this ${commitType} change to the Bay View Association unified system:
 
-**Commit SHA:** ${commitSha}
-**Author:** ${commitAuthor}
-**Date:** ${commitDate}
-**Message:** ${commitMessage}
+**Commit:** ${commitMessage}
+**Type:** ${commitType.toUpperCase()} (${changedFiles.length} files)
+**Files:** ${changedFiles.join(', ')}
 
-**Changed Files:** ${changedFiles.join(', ')}
+**Context:** Bay View Association administrative system - 150-year-old National Historic Landmark Chautauqua community managing chapel services and memorial garden applications.
 
-**Context:** This is the Bay View Association administrative system managing chapel services and memorial garden applications for a 150-year-old National Historic Landmark Chautauqua community in Petoskey, Michigan.
-
-**Diff:**
+**Diff (first 8000 chars):**
 \`\`\`diff
-${diffOutput.slice(0, 8000)} // Truncate for API limits
+${diffOutput.slice(0, 8000)}
 \`\`\`
 
-Please provide a focused code review covering:
+**Review Focus for ${commitType} changes:**
 
-1. **Security Analysis**: Authentication, input validation, SQL injection prevention
-2. **Code Quality**: Best practices, error handling, maintainability  
-3. **Bay View Context**: Proper terminology (leaseholders not owners), cultural preservation
-4. **Performance**: Database queries, API efficiency
-5. **Architecture**: Follows dual-write pattern for migration safety
+${commitType === 'infrastructure' ? `
+🔧 **Infrastructure Review:**
+- CI/CD pipeline security and efficiency
+- Deployment safety and rollback capability  
+- Environment configuration correctness
+- Tool integration and automation quality
+` : commitType === 'api' ? `
+🌐 **API Review:**
+- Authentication and authorization
+- Input validation and SQL injection prevention
+- Error handling and API design
+- Rate limiting and security headers
+` : `
+💻 **Application Review:**
+- Code quality and maintainability
+- Business logic correctness
+- Data integrity and validation
+- User experience and accessibility
+`}
 
-Please be concise and focus on actionable feedback.`;
+**Priority Levels:**
+🚨 **CRITICAL** - Security vulnerabilities, data loss risks, breaking changes
+⚠️ **IMPORTANT** - Performance issues, maintainability concerns, architecture violations  
+💡 **SUGGESTION** - Code style, optimizations, best practices
+
+**Bay View Specific:**
+- Cultural preservation (leaseholder not owner terminology)
+- Dual-write pattern compliance for migration safety
+- Member vs non-member business rules
+- 150-year heritage considerations
+
+Provide **actionable feedback only** - focus on what should be changed and why. Skip generic observations.`;
 
     // Call Claude API
     const response = await anthropic.messages.create({
