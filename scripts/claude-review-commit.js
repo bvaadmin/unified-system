@@ -21,7 +21,9 @@ async function reviewCommit(commitSha) {
 
   try {
     // Get commit information
-    const commitInfo = JSON.parse(execSync(`git show --format='{"sha":"%H","author":"%an","date":"%ad","message":"%s"}' --no-patch ${commitSha}`, { encoding: 'utf8' }));
+    const commitMessage = execSync(`git log -1 --format=%s ${commitSha}`, { encoding: 'utf8' }).trim();
+    const commitAuthor = execSync(`git log -1 --format=%an ${commitSha}`, { encoding: 'utf8' }).trim();
+    const commitDate = execSync(`git log -1 --format=%ad ${commitSha}`, { encoding: 'utf8' }).trim();
     
     // Get commit diff
     const diffOutput = execSync(`git show ${commitSha}`, { encoding: 'utf8' });
@@ -46,9 +48,9 @@ async function reviewCommit(commitSha) {
 Please review this commit to the Bay View Association unified system project:
 
 **Commit SHA:** ${commitSha}
-**Author:** ${commitInfo.author}
-**Date:** ${commitInfo.date}
-**Message:** ${commitInfo.message}
+**Author:** ${commitAuthor}
+**Date:** ${commitDate}
+**Message:** ${commitMessage}
 
 **Changed Files:** ${changedFiles.join(', ')}
 
@@ -82,10 +84,10 @@ Please be concise and focus on actionable feedback.`;
     const reviewContent = response.content[0].text;
 
     // Create commit comment via GitHub API
-    const commentBody = `**Claude finished @bvaadmin's task** —— [View job](https://github.com/bvaadmin/unified-system/actions/runs/${{ github.run_id }})
+    const commentBody = `**Claude finished @bvaadmin's task** —— [View job](https://github.com/bvaadmin/unified-system/commit/${commitSha})
 
 ---
-### Commit Review: ${commitInfo.message} ✅
+### Commit Review: ${commitMessage} ✅
 
 ${reviewContent}
 
