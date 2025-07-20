@@ -7,6 +7,7 @@
 
 import pg from 'pg';
 import dotenv from 'dotenv';
+import { DynamicSystemPromptGenerator } from './dynamic-system-prompt-generator.js';
 
 const { Client } = pg;
 dotenv.config();
@@ -17,10 +18,12 @@ class AgentWorkQueue {
       connectionString: process.env.DATABASE_URL.replace('?sslmode=require', ''),
       ssl: { rejectUnauthorized: false }
     });
+    this.promptGenerator = new DynamicSystemPromptGenerator();
   }
 
   async connect() {
     await this.client.connect();
+    await this.promptGenerator.connect();
     console.log('🤖 Agent Work Queue Monitor connected to PMD');
   }
 
@@ -68,7 +71,7 @@ class AgentWorkQueue {
           : ''}
       GROUP BY t.id, p.id
       HAVING COUNT(bt.id) FILTER (WHERE bt.status = 'Active') = 0  -- No active blockers
-      ORDER BY priority_rank, t.created_at
+      ORDER BY priority_rank ASC, t.created_at ASC
       LIMIT 1
     `;
 
@@ -317,8 +320,22 @@ class AgentWorkQueue {
     return nextTask;
   }
 
-  async generateImplementationPlan(taskId) {
-    // Enhanced query with architecture and transformation context
+  async generateImplementationPlan(taskId, personaId = null, options = {}) {
+    // Generate persona-aware system prompt for maximum context compression
+    const systemPrompt = await this.promptGenerator.generateAgentSystemPrompt(
+      taskId, 
+      personaId, 
+      { 
+        compressionLevel: 'maximum', 
+        responseFormat: 'production',
+        ...options 
+      }
+    );
+
+    // Get persona recommendations for task
+    const personaRecommendations = await this.promptGenerator.generatePersonaRecommendations(taskId);
+
+    // Enhanced query with architecture and transformation context (for backward compatibility)
     const enhancedContext = await this.client.query(`
       SELECT 
         t.*,
@@ -367,8 +384,13 @@ class AgentWorkQueue {
 
     const context = enhancedContext.rows[0];
 
-    // Generate comprehensive implementation context
+    // Generate comprehensive implementation context with persona awareness
     return {
+      // NEW: Persona-optimized system prompt
+      systemPrompt,
+      personaRecommendations,
+      
+      // Enhanced task context
       task: {
         id: context.id,
         name: context.name,
@@ -443,6 +465,7 @@ class AgentWorkQueue {
 
   async close() {
     await this.client.end();
+    await this.promptGenerator.close();
     console.log('🔌 Agent Work Queue Monitor disconnected');
   }
 }
@@ -488,12 +511,22 @@ async function main() {
         
       case 'plan':
         const planTaskId = parseInt(args[1]);
+        const planPersonaId = args[2] ? parseInt(args[2]) : null;
         if (!planTaskId) {
-          console.error('❌ Usage: plan <task_id>');
+          console.error('❌ Usage: plan <task_id> [persona_id]');
           process.exit(1);
         }
-        const plan = await workQueue.generateImplementationPlan(planTaskId);
-        console.log('📋 Implementation Plan:', JSON.stringify(plan, null, 2));
+        const plan = await workQueue.generateImplementationPlan(planTaskId, planPersonaId);
+        
+        console.log('🎭 PERSONA-AWARE IMPLEMENTATION PLAN\n');
+        console.log('📋 SYSTEM PROMPT:');
+        console.log(plan.systemPrompt);
+        console.log('\n🎯 PERSONA RECOMMENDATIONS:');
+        plan.personaRecommendations.forEach((rec, i) => {
+          console.log(`${i + 1}. ${rec.display_name} (Score: ${rec.match_score})`);
+        });
+        console.log('\n📊 TASK CONTEXT:');
+        console.log(JSON.stringify(plan.task, null, 2));
         break;
         
       default:

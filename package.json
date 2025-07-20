@@ -34,6 +34,9 @@
     "enhance-pmd-architecture": "node scripts/enhance-pmd-architecture-context.js",
     "enhance-pmd-scope": "node scripts/enhance-pmd-transformation-scope.js",
     "enhance-pmd-full": "npm run enhance-pmd-architecture && npm run enhance-pmd-scope",
+    "implement-personas": "node scripts/implement-agent-persona-system.js",
+    "generate-prompt": "node scripts/dynamic-system-prompt-generator.js",
+    "agent-workqueue-persona": "node scripts/agent-work-queue.js plan",
     "lint": "echo '✅ Linting passed (add ESLint for production)'",
     "typecheck": "echo '✅ Type checking passed (add TypeScript for production)'",
     "pre-commit": "npm run validate-constraints && npm run lint && npm run typecheck",
@@ -53,6 +56,7 @@
   "license": "UNLICENSED",
   "dependencies": {
     "dotenv": "^17.2.0",
+    "exceljs": "^4.4.0",
     "pg": "^8.11.3"
   },
   "devDependencies": {
