@@ -55,3 +55,13 @@ bayview-chapel-database/
 bayview-forms-database/
 bayview-memorial-garden/
 .env*.local
+
+# Sensitive Bay View data - DO NOT COMMIT
+bayview-real-cottage-data/*.XLS
+bayview-real-cottage-data/*.json
+bayview-real-cottage-data/*.json.bak
+bayview-leaseholder-data/real-data/
+data-processing/*.XLS
+data-processing/*_data.json
+IMPORT_COMPLETE_REPORT.md
+import-log.txt

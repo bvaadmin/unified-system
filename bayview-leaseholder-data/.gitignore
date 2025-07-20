@@ -1,0 +1,36 @@
+# Sensitive Data Protection - Bay View Leaseholder Import
+# CRITICAL: This directory contains PII data - DO NOT COMMIT
+
+# Excel files with real leaseholder data
+*.xlsx
+*.xls
+*.csv
+
+# JSON exports with PII
+*-real.json
+*-production.json
+leaseholder-*.json
+
+# Database dumps
+*.sql
+*.dump
+*.bak
+
+# Temporary processing files
+temp/
+tmp/
+processing/
+imports/
+
+# Log files that might contain PII
+*.log
+import-*.txt
+
+# Configuration with credentials
+.env
+.env.local
+config.json
+
+# Test data should use anonymized versions only
+!*-anonymized.json
+!test-data/
