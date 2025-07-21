@@ -49,6 +49,13 @@
             font-size: 1.5em;
         }
         
+        .section-title {
+            color: #2c5aa0;
+            margin-bottom: 15px;
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+        
         .form-section {
             margin-bottom: 30px;
             padding: 20px;
@@ -118,9 +125,25 @@
         }
         
         .radio-group label {
-            display: inline-block;
-            margin-left: 0;
+            display: inline;
+            margin-left: 5px;
             margin-right: 20px;
+            font-weight: normal;
+            cursor: pointer;
+        }
+        
+        .checkbox-group {
+            margin: 10px 0;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            width: auto;
+            margin-right: 8px;
+        }
+        
+        .checkbox-group label {
+            display: inline;
+            margin-left: 0;
             font-weight: normal;
             cursor: pointer;
         }
@@ -238,6 +261,14 @@
         
         #feeDisplay {
             display: none;
+        }
+        
+        #prepaymentSection {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f0f8ff;
+            border-radius: 5px;
+            border-left: 4px solid #2c5aa0;
         }
         
         .service-planning-section {
@@ -500,11 +531,37 @@
 <p id="errorText">An error occurred while submitting your application. Please try again.</p>
 </div>
 <form id="memorialGardenForm">
+<!-- Purpose of Application Section (moved to top) -->
+<div class="section-title">Purpose of Application</div>
+
+<div class="form-group">
+    <label class="required">Select one:</label>
+    <div class="radio-group">
+        <label>
+            <input type="radio" name="applicationType" value="future" required>
+            Future placement when needed
+        </label>
+        <label>
+            <input type="radio" name="applicationType" value="immediate" required>
+            Application for immediate placement of ashes
+        </label>
+    </div>
+</div>
+
+<!-- Conditional Prepayment Section -->
+<div id="prepaymentSection" style="display: none;">
+    <div class="checkbox-group">
+        <label>
+            <input type="checkbox" name="prepaymentMade" value="yes">
+            <strong>Prepayment made</strong> (Please note: For immediate placement, full payment is required with this application)
+        </label>
+    </div>
+</div>
 <!-- Bay View Membership - Moved to top for fee calculation -->
 <div class="form-section">
 <h2>Bay View Membership Information</h2>
 <div class="form-group">
-<label>Are you or the deceased a Bay View member or relative of a member? <span class="required">*</span></label>
+<label>Is the person whose ashes are to be placed in the Garden a Bay View member or relative of a member? <span class="required">*</span></label>
 <div class="radio-group">
 <input id="member_yes" name="is_member" required="" type="radio" value="Yes"/>
 <label for="member_yes">Yes - Bay View member or relative</label>
@@ -910,6 +967,18 @@
         // Store form data for thank you page
         let submittedData = {};
         
+        // Show/hide prepayment section based on application type
+        document.querySelectorAll('input[name="applicationType"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const prepaymentSection = document.getElementById('prepaymentSection');
+                if (this.value === 'immediate') {
+                    prepaymentSection.style.display = 'block';
+                } else {
+                    prepaymentSection.style.display = 'none';
+                }
+            });
+        });
+        
         // Show/hide member details and update fee display based on membership selection
         document.querySelectorAll('input[name="is_member"]').forEach(radio => {
             radio.addEventListener('change', function() {
@@ -1152,7 +1221,7 @@
                 'Submission Date': new Date().toISOString(),
                 'date:Submission Date:start': new Date().toISOString().split('T')[0],
                 'Status': 'Submitted',
-                'Application Type': document.querySelector('input[name="application_purpose"]:checked')?.value || '',
+                'Application Type': document.querySelector('input[name="applicationType"]:checked')?.value || '',
                 'Bay View Member': membershipSelected.value,
                 'Contact Name': document.getElementById('contact_name').value,
                 'Contact Phone': document.getElementById('contact_phone').value,
@@ -1172,7 +1241,8 @@
                 'Fee Amount': parseFloat(document.getElementById('payment_amount').value) || 0,
                 'Policy Agreement': document.getElementById('policy_agreement').checked ? '__YES__' : '__NO__',
                 'date:Service Date:start': document.getElementById('requested_service_date').value || '',
-                'Celebrant Requested': document.querySelector('input[name="celebrant_requested"]:checked')?.value || ''
+                'Celebrant Requested': document.querySelector('input[name="celebrant_requested"]:checked')?.value || '',
+                'Prepayment Made': document.querySelector('input[name="prepaymentMade"]:checked')?.value || ''
             };
             
             // Store for thank you page
