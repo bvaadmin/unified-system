@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bay View Association Forms - Embed Directory</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            color: #8B4513;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.2em;
+        }
+        
+        .forms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .form-card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .form-card h2 {
+            color: #8B4513;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        
+        .form-card p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .embed-code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            margin: 10px 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        
+        .copy-button {
+            background: #8B4513;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        .copy-button:hover {
+            background: #654321;
+        }
+        
+        .copy-button.copied {
+            background: #4CAF50;
+        }
+        
+        .links {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        
+        .links a {
+            display: inline-block;
+            margin-right: 15px;
+            color: #8B4513;
+            text-decoration: none;
+        }
+        
+        .links a:hover {
+            text-decoration: underline;
+        }
+        
+        .instructions {
+            background: #f0f8ff;
+            border-left: 4px solid #4CAF50;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 4px;
+        }
+        
+        .instructions h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+        
+        .instructions li {
+            margin: 5px 0;
+        }
+        
+        .warning {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Bay View Association Forms</h1>
+            <p>Embed these forms on your website using iframes</p>
+            <p>National Historic Landmark • Petoskey, Michigan</p>
+        </div>
+
+        <div class="instructions">
+            <h3>📋 How to Embed Forms</h3>
+            <ul>
+                <li>Copy the complete embed code for your desired form</li>
+                <li>Paste it into your website's HTML where you want the form to appear</li>
+                <li>Ensure your page allows iframes (some CMSs may require HTML blocks)</li>
+                <li>The forms are mobile-responsive and will adapt to your container width</li>
+                <li>All forms require width, height, and src attributes to display properly</li>
+            </ul>
+        </div>
+
+        <div class="forms-grid">
+            <!-- Chapel Memorial Service Form -->
+            <div class="form-card">
+                <h2>Chapel Memorial/Funeral Service</h2>
+                <p>Application for memorial and funeral services at Crouse Memorial Chapel</p>
+                
+                <h4>Complete Embed Code:</h4>
+                <div class="embed-code" id="memorialCode"><iframe 
+  src="https://bvaadmin.github.io/unified-system/forms/chapel-memorial-service.html"
+  width="100%"
+  height="800"
+  frameborder="0"
+  title="Bay View Chapel Memorial Service Application"
+  style="border: 1px solid #ddd; border-radius: 8px;">
+</iframe></div>
+                <button class="copy-button" onclick="copyCode('memorialCode', this)">Copy Embed Code</button>
+                
+                <div class="links">
+                    <a href="./chapel-memorial-service.html" target="_blank">View Form →</a>
+                    <a href="./chapel-memorial-service-iframe.html" target="_blank">Advanced Options →</a>
+                </div>
+            </div>
+
+            <!-- Memorial Garden Form -->
+            <div class="form-card">
+                <h2>Memorial Garden Application</h2>
+                <p>Apply for placement in the Bay View Memorial Garden</p>
+                
+                <h4>Complete Embed Code:</h4>
+                <div class="embed-code" id="gardenCode"><iframe 
+  src="https://bvaadmin.github.io/unified-system/forms/memorial-garden.html"
+  width="100%"
+  height="1200"
+  frameborder="0"
+  title="Bay View Memorial Garden Application"
+  style="border: 1px solid #ddd; border-radius: 8px;">
+</iframe></div>
+                <button class="copy-button" onclick="copyCode('gardenCode', this)">Copy Embed Code</button>
+                
+                <div class="links">
+                    <a href="./memorial-garden.html" target="_blank">View Form →</a>
+                    <a href="./memorial-garden-iframe.html" target="_blank">Advanced Options →</a>
+                </div>
+            </div>
+
+            <!-- Chapel Wedding Form -->
+            <div class="form-card">
+                <h2>Chapel Wedding Application</h2>
+                <p>Book your wedding at historic Crouse Memorial Chapel</p>
+                
+                <h4>Complete Embed Code:</h4>
+                <div class="embed-code" id="weddingCode"><iframe 
+  src="https://bvaadmin.github.io/unified-system/forms/chapel-wedding.html"
+  width="100%"
+  height="1000"
+  frameborder="0"
+  title="Bay View Chapel Wedding Application"
+  style="border: 1px solid #ddd; border-radius: 8px;">
+</iframe></div>
+                <button class="copy-button" onclick="copyCode('weddingCode', this)">Copy Embed Code</button>
+                
+                <div class="links">
+                    <a href="./chapel-wedding.html" target="_blank">View Form →</a>
+                    <a href="./chapel-wedding-iframe.html" target="_blank">Advanced Options →</a>
+                </div>
+            </div>
+
+            <!-- Chapel Baptism Form -->
+            <div class="form-card">
+                <h2>Chapel Baptism Application</h2>
+                <p>Schedule a baptism service at Crouse Memorial Chapel</p>
+                
+                <h4>Complete Embed Code:</h4>
+                <div class="embed-code" id="baptismCode"><iframe 
+  src="https://bvaadmin.github.io/unified-system/forms/chapel-baptism.html"
+  width="100%"
+  height="900"
+  frameborder="0"
+  title="Bay View Chapel Baptism Application"
+  style="border: 1px solid #ddd; border-radius: 8px;">
+</iframe></div>
+                <button class="copy-button" onclick="copyCode('baptismCode', this)">Copy Embed Code</button>
+                
+                <div class="links">
+                    <a href="./chapel-baptism.html" target="_blank">View Form →</a>
+                    <a href="./chapel-baptism-iframe.html" target="_blank">Advanced Options →</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="warning">
+            <h3>⚠️ Important Notes</h3>
+            <ul>
+                <li><strong>Required Attributes:</strong> Every iframe MUST have width, height, and src attributes</li>
+                <li><strong>HTTPS Only:</strong> Forms must be embedded on secure (HTTPS) pages</li>
+                <li><strong>Member Sponsorship:</strong> All chapel services require Bay View member sponsorship</li>
+                <li><strong>Mobile Support:</strong> Forms are responsive but require minimum 320px width</li>
+            </ul>
+        </div>
+
+        <div class="instructions">
+            <h3>🔧 Troubleshooting</h3>
+            <ul>
+                <li><strong>Form not showing?</strong> Check that all three attributes are present: width, height, and src</li>
+                <li><strong>Form cut off?</strong> Increase the height value in the iframe code</li>
+                <li><strong>Form too narrow?</strong> Ensure your container is at least 320px wide</li>
+                <li><strong>Security errors?</strong> Ensure both your site and the form use HTTPS</li>
+                <li><strong>WordPress users:</strong> Use the Text/HTML block, not the Embed block</li>
+            </ul>
+        </div>
+
+        <div class="form-card" style="margin-top: 30px;">
+            <h2>Minimal Working Example</h2>
+            <p>This is the absolute minimum code required for an iframe to display:</p>
+            <div class="embed-code"><iframe src="https://bvaadmin.github.io/unified-system/forms/chapel-memorial-service.html" width="100%" height="800"></iframe></div>
+            <p style="margin-top: 15px; color: #666;">
+                ✅ Has src attribute with full URL<br>
+                ✅ Has width attribute (100% or pixel value)<br>
+                ✅ Has height attribute (pixel value recommended)<br>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        // Copy code function
+        function copyCode(elementId, button) {
+            const codeBlock = document.getElementById(elementId);
+            const text = codeBlock.textContent.trim();
+            
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+                alert('Copy failed. Please select and copy manually.');
+            });
+        }
+    </script>
+</body>
+</html>
