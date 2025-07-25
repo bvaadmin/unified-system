@@ -302,27 +302,21 @@ export default async function handler(req, res) {
         );
       }
       
-      // 8. Check and mark chapel availability
+      // 8. Record the booking without checking availability
       const serviceDate = data.weddingDate || data.serviceDate;
       const serviceTime = data.ceremonyTime || data.serviceTime;
       
-      const availabilityCheck = await pgClient.query(
-        'SELECT crouse_chapel.is_chapel_available($1, $2, $3) as available',
-        [serviceDate, serviceTime, applicationType]
-      );
-      
-      if (!availabilityCheck.rows[0].available) {
-        throw new Error('Chapel is not available at the requested date and time');
-      }
-      
-      // Mark as unavailable
+      // Mark as unavailable (skip the availability check per request)
       await pgClient.query(
         `INSERT INTO crouse_chapel.chapel_availability (date, time_slot, available, service_id)
          VALUES ($1, $2, false, $3)
          ON CONFLICT (date, time_slot) 
          DO UPDATE SET available = false, service_id = $3`,
         [serviceDate, serviceTime, applicationId]
-      );
+      ).catch(error => {
+        // If the availability table doesn't exist or has issues, don't fail the whole request
+        console.log('Chapel availability table update skipped:', error.message);
+      });
       
       // Transaction will auto-commit when function returns successfully
       return { 
