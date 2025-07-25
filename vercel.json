@@ -31,7 +31,7 @@
     },
     {
       "source": "/api/db-init",
-      "destination": "/api/admin/db-init"
+      "destination": "/api/admin?action=db-init"
     }
   ]
 }
