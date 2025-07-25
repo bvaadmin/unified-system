@@ -302,7 +302,7 @@ export default async function handler(req, res) {
         );
       }
       
-      // 8. Record the booking without checking availability
+      // 8. Record the booking without checking availability (updated 2025-07-25)
       const serviceDate = data.weddingDate || data.serviceDate;
       const serviceTime = data.ceremonyTime || data.serviceTime;
       
