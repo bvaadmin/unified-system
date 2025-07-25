@@ -1,8 +1,9 @@
 // api/submit-chapel-service.js
 // API endpoint for Crouse Chapel service applications (wedding, memorial, funeral)
 
-import { Client } from 'pg';
+import { withPooledTransaction } from '../../lib/db-pool.js';
 import { createNotionPage, toNotionProperty } from '../../lib/notion.js';
+import { trackError, ErrorCategory, ErrorSeverity } from '../../lib/error-tracking.js';
 
 export default async function handler(req, res) {
   // Enable CORS
@@ -39,11 +40,6 @@ export default async function handler(req, res) {
     return res.status(500).json({ error: 'Database not configured' });
   }
 
-  const pgClient = new Client({
-    connectionString: DATABASE_URL.replace('?sslmode=require', ''),
-    ssl: { rejectUnauthorized: false }
-  });
-
   try {
     const { formType, data } = req.body;
     
@@ -52,12 +48,7 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: 'Invalid form type' });
     }
 
-    await pgClient.connect();
-    
-    // Start transaction
-    await pgClient.query('BEGIN');
-    
-    try {
+    const result = await withPooledTransaction(async (pgClient) => {
       // 1. Insert main service application
       const applicationQuery = `
         INSERT INTO crouse_chapel.service_applications (
@@ -88,11 +79,11 @@ export default async function handler(req, res) {
         data.ceremonyTime || data.serviceTime,
         data.rehearsalDate || null,
         data.rehearsalTime || null,
-        data.bayViewMember,
-        data.relationship,
-        data.contactName,
-        data.contactAddress,
-        data.contactPhone,
+        data.bayViewMember || data.memberName || 'Not provided',
+        data.relationship || data.memberRelationship || 'Not provided',
+        data.contactName || 'Not provided',
+        data.contactAddress || 'Not provided',
+        data.contactPhone || 'Not provided',
         data.contactEmail || null,
         'pending'
       ];
@@ -149,11 +140,11 @@ export default async function handler(req, res) {
         
         await pgClient.query(weddingQuery, [
           applicationId,
-          data.coupleNames,
-          parseInt(data.guestCount),
+          data.coupleNames || 'Not provided',
+          parseInt(data.guestCount) || 0,
           data.brideArrival || null,
           data.dressingAtChapel === 'yes',
-          data.whyBayView,
+          data.whyBayView || 'Not provided',
           isMember,
           weddingFee
         ]);
@@ -171,8 +162,8 @@ export default async function handler(req, res) {
         
         await pgClient.query(memorialQuery, [
           applicationId,
-          data.deceasedName,
-          data.memorialGarden === 'yes',
+          data.deceasedName || 'Not provided',
+          data.memorialGarden === 'yes' || data.memorialGarden === 'Y',
           data.placementDate || null,
           data.placementTime || null
         ]);
@@ -191,7 +182,7 @@ export default async function handler(req, res) {
         
         await pgClient.query(baptismQuery, [
           applicationId,
-          data.baptismPersonName,
+          data.baptismPersonName || 'Not provided',
           data.baptismDate || data.serviceDate,
           data.parentsNames || null,
           data.witnesses || null,
@@ -333,12 +324,21 @@ export default async function handler(req, res) {
         [serviceDate, serviceTime, applicationId]
       );
       
-      // Commit transaction
-      await pgClient.query('COMMIT');
-      
-      // 9. Save to Notion (optional, for workflow management)
-      if (NOTION_API_KEY && NOTION_DATABASE_ID) {
+      // Transaction will auto-commit when function returns successfully
+      return { 
+        applicationId, 
+        submissionDate: appResult.rows[0].submission_date,
+        applicationType,
+        serviceDate,
+        serviceTime,
+        data
+      };
+    });
+    
+    // 9. Save to Notion (optional, for workflow management)
+    if (NOTION_API_KEY && NOTION_DATABASE_ID) {
         try {
+          const { applicationId, applicationType, serviceDate, serviceTime, data } = result;
           const notionProperties = {
             'Application ID': toNotionProperty(applicationId.toString(), 'title'),
             'Type': toNotionProperty(applicationType, 'select'),
@@ -358,8 +358,10 @@ export default async function handler(req, res) {
           
           // Add type-specific fields
           if (formType === 'wedding') {
+            const isMember = true; // All chapel users must be members or relatives
+            const weddingFee = isMember ? 300.00 : 750.00;
             notionProperties['Couple Names'] = toNotionProperty(data.coupleNames, 'rich_text');
-            notionProperties['Guest Count'] = toNotionProperty(parseInt(data.guestCount), 'number');
+            notionProperties['Guest Count'] = toNotionProperty(parseInt(data.guestCount) || 0, 'number');
             notionProperties['Wedding Fee'] = toNotionProperty(weddingFee, 'number');
             notionProperties['Rehearsal Date'] = toNotionProperty(data.rehearsalDate, 'date');
             notionProperties['Rehearsal Time'] = toNotionProperty(data.rehearsalTime, 'rich_text');
@@ -435,32 +437,37 @@ export default async function handler(req, res) {
           // Don't fail the whole request if Notion fails
         }
       }
-      
-      return res.status(200).json({
-        success: true,
-        applicationId: applicationId,
-        submissionDate: appResult.rows[0].submission_date,
-        message: 'Application submitted successfully',
-        nextSteps: [
-          'Your application will be reviewed by the Director of Worship',
-          'You will be contacted within 2-3 business days',
-          'Full payment is required to secure your date',
-          'Clergy must be approved before the service'
-        ]
-      });
-      
-    } catch (error) {
-      await pgClient.query('ROLLBACK');
-      throw error;
-    }
+    
+    return res.status(200).json({
+      success: true,
+      applicationId: result.applicationId,
+      submissionDate: result.submissionDate,
+      message: 'Application submitted successfully',
+      nextSteps: [
+        'Your application will be reviewed by the Director of Worship',
+        'You will be contacted within 2-3 business days',
+        'Full payment is required to secure your date',
+        'Clergy must be approved before the service'
+      ]
+    });
     
   } catch (error) {
     console.error('Error processing chapel application:', error);
+    await trackError({
+      message: 'Chapel service submission failed',
+      category: ErrorCategory.API,
+      severity: ErrorSeverity.CRITICAL,
+      error,
+      endpoint: req.url,
+      context: {
+        formType: req.body?.formType,
+        serviceDate: req.body?.data?.serviceDate || req.body?.data?.weddingDate,
+        contactName: req.body?.data?.contactName
+      }
+    });
     return res.status(500).json({
       error: 'Failed to submit application',
       message: error.message
     });
-  } finally {
-    await pgClient.end();
   }
 }
