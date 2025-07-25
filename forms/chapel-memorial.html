@@ -272,14 +272,14 @@
                 <h2 class="section-title">Bay View Member Sponsor</h2>
                 
                 <div class="form-group">
-                    <label for="memberName" class="required">Bay View Member</label>
-                    <input type="text" id="memberName" name="memberName" required>
+                    <label for="bayViewMember" class="required">Bay View Member</label>
+                    <input type="text" id="bayViewMember" name="bayViewMember" required>
                     <span class="error-message">Please enter member name</span>
                 </div>
                 
                 <div class="form-group">
-                    <label for="memberRelationship" class="required">Relationship to the deceased</label>
-                    <input type="text" id="memberRelationship" name="memberRelationship" required>
+                    <label for="relationship" class="required">Relationship to the deceased</label>
+                    <input type="text" id="relationship" name="relationship" required>
                     <span class="error-message">Please enter relationship</span>
                 </div>
             </div>
@@ -526,12 +526,15 @@
             
             try {
                 // Submit to API
-                const response = await fetch('https://bvaadmin.vercel.app/api/chapel/submit-service', {
+                const response = await fetch('https://unified-system-229ae5i4t-sam-scarrows-projects.vercel.app/api/chapel/submit-service', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify({
+                        formType: 'memorial-funeral-service',
+                        data: data
+                    })
                 });
                 
                 if (response.ok) {
