@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chapel Memorial Service TEST Form - Bay View Association</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        .test-notice {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 30px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .endpoint-config {
+            background-color: #e8f4fd;
+            border: 1px solid #b8e0fb;
+            border-radius: 4px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .endpoint-config h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            font-size: 1.3rem;
+            color: #34495e;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        .required::after {
+            content: " *";
+            color: #e74c3c;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        input[type="time"],
+        input[type="number"],
+        input[type="url"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #3498db;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        
+        .submit-section {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+        
+        .button {
+            background-color: #3498db;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-right: 10px;
+        }
+        
+        .button:hover {
+            background-color: #2980b9;
+        }
+        
+        .button:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+        }
+        
+        .button.secondary {
+            background-color: #95a5a6;
+        }
+        
+        .button.secondary:hover {
+            background-color: #7f8c8d;
+        }
+        
+        .success-message {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .error-message {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .response-display {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .response-display h3 {
+            margin-bottom: 10px;
+        }
+        
+        .response-display pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .form-row {
+                flex-direction: column;
+            }
+            
+            .form-row .form-group {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Crouse Memorial Chapel</h1>
+            <p>TEST FORM - Memorial/Funeral Service Application</p>
+        </div>
+
+        <div class="test-notice">
+            ⚠️ TEST FORM - For testing purposes only. Data will be prefilled.
+        </div>
+
+        <div class="endpoint-config">
+            <h3>API Endpoint Configuration</h3>
+            <div class="form-group">
+                <label for="apiEndpoint">API Endpoint URL</label>
+                <input type="url" id="apiEndpoint" value="https://unified-system-229ae5i4t-sam-scarrows-projects.vercel.app/api/chapel/submit-service">
+                <small style="display: block; margin-top: 5px; color: #666;">
+                    Default: Production Vercel deployment
+                </small>
+            </div>
+        </div>
+
+        <div id="successMessage" class="success-message"></div>
+        <div id="errorMessage" class="error-message"></div>
+
+        <form id="memorialForm">
+            <!-- Service Information -->
+            <div class="section">
+                <h2 class="section-title">Service Information</h2>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="serviceDate" class="required">Date of Service</label>
+                        <input type="date" id="serviceDate" name="serviceDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="serviceTime" class="required">Time of Service</label>
+                        <input type="time" id="serviceTime" name="serviceTime" value="14:00" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="deceasedName" class="required">Person for whom the service is to be held</label>
+                    <input type="text" id="deceasedName" name="deceasedName" value="John Michael Smith" required>
+                </div>
+            </div>
+
+            <!-- Clergy Information -->
+            <div class="section">
+                <h2 class="section-title">Clergy Information</h2>
+                
+                <div class="form-group">
+                    <label for="clergyName" class="required">Name of Clergyperson</label>
+                    <input type="text" id="clergyName" name="clergyName" value="Rev. Dr. Sarah Johnson" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="clergyDenomination">Denomination</label>
+                    <input type="text" id="clergyDenomination" name="clergyDenomination" value="United Methodist">
+                </div>
+                
+                <div class="form-group">
+                    <label for="clergyAddress">Address</label>
+                    <textarea id="clergyAddress" name="clergyAddress" rows="3">123 Church Street
+Petoskey, MI 49770</textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="clergyPhone">Phone</label>
+                        <input type="tel" id="clergyPhone" name="clergyPhone" value="(231) 555-0123">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="clergyEmail">Email</label>
+                        <input type="email" id="clergyEmail" name="clergyEmail" value="rev.johnson@testchurch.org">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bay View Member Information -->
+            <div class="section">
+                <h2 class="section-title">Bay View Member Sponsor</h2>
+                
+                <div class="form-group">
+                    <label for="memberName" class="required">Bay View Member</label>
+                    <input type="text" id="memberName" name="memberName" value="Robert Wilson" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="memberRelationship" class="required">Relationship to the deceased</label>
+                    <input type="text" id="memberRelationship" name="memberRelationship" value="Friend and neighbor" required>
+                </div>
+            </div>
+
+            <!-- Memorial Garden -->
+            <div class="section">
+                <h2 class="section-title">Memorial Garden</h2>
+                
+                <div class="form-group">
+                    <label for="memorialGarden">Are the cremains to be placed in the Bay View Memorial Garden?</label>
+                    <select id="memorialGarden" name="memorialGarden">
+                        <option value="">Please select</option>
+                        <option value="Y" selected>Yes</option>
+                        <option value="N">No</option>
+                    </select>
+                </div>
+                
+                <div id="gardenDetails">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="placementDate">Date of their placement</label>
+                            <input type="date" id="placementDate" name="placementDate">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="placementTime">Time</label>
+                            <input type="time" id="placementTime" name="placementTime" value="10:00">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="section">
+                <h2 class="section-title">Contact Information</h2>
+                
+                <p style="margin-bottom: 15px;">Person to be contacted regarding this service:</p>
+                
+                <div class="form-group">
+                    <label for="contactName" class="required">Name</label>
+                    <input type="text" id="contactName" name="contactName" value="Mary Elizabeth Smith" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contactAddress" class="required">Address</label>
+                    <textarea id="contactAddress" name="contactAddress" rows="3" required>456 Oak Avenue
+Cottage 234
+Bay View, MI 49770</textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="contactPhone" class="required">Phone</label>
+                        <input type="tel" id="contactPhone" name="contactPhone" value="(616) 555-0456" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contactEmail" class="required">Email</label>
+                        <input type="email" id="contactEmail" name="contactEmail" value="mary.smith@testmail.com" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Music Section -->
+            <div class="section">
+                <h2 class="section-title">Musicians</h2>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="hasMusic" name="hasMusic" checked>
+                    <label for="hasMusic">There will be music</label>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="needsPiano" name="needsPiano" checked>
+                    <label for="needsPiano">The piano will be needed</label>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="needsOrgan" name="needsOrgan">
+                    <label for="needsOrgan">The organ will be needed</label>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="performSanctuary" name="performSanctuary" checked>
+                    <label for="performSanctuary">They will perform from the sanctuary</label>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="performBalcony" name="performBalcony">
+                    <label for="performBalcony">They will perform from the balcony</label>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="additionalChairs" name="additionalChairs">
+                    <label for="additionalChairs">Additional chairs will be needed for musicians</label>
+                </div>
+                
+                <div class="form-row" id="chairDetails" style="display: none; margin-left: 25px;">
+                    <div class="form-group">
+                        <label for="chairNumber">Number</label>
+                        <input type="number" id="chairNumber" name="chairNumber" min="1" value="2">
+                    </div>
+                    <div class="form-group">
+                        <label for="chairPlacement">Placement</label>
+                        <input type="text" id="chairPlacement" name="chairPlacement" value="Near piano">
+                    </div>
+                </div>
+                
+                <div class="form-group" style="margin-top: 20px;">
+                    <label for="musicianNames">Names of Musicians</label>
+                    <textarea id="musicianNames" name="musicianNames" rows="4" placeholder="Enter each musician on a new line">Jane Doe - Piano
+Bob Smith - Violin</textarea>
+                </div>
+            </div>
+            
+            <!-- Equipment Section -->
+            <div class="section">
+                <h2 class="section-title">Equipment Needed</h2>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="standMic" name="standMic" checked>
+                    <label for="standMic">A stand microphone</label>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="wirelessMic" name="wirelessMic">
+                    <label for="wirelessMic">A wireless microphone</label>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="cdPlayer" name="cdPlayer">
+                    <label for="cdPlayer">The CD player for your provided music</label>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="communion" name="communion">
+                    <label for="communion">Communion served</label>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="guestBookStand" name="guestBookStand" checked>
+                    <label for="guestBookStand">A stand for a Guest Book</label>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="ropedSeating" name="ropedSeating">
+                    <label for="ropedSeating">Seating to be roped off</label>
+                </div>
+                
+                <div class="form-row" id="ropedDetails" style="display: none; margin-left: 25px;">
+                    <div class="form-group">
+                        <label for="rowsLeft">Number of rows on left side</label>
+                        <input type="number" id="rowsLeft" name="rowsLeft" min="0" value="2">
+                    </div>
+                    <div class="form-group">
+                        <label for="rowsRight">Number of rows on right side</label>
+                        <input type="number" id="rowsRight" name="rowsRight" min="0" value="2">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Policy Agreement -->
+            <div class="section">
+                <h2 class="section-title">Policy Agreement</h2>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="policyAgreement" name="policyAgreement" checked required>
+                    <label for="policyAgreement" class="required">
+                        I have read and agree to the Crouse Chapel policies
+                    </label>
+                </div>
+            </div>
+
+            <!-- Submit Section -->
+            <div class="submit-section">
+                <input type="hidden" name="formType" value="memorial-funeral-service">
+                <button type="submit" class="button" id="submitButton">Submit Test Application</button>
+                <button type="button" class="button secondary" id="clearButton">Clear Form</button>
+                <button type="button" class="button secondary" id="fillButton">Reset Test Data</button>
+            </div>
+        </form>
+
+        <div id="responseDisplay" class="response-display">
+            <h3>API Response</h3>
+            <pre id="responseContent"></pre>
+        </div>
+    </div>
+
+    <script>
+        // Set date fields to reasonable defaults
+        const today = new Date();
+        const futureDate = new Date(today);
+        futureDate.setDate(today.getDate() + 30);
+        
+        document.getElementById('serviceDate').value = futureDate.toISOString().split('T')[0];
+        
+        const placementDate = new Date(futureDate);
+        placementDate.setDate(futureDate.getDate() + 1);
+        document.getElementById('placementDate').value = placementDate.toISOString().split('T')[0];
+
+        // Show/hide conditional fields
+        document.getElementById('memorialGarden').addEventListener('change', function() {
+            document.getElementById('gardenDetails').style.display = this.value === 'Y' ? 'block' : 'none';
+        });
+        
+        document.getElementById('additionalChairs').addEventListener('change', function() {
+            document.getElementById('chairDetails').style.display = this.checked ? 'flex' : 'none';
+        });
+        
+        document.getElementById('ropedSeating').addEventListener('change', function() {
+            document.getElementById('ropedDetails').style.display = this.checked ? 'flex' : 'none';
+        });
+
+        // Clear form button
+        document.getElementById('clearButton').addEventListener('click', function() {
+            document.getElementById('memorialForm').reset();
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('responseDisplay').style.display = 'none';
+        });
+
+        // Fill test data button
+        document.getElementById('fillButton').addEventListener('click', function() {
+            location.reload(); // Simple reload to reset all prefilled data
+        });
+        
+        // Form submission
+        document.getElementById('memorialForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Hide previous messages
+            document.getElementById('successMessage').style.display = 'none';
+            document.getElementById('errorMessage').style.display = 'none';
+            document.getElementById('responseDisplay').style.display = 'none';
+            
+            // Get API endpoint
+            const apiEndpoint = document.getElementById('apiEndpoint').value;
+            if (!apiEndpoint) {
+                document.getElementById('errorMessage').textContent = 'Please enter an API endpoint URL';
+                document.getElementById('errorMessage').style.display = 'block';
+                return;
+            }
+            
+            // Disable submit button
+            const submitButton = document.getElementById('submitButton');
+            submitButton.disabled = true;
+            submitButton.textContent = 'Submitting...';
+            
+            // Prepare form data
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            try {
+                const response = await fetch(apiEndpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        formType: 'memorial-funeral-service',
+                        data: data
+                    })
+                });
+                
+                const result = await response.json();
+                
+                // Display response
+                document.getElementById('responseDisplay').style.display = 'block';
+                document.getElementById('responseContent').textContent = JSON.stringify(result, null, 2);
+                
+                if (response.ok) {
+                    document.getElementById('successMessage').textContent = 
+                        `Success! Application ID: ${result.applicationId || 'N/A'}`;
+                    document.getElementById('successMessage').style.display = 'block';
+                } else {
+                    document.getElementById('errorMessage').textContent = 
+                        `Error ${response.status}: ${result.error || 'Unknown error'}`;
+                    document.getElementById('errorMessage').style.display = 'block';
+                }
+            } catch (error) {
+                document.getElementById('errorMessage').textContent = 
+                    `Network error: ${error.message}`;
+                document.getElementById('errorMessage').style.display = 'block';
+                
+                document.getElementById('responseDisplay').style.display = 'block';
+                document.getElementById('responseContent').textContent = error.toString();
+            } finally {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Submit Test Application';
+            }
+        });
+        
+        // Auto-format phone number
+        document.getElementById('contactPhone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 6) {
+                value = `(${value.slice(0,3)}) ${value.slice(3,6)}-${value.slice(6,10)}`;
+            } else if (value.length >= 3) {
+                value = `(${value.slice(0,3)}) ${value.slice(3)}`;
+            }
+            e.target.value = value;
+        });
+        
+        document.getElementById('clergyPhone').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length >= 6) {
+                value = `(${value.slice(0,3)}) ${value.slice(3,6)}-${value.slice(6,10)}`;
+            } else if (value.length >= 3) {
+                value = `(${value.slice(0,3)}) ${value.slice(3)}`;
+            }
+            e.target.value = value;
+        });
+    </script>
+</body>
+</html>
