@@ -1,126 +1,111 @@
-import { Client } from 'pg';
+import { withPooledTransaction } from '../../lib/db.js';
+import { applyCors } from '../../lib/cors.js';
 
 export default async function handler(req, res) {
-  // Set CORS headers
-  const allowedOrigins = [
-    'https://bvaadmin.github.io',
-    'https://vercel.com',
-    'http://localhost:3000',
-    'http://127.0.0.1:5500'
-  ];
-  
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
-  
-  res.setHeader('Access-Control-Allow-Methods', 'PUT, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  
+  // Apply CORS
+  applyCors(req, res);
+
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
-  
+
   if (req.method !== 'PUT') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   const { applicationId } = req.query;
-  const updates = req.body;
-  
   if (!applicationId) {
     return res.status(400).json({ error: 'Application ID is required' });
   }
 
-  const DATABASE_URL = process.env.DATABASE_URL_CLEAN || process.env.DATABASE_URL;
-  
-  const pgClient = new Client({
-    connectionString: DATABASE_URL.replace('?sslmode=require', ''),
-    ssl: { rejectUnauthorized: false }
-  });
-
   try {
-    await pgClient.connect();
+    const updateData = req.body;
     
-    // Start transaction
-    await pgClient.query('BEGIN');
-    
-    // Update main application
-    if (updates.status || updates.approved_by || updates.date_fees_paid || updates.amount_paid) {
-      const updateFields = [];
-      const updateValues = [];
-      let valueIndex = 1;
-      
-      if (updates.status) {
-        updateFields.push(`status = $${valueIndex++}`);
-        updateValues.push(updates.status);
+    await withPooledTransaction(async (pgClient) => {
+      // Update main application
+      if (updateData.status) {
+        await pgClient.query(
+          `UPDATE crouse_chapel.service_applications 
+           SET status = $1, updated_at = CURRENT_TIMESTAMP 
+           WHERE id = $2`,
+          [updateData.status, applicationId]
+        );
       }
       
-      if (updates.approved_by) {
-        updateFields.push(`approved_by = $${valueIndex++}`);
-        updateValues.push(updates.approved_by);
-        updateFields.push(`approval_date = $${valueIndex++}`);
-        updateValues.push(new Date());
+      // Update approval information
+      if (updateData.approved_by) {
+        await pgClient.query(
+          `UPDATE crouse_chapel.service_applications 
+           SET approved_by = $1, approved_date = $2, updated_at = CURRENT_TIMESTAMP 
+           WHERE id = $3`,
+          [updateData.approved_by, updateData.approved_date || new Date(), applicationId]
+        );
       }
       
-      if (updates.date_fees_paid) {
-        updateFields.push(`date_fees_paid = $${valueIndex++}`);
-        updateValues.push(updates.date_fees_paid);
+      // Update payment information
+      if (updateData.payment_received !== undefined) {
+        await pgClient.query(
+          `UPDATE crouse_chapel.service_applications 
+           SET payment_received = $1, payment_date = $2, updated_at = CURRENT_TIMESTAMP 
+           WHERE id = $3`,
+          [updateData.payment_received, updateData.payment_date, applicationId]
+        );
       }
       
-      if (updates.amount_paid) {
-        updateFields.push(`amount_paid = $${valueIndex++}`);
-        updateValues.push(updates.amount_paid);
+      // Handle clergy approval
+      if (updateData.clergy_approved !== undefined) {
+        const clergyResult = await pgClient.query(
+          `SELECT c.id FROM crouse_chapel.clergy c
+           JOIN crouse_chapel.service_clergy sc ON c.id = sc.clergy_id
+           WHERE sc.service_id = $1`,
+          [applicationId]
+        );
+        
+        if (clergyResult.rows.length > 0) {
+          await pgClient.query(
+            `UPDATE crouse_chapel.clergy 
+             SET approved_status = $1, approved_date = $2, approved_by = $3
+             WHERE id = $4`,
+            [
+              updateData.clergy_approved ? 'approved' : 'rejected',
+              new Date(),
+              updateData.approved_by,
+              clergyResult.rows[0].id
+            ]
+          );
+        }
       }
       
-      if (updates.altar_guild_notified) {
-        updateFields.push(`altar_guild_notified = $${valueIndex++}`);
-        updateValues.push(updates.altar_guild_notified);
+      // Log notification if altar guild needs to be notified
+      if (updateData.notify_altar_guild && updateData.status === 'approved') {
+        await pgClient.query(
+          `INSERT INTO crouse_chapel.notifications 
+           (service_id, notification_type, recipient, message, created_at)
+           VALUES ($1, $2, $3, $4, CURRENT_TIMESTAMP)`,
+          [
+            applicationId,
+            'altar_guild_notification',
+            'altar_guild@bayviewassociation.org',
+            `Service approved for application ${applicationId} - please prepare chapel`
+          ]
+        );
       }
-      
-      updateValues.push(applicationId);
-      
-      await pgClient.query(
-        `UPDATE crouse_chapel.service_applications 
-         SET ${updateFields.join(', ')}, updated_at = CURRENT_TIMESTAMP
-         WHERE id = $${valueIndex}`,
-        updateValues
-      );
-    }
-    
-    // If approved, send notifications
-    if (updates.status === 'approved') {
-      // Log altar guild notification
-      await pgClient.query(
-        `INSERT INTO crouse_chapel.notifications 
-         (application_id, notification_type, recipient, sent_by, notes)
-         VALUES ($1, $2, $3, $4, $5)`,
-        [
-          applicationId,
-          'altar_guild_notification',
-          'Altar Guild Co-Chairs',
-          updates.approved_by || 'System',
-          'Service approved and scheduled'
-        ]
-      );
-      
-      // You could trigger actual email notifications here
-      // await sendAltarGuildNotification(applicationId);
-    }
-    
-    await pgClient.query('COMMIT');
-    
-    return res.status(200).json({
-      success: true,
-      message: 'Application updated successfully',
-      applicationId: applicationId
+    }).then(() => {
+      return res.status(200).json({
+        success: true,
+        message: 'Application updated successfully',
+        applicationId: parseInt(applicationId)
+      });
+    }).catch(async (error) => {
+      console.error('Error updating application:', error);
+      return res.status(500).json({ error: 'Failed to update application' });
     });
     
   } catch (error) {
-    await pgClient.query('ROLLBACK');
-    console.error('Error updating application:', error);
-    return res.status(500).json({ error: 'Failed to update application' });
-  } finally {
-    await pgClient.end();
+    console.error('Update application error:', error);
+    return res.status(500).json({ 
+      error: 'Internal server error',
+      message: error.message 
+    });
   }
 }

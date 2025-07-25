@@ -1,107 +1,97 @@
-import { Client } from 'pg';
+import { withPooledConnection } from '../../lib/db.js';
+import { applyCors } from '../../lib/cors.js';
 
 export default async function handler(req, res) {
-  // Set CORS headers
-  const allowedOrigins = [
-    'https://bvaadmin.github.io',
-    'https://vercel.com',
-    'http://localhost:3000',
-    'http://127.0.0.1:5500'
-  ];
-  
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-  }
-  
-  res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  
+  // Apply CORS
+  applyCors(req, res);
+
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
   }
-  
+
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   const { month, year } = req.query;
-  
-  const DATABASE_URL = process.env.DATABASE_URL_CLEAN || process.env.DATABASE_URL;
-  
-  const pgClient = new Client({
-    connectionString: DATABASE_URL.replace('?sslmode=require', ''),
-    ssl: { rejectUnauthorized: false }
-  });
+  const targetMonth = month ? parseInt(month) : new Date().getMonth() + 1;
+  const targetYear = year ? parseInt(year) : new Date().getFullYear();
 
   try {
-    await pgClient.connect();
-    
-    // Get all services for the month
-    const startDate = `${year}-${month.padStart(2, '0')}-01`;
-    const endDate = new Date(year, month, 0).toISOString().split('T')[0];
-    
-    const result = await pgClient.query(
-      `SELECT 
-        sa.id,
-        sa.service_date,
-        sa.service_time,
-        sa.application_type,
-        sa.status,
-        CASE 
-          WHEN sa.application_type = 'wedding' THEN wd.couple_names
-          WHEN sa.application_type IN ('memorial', 'funeral') THEN md.deceased_name
-          ELSE sa.contact_name
-        END as service_for,
-        c.name as clergy_name
-      FROM crouse_chapel.service_applications sa
-      LEFT JOIN crouse_chapel.wedding_details wd ON sa.id = wd.application_id
-      LEFT JOIN crouse_chapel.memorial_details md ON sa.id = md.application_id
-      LEFT JOIN crouse_chapel.service_clergy sc ON sa.id = sc.service_id
-      LEFT JOIN crouse_chapel.clergy c ON sc.clergy_id = c.id
-      WHERE sa.service_date BETWEEN $1 AND $2
-      AND sa.status IN ('approved', 'pending')
-      ORDER BY sa.service_date, sa.service_time`,
-      [startDate, endDate]
-    );
-    
-    // Get blackout dates for the month
-    const blackoutResult = await pgClient.query(
-      `SELECT * FROM crouse_chapel.blackout_dates
-       WHERE (start_date <= $2 AND end_date >= $1)`,
-      [startDate, endDate]
-    );
-    
-    // Format as calendar events
-    const events = result.rows.map(row => ({
-      id: row.id,
-      date: row.service_date,
-      time: row.service_time,
-      type: row.application_type,
-      title: `${row.application_type}: ${row.service_for}`,
-      status: row.status,
-      clergy: row.clergy_name
-    }));
-    
-    const blackouts = blackoutResult.rows.map(row => ({
-      startDate: row.start_date,
-      endDate: row.end_date,
-      reason: row.reason,
-      type: 'blackout'
-    }));
-    
-    return res.status(200).json({
-      success: true,
-      month: month,
-      year: year,
-      events: events,
-      blackouts: blackouts
+    const result = await withPooledConnection(async (pgClient) => {
+      // Get all approved services for the month
+      const servicesQuery = `
+        SELECT 
+          sa.id,
+          sa.service_date,
+          sa.service_time,
+          sa.application_type,
+          sa.contact_name,
+          wd.couple_names,
+          md.deceased_name,
+          bd.baptism_candidate_name,
+          gd.event_type
+        FROM crouse_chapel.service_applications sa
+        LEFT JOIN crouse_chapel.wedding_details wd ON sa.id = wd.application_id
+        LEFT JOIN crouse_chapel.memorial_details md ON sa.id = md.application_id  
+        LEFT JOIN crouse_chapel.baptism_details bd ON sa.id = bd.application_id
+        LEFT JOIN crouse_chapel.general_use_details gd ON sa.id = gd.application_id
+        WHERE EXTRACT(MONTH FROM sa.service_date) = $1 
+        AND EXTRACT(YEAR FROM sa.service_date) = $2
+        AND sa.status = 'approved'
+        ORDER BY sa.service_date, sa.service_time
+      `;
+      
+      const servicesResult = await pgClient.query(servicesQuery, [targetMonth, targetYear]);
+      
+      // Get blackout dates for the month
+      const blackoutQuery = `
+        SELECT date, reason
+        FROM crouse_chapel.blackout_dates
+        WHERE EXTRACT(MONTH FROM date) = $1 
+        AND EXTRACT(YEAR FROM date) = $2
+        ORDER BY date
+      `;
+      
+      const blackoutResult = await pgClient.query(blackoutQuery, [targetMonth, targetYear]);
+      
+      // Format events for calendar display
+      const events = servicesResult.rows.map(service => {
+        let title = service.contact_name;
+        
+        if (service.application_type === 'wedding' && service.couple_names) {
+          title = `Wedding: ${service.couple_names}`;
+        } else if (service.application_type === 'memorial' && service.deceased_name) {
+          title = `Memorial: ${service.deceased_name}`;
+        } else if (service.application_type === 'baptism' && service.baptism_candidate_name) {
+          title = `Baptism: ${service.baptism_candidate_name}`;
+        } else if (service.application_type === 'general_use' && service.event_type) {
+          title = `${service.event_type}: ${service.contact_name}`;
+        }
+        
+        return {
+          id: service.id,
+          title,
+          date: service.service_date,
+          time: service.service_time,
+          type: service.application_type
+        };
+      });
+      
+      return {
+        month: targetMonth,
+        year: targetYear,
+        events,
+        blackout_dates: blackoutResult.rows
+      };
     });
     
+    return res.status(200).json(result);
   } catch (error) {
-    console.error('Error retrieving calendar:', error);
-    return res.status(500).json({ error: 'Failed to retrieve calendar' });
-  } finally {
-    await pgClient.end();
+    console.error('Calendar error:', error);
+    return res.status(500).json({ 
+      error: 'Failed to get calendar data',
+      message: error.message 
+    });
   }
 }
