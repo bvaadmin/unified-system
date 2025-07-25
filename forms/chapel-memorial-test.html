@@ -253,7 +253,7 @@
             <h3>API Endpoint Configuration</h3>
             <div class="form-group">
                 <label for="apiEndpoint">API Endpoint URL</label>
-                <input type="url" id="apiEndpoint" value="https://unified-system-229ae5i4t-sam-scarrows-projects.vercel.app/api/chapel/submit-service">
+                <input type="url" id="apiEndpoint" value="https://unified-system.vercel.app/api/chapel/submit-service">
                 <small style="display: block; margin-top: 5px; color: #666;">
                     Default: Production Vercel deployment
                 </small>
@@ -522,7 +522,7 @@ Bob Smith - Violin</textarea>
         // Set date fields to reasonable defaults
         const today = new Date();
         const futureDate = new Date(today);
-        futureDate.setDate(today.getDate() + 30);
+        futureDate.setDate(today.getDate() + 60); // Changed from 30 to 60 days to avoid availability issues
         
         document.getElementById('serviceDate').value = futureDate.toISOString().split('T')[0];
         
