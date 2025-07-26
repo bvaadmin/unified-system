@@ -41,10 +41,10 @@ export default async function handler(req, res) {
   try {
     await pgClient.connect();
     
-    // Check if date/time is available
+    // Check if date/time is available (with default event type)
     const availabilityResult = await pgClient.query(
-      'SELECT crouse_chapel.is_chapel_available($1, $2) as available',
-      [date, time]
+      'SELECT crouse_chapel.is_chapel_available($1, $2, $3) as available',
+      [date, time, 'general']
     );
     
     const isAvailable = availabilityResult.rows[0].available;
