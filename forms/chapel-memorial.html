@@ -526,12 +526,12 @@
             
             try {
                 // Submit to API
-                const response = await fetch('https://unified-system-1b8xysvgv-sam-scarrows-projects.vercel.app/api/chapel/submit-test', {
+                const response = await fetch('https://unified-system-229ae5i4t-sam-scarrows-projects.vercel.app/api/chapel/submit-service', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ formType: 'memorial-funeral-service', data: data })
+                    body: JSON.stringify(data)
                 });
                 
                 if (response.ok) {
