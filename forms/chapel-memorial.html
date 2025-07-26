@@ -458,6 +458,7 @@
             <!-- Submit Section -->
             <div class="submit-section">
                 <input type="hidden" name="formType" value="memorial-funeral-service">
+                <input type="hidden" name="serviceType" value="memorial">
                 <button type="submit" class="button" id="submitButton">Submit Application</button>
                 <p style="margin-top: 10px; font-size: 0.9rem; color: #666;">
                     By submitting this form, you agree to be contacted by Bay View Association staff regarding your application.
@@ -522,7 +523,17 @@
             
             // Prepare form data
             const formData = new FormData(this);
-            const data = Object.fromEntries(formData);
+            const rawData = Object.fromEntries(formData);
+            
+            // Extract formType and prepare nested data structure
+            const { formType, serviceType, ...restData } = rawData;
+            const submissionData = {
+                formType: formType,
+                data: {
+                    serviceType: serviceType,
+                    ...restData
+                }
+            };
             
             try {
                 // Submit to API
@@ -531,7 +542,7 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(data)
+                    body: JSON.stringify(submissionData)
                 });
                 
                 if (response.ok) {
