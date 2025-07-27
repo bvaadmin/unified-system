@@ -1,10 +1,10 @@
 // Unified API endpoint - handles all routes through a single function
 // This solves Vercel's 12-function limit on hobby plan
 
-// Import existing API handlers
-import testDb from './test-db.js';
-import chapelCheckAvailability from './chapel/check-availability.js';
-import chapelSubmitService from './chapel/submit-service.js';
+// Import API handlers from lib directory
+import testDb from '../lib/handlers/test-db.js';
+import chapelCheckAvailability from '../lib/handlers/chapel/check-availability.js';
+import chapelSubmitService from '../lib/handlers/chapel/submit-service.js';
 
 // Route mapping - start with working endpoints
 const routes = {
