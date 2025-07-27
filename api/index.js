@@ -5,12 +5,16 @@
 import testDb from '../lib/handlers/test-db.js';
 import chapelCheckAvailability from '../lib/handlers/chapel/check-availability.js';
 import chapelSubmitService from '../lib/handlers/chapel/submit-service.js';
+import fixChapelFunction from '../lib/handlers/admin/fix-chapel-function.js';
 
 // Route mapping - start with working endpoints
 const routes = {
   // Chapel endpoints
   'GET /api/chapel/check-availability': chapelCheckAvailability,
   'POST /api/chapel/submit-service': chapelSubmitService,
+  
+  // Admin endpoints
+  'POST /api/admin/fix-chapel-function': fixChapelFunction,
   
   // Utility endpoints
   'GET /api/test-db': testDb,
