@@ -6,8 +6,8 @@ import testDb from '../lib/handlers/test-db.js';
 import chapelCheckAvailability from '../lib/handlers/chapel/check-availability.js';
 import chapelSubmitService from '../lib/handlers/chapel/submit-service.js';
 import fixChapelFunction from '../lib/handlers/admin/fix-chapel-function.js';
-import memorialSubmitGarden from './memorial/submit-garden.js';
-import health from './health.js';
+import memorialSubmitGarden from '../lib/api/memorial/submit-garden.js';
+import health from '../lib/api/health.js';
 
 // Route mapping
 const routes = {
