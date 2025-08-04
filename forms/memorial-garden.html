@@ -260,7 +260,7 @@
         }
         
         #feeDisplay {
-            display: none;
+            display: block;
         }
         
         #prepaymentSection {
@@ -539,11 +539,11 @@
     <div class="radio-group">
         <label>
             <input type="radio" name="applicationType" value="future" required>
-            Future placement when needed
+            Prepayment for future placement of ashes
         </label>
         <label>
             <input type="radio" name="applicationType" value="immediate" required>
-            Application for immediate placement of ashes
+            Payment for immediate placement of ashes
         </label>
     </div>
 </div>
@@ -589,7 +589,7 @@
 <div class="fee-note" id="feeNote"></div>
 <div class="payment-info-display">
 <p><strong>Payment Instructions:</strong></p>
-<p>Please make checks payable to "Bay View Association," with memo of "Memorial Garden."</p>
+<p id="paymentTimingNote">Please make checks payable to "Bay View Association," with memo of "Memorial Garden."</p>
 <div style="margin-top: 15px;">
 <p><strong>Payment Delivery Options:</strong></p>
 <div class="payment-option">
@@ -600,21 +600,6 @@
 <span style="margin-left: 0px; font-size: 0.9em; color: #666;">1715 Encampment Avenue, Petoskey, MI 49770</span><br/>
 <span style="margin-left: 0px; font-size: 0.9em; color: #2c5aa0; font-style: italic;">Available for Bay View members and relatives</span>
 </div>
-</div>
-</div>
-</div>
-<!-- Purpose Section -->
-<div class="form-section">
-<h2>Purpose of Application</h2>
-<div class="form-group">
-<label>Application Purpose <span class="required">*</span></label>
-<div class="radio-group">
-<input id="immediatePayment" name="application_purpose" required="" type="radio" value="Payment for immediate placement of ashes"/>
-<label for="immediatePayment">Payment for immediate placement of ashes</label>
-</div>
-<div class="radio-group">
-<input id="prepayment" name="application_purpose" required="" type="radio" value="Prepayment for future placement of ashes"/>
-<label for="prepayment">Prepayment for future placement of ashes</label>
 </div>
 </div>
 </div>
@@ -967,14 +952,24 @@
         // Store form data for thank you page
         let submittedData = {};
         
+        // Initialize fee display with default message
+        document.addEventListener('DOMContentLoaded', function() {
+            const feeNote = document.getElementById('feeNote');
+            feeNote.textContent = 'Please select membership status above to see your fee';
+        });
+        
         // Show/hide prepayment section based on application type
         document.querySelectorAll('input[name="applicationType"]').forEach(radio => {
             radio.addEventListener('change', function() {
                 const prepaymentSection = document.getElementById('prepaymentSection');
+                const paymentTimingNote = document.getElementById('paymentTimingNote');
+                
                 if (this.value === 'immediate') {
                     prepaymentSection.style.display = 'block';
+                    paymentTimingNote.innerHTML = 'For immediate placement, <strong>full payment is required with this application</strong>. Please make checks payable to "Bay View Association," with memo of "Memorial Garden."';
                 } else {
                     prepaymentSection.style.display = 'none';
+                    paymentTimingNote.innerHTML = 'For future placement, you may prepay now or payment will be due when placement is needed. Please make checks payable to "Bay View Association," with memo of "Memorial Garden."';
                 }
             });
         });
@@ -1015,7 +1010,7 @@
         });
         
         // Show/hide fields based on application purpose
-        document.querySelectorAll('input[name="application_purpose"]').forEach(radio => {
+        document.querySelectorAll('input[name="applicationType"]').forEach(radio => {
             radio.addEventListener('change', function() {
                 const deathDateGroup = document.getElementById('deathDateGroup');
                 const deathDateInput = document.getElementById('death_date');
@@ -1028,7 +1023,7 @@
                 const prepaymentNamesInput = document.getElementById('prepayment_names');
                 const servicePlanningSection = document.getElementById('servicePlanningSection');
                 
-                if (this.value === 'Prepayment for future placement of ashes') {
+                if (this.value === 'future') {
                     // Hide fields for prepayment (planning ahead)
                     deathDateGroup.style.display = 'none';
                     personalHistorySection.style.display = 'none';
