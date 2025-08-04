@@ -358,7 +358,11 @@
                 
                 let formsAccessible = true;
                 for (const form of formsToCheck) {
-                    const response = await fetch(`/forms/${form}`, { method: 'HEAD' });
+                    // Get the base path for GitHub Pages
+                    const basePath = window.location.pathname.includes('/unified-system/') 
+                        ? '/unified-system/forms/' 
+                        : '/forms/';
+                    const response = await fetch(`${basePath}${form}`, { method: 'HEAD' });
                     if (!response.ok) {
                         formsAccessible = false;
                         break;
