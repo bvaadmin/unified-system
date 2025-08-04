@@ -40,7 +40,9 @@
     "lint": "echo '✅ Linting passed (add ESLint for production)'",
     "typecheck": "echo '✅ Type checking passed (add TypeScript for production)'",
     "pre-commit": "npm run validate-constraints && npm run lint && npm run typecheck",
-    "security-check": "npm audit && node scripts/validate-constraints.js"
+    "security-check": "npm audit && node scripts/validate-constraints.js",
+    "check-submissions": "node scripts/check-recent-submissions.js",
+    "health-check": "curl -s https://unified-system-api.vercel.app/api/health | jq"
   },
   "keywords": [
     "bay-view",
