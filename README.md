@@ -30,6 +30,12 @@ A unified administrative system for managing chapel services, memorial garden ap
 - **Frontend**: Static HTML forms deployed via GitHub Pages
 - **Deployment**: Vercel
 
+## 🚨 IMPORTANT: API Architecture
+
+**Before adding ANY new API endpoints, you MUST read [API-ARCHITECTURE.md](./API-ARCHITECTURE.md)**
+
+We use a unified API pattern due to Vercel's 12-function limit. All endpoints go through `/api/index.js`.
+
 ## Getting Started
 
 ### Prerequisites

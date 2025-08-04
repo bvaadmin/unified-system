@@ -1,5 +1,17 @@
-// Unified API endpoint - handles all routes through a single function
-// This solves Vercel's 12-function limit on hobby plan
+/**
+ * UNIFIED API ROUTER - DO NOT CREATE NEW FILES IN /api DIRECTORY!
+ * 
+ * This is the ONLY serverless function deployed to Vercel.
+ * All API endpoints are routed through this single file to stay within
+ * Vercel's hobby plan limit of 12 functions.
+ * 
+ * TO ADD A NEW ENDPOINT:
+ * 1. Create your handler in /lib/api/
+ * 2. Import it below
+ * 3. Add it to the routes object
+ * 
+ * See API-ARCHITECTURE.md for detailed instructions.
+ */
 
 // Import API handlers
 import testDb from '../lib/handlers/test-db.js';
@@ -9,7 +21,8 @@ import fixChapelFunction from '../lib/handlers/admin/fix-chapel-function.js';
 import memorialSubmitGarden from '../lib/api/memorial/submit-garden.js';
 import health from '../lib/api/health.js';
 
-// Route mapping
+// Route mapping - ALL API endpoints must be defined here
+// Format: 'METHOD /path': handlerFunction
 const routes = {
   // Chapel endpoints
   'GET /api/chapel/check-availability': chapelCheckAvailability,
