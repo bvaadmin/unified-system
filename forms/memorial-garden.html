@@ -1161,6 +1161,14 @@
             // Show the thank you page
             document.getElementById('thankYouPage').style.display = 'block';
             
+            // Update the main success message based on application type
+            const successHeading = document.querySelector('#thankYouPage h2[style*="color: #28a745"]');
+            if (submittedData['Application Type'] === 'future') {
+                successHeading.textContent = 'Future Placement Application Successfully Submitted!';
+            } else {
+                successHeading.textContent = 'Memorial Garden Application Successfully Submitted!';
+            }
+            
             // Populate confirmation details
             document.getElementById('confirmationId').textContent = submittedData['Submission ID'];
             document.getElementById('confirmationDate').textContent = new Date().toLocaleDateString('en-US', {
@@ -1168,13 +1176,53 @@
                 month: 'long',
                 day: 'numeric'
             });
-            document.getElementById('confirmationType').textContent = submittedData['Application Type'];
+            document.getElementById('confirmationType').textContent = submittedData['Application Type'] === 'future' ? 'Future Placement' : 'Immediate Placement';
             document.getElementById('confirmationContact').textContent = submittedData['Contact Name'];
             document.getElementById('confirmationFee').textContent = `$${parseFloat(submittedData['Fee Amount']).toFixed(2)}`;
             
             // Set payment memo name
             const memoName = submittedData['Deceased Name'] || submittedData['Prepayment Names'] || 'Application';
             document.getElementById('paymentMemoName').textContent = memoName;
+            
+            // Update timeline and next steps based on application type
+            if (submittedData['Application Type'] === 'future') {
+                // Update step 1 for future placement
+                document.querySelector('#thankYouPage .step:nth-child(1) p').textContent = 'You will receive a confirmation email within 24 hours with a copy of your application and payment instructions for securing your future placement.';
+                
+                // Update step 4 for future placement
+                document.querySelector('#thankYouPage .step:nth-child(4) h4').textContent = 'Secure Your Placement';
+                document.querySelector('#thankYouPage .step:nth-child(4) p').textContent = 'Please submit your payment to secure your future placement rights. Your application will be kept on file until placement is needed.';
+                
+                // Update step 5 for future placement
+                document.querySelector('#thankYouPage .step:nth-child(5) h4').textContent = 'Future Placement Coordination';
+                document.querySelector('#thankYouPage .step:nth-child(5) p').textContent = 'When placement is needed in the future, contact the Memorial Garden Committee to coordinate service details. Please notify us at least 30 days in advance.';
+                
+                // Update timeline items for future placement
+                const timelineItems = document.querySelectorAll('#thankYouPage .timeline-item');
+                timelineItems[3].innerHTML = '<strong>Upon payment:</strong> Application approved and held on file';
+                timelineItems[4].innerHTML = '<strong>When needed:</strong> Contact committee with 30+ days notice for placement';
+                
+                // Update payment reminder text
+                const paymentSection = document.querySelector('#thankYouPage .payment-info-display');
+                const newParagraph = document.createElement('p');
+                newParagraph.style.marginTop = '10px';
+                newParagraph.style.color = '#2c5aa0';
+                newParagraph.innerHTML = '<em>Note: For future placements, your payment secures your placement rights. The Memorial Garden Committee will contact you when you notify them that placement is needed.</em>';
+                paymentSection.insertBefore(newParagraph, paymentSection.querySelector('.payment-option').parentElement);
+            } else {
+                // Update for immediate placement
+                const timelineItems = document.querySelectorAll('#thankYouPage .timeline-item');
+                timelineItems[3].innerHTML = '<strong>Upon payment:</strong> Service coordination begins';
+                timelineItems[4].innerHTML = '<strong>4-6 weeks:</strong> Placement ceremony scheduled (weather permitting)';
+                
+                // Add note about timing for immediate placement
+                const paymentSection = document.querySelector('#thankYouPage .payment-info-display');
+                const newParagraph = document.createElement('p');
+                newParagraph.style.marginTop = '10px';
+                newParagraph.style.color = '#2c5aa0';
+                newParagraph.innerHTML = '<em>Note: For immediate placements, prompt payment helps ensure timely scheduling of the placement ceremony.</em>';
+                paymentSection.insertBefore(newParagraph, paymentSection.querySelector('.payment-option').parentElement);
+            }
             
             // Show in-person option for members
             if (submittedData['Bay View Member'] === 'Yes') {
