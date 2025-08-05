@@ -860,14 +860,14 @@
 <div class="step-number">4</div>
 <div class="step-content">
 <h4>Payment Processing</h4>
-<p>Please submit your payment according to the instructions provided. Full payment must be received before placement can be scheduled.</p>
+<p>Please submit your payment according to the instructions provided to complete your application.</p>
 </div>
 </div>
 <div class="step">
 <div class="step-number">5</div>
 <div class="step-content">
-<h4>Service Coordination</h4>
-<p>Once approved and payment is received, the Memorial Garden Committee will contact you to coordinate service details.</p>
+<h4>Final Steps</h4>
+<p>Once your application is approved and payment is received, we will coordinate the next steps according to your preferences.</p>
 </div>
 </div>
 </div>
@@ -1191,23 +1191,23 @@
                 
                 // Update step 4 for future placement
                 document.querySelector('#thankYouPage .step:nth-child(4) h4').textContent = 'Secure Your Placement';
-                document.querySelector('#thankYouPage .step:nth-child(4) p').textContent = 'Please submit your payment to secure your future placement rights. Your application will be kept on file until placement is needed.';
+                document.querySelector('#thankYouPage .step:nth-child(4) p').textContent = 'Your payment reserves your place in the Memorial Garden. Once received, your placement rights are secured and your wishes will be honored when the time comes.';
                 
                 // Update step 5 for future placement
-                document.querySelector('#thankYouPage .step:nth-child(5) h4').textContent = 'Future Placement Coordination';
-                document.querySelector('#thankYouPage .step:nth-child(5) p').textContent = 'When placement is needed in the future, contact the Memorial Garden Committee to coordinate service details. Please notify us at least 30 days in advance.';
+                document.querySelector('#thankYouPage .step:nth-child(5) h4').textContent = 'Your Wishes Are Recorded';
+                document.querySelector('#thankYouPage .step:nth-child(5) p').textContent = 'Your placement preferences are safely on file. Your family or designated contact can notify the Memorial Garden Committee when the time comes, and we will coordinate all details according to your wishes.';
                 
                 // Update timeline items for future placement
                 const timelineItems = document.querySelectorAll('#thankYouPage .timeline-item');
-                timelineItems[3].innerHTML = '<strong>Upon payment:</strong> Application approved and held on file';
-                timelineItems[4].innerHTML = '<strong>When needed:</strong> Contact committee with 30+ days notice for placement';
+                timelineItems[3].innerHTML = '<strong>Upon payment:</strong> Your placement is secured and wishes recorded';
+                timelineItems[4].innerHTML = '<strong>Peace of mind:</strong> Everything is arranged for when the time comes';
                 
                 // Update payment reminder text
                 const paymentSection = document.querySelector('#thankYouPage .payment-info-display');
                 const newParagraph = document.createElement('p');
                 newParagraph.style.marginTop = '10px';
                 newParagraph.style.color = '#2c5aa0';
-                newParagraph.innerHTML = '<em>Note: For future placements, your payment secures your placement rights. The Memorial Garden Committee will contact you when you notify them that placement is needed.</em>';
+                newParagraph.innerHTML = '<em>Note: Your payment today ensures your wishes will be honored. This one-time fee covers all future costs, providing peace of mind that everything is arranged.</em>';
                 paymentSection.insertBefore(newParagraph, paymentSection.querySelector('.payment-option').parentElement);
             } else {
                 // Update for immediate placement
