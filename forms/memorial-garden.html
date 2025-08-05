@@ -553,7 +553,7 @@
     <div class="checkbox-group">
         <label>
             <input type="checkbox" name="prepaymentMade" value="yes">
-            <strong>Prepayment made</strong> (Please note: For immediate placement, full payment is required with this application)
+            <strong>I have already paid the memorial garden fee</strong> (Check if you previously submitted payment)
         </label>
     </div>
 </div>
@@ -966,7 +966,7 @@
                 
                 if (this.value === 'immediate') {
                     prepaymentSection.style.display = 'block';
-                    paymentTimingNote.innerHTML = 'For immediate placement, <strong>full payment is required with this application</strong>. Please make checks payable to "Bay View Association," with memo of "Memorial Garden."';
+                    paymentTimingNote.innerHTML = 'For immediate placement, <strong>payment is due upon approval</strong>. Please make checks payable to "Bay View Association," with memo of "Memorial Garden."';
                 } else {
                     prepaymentSection.style.display = 'none';
                     paymentTimingNote.innerHTML = 'For future placement, you may prepay now or payment will be due when placement is needed. Please make checks payable to "Bay View Association," with memo of "Memorial Garden."';
