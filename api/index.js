@@ -20,6 +20,7 @@ import chapelSubmitService from '../lib/handlers/chapel/submit-service.js';
 import fixChapelFunction from '../lib/handlers/admin/fix-chapel-function.js';
 import memorialSubmitGarden from '../lib/api/memorial/submit-garden.js';
 import health from '../lib/api/health.js';
+import checkDbUrl from './diagnostic/check-db-url.js';
 
 // Route mapping - ALL API endpoints must be defined here
 // Format: 'METHOD /path': handlerFunction
@@ -39,6 +40,7 @@ const routes = {
   'GET /api/test-db': testDb,
   'GET /api/health': health,
   'OPTIONS /api/health': health,
+  'GET /api/diagnostic/check-db-url': checkDbUrl,
 };
 
 export default async function handler(req, res) {
