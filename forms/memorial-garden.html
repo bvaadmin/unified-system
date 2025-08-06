@@ -1185,43 +1185,61 @@
             document.getElementById('paymentMemoName').textContent = memoName;
             
             // Update timeline and next steps based on application type
-            if (submittedData['Application Type'] === 'future') {
-                // Update step 1 for future placement
-                document.querySelector('#thankYouPage .step:nth-child(1) p').textContent = 'You will receive a confirmation email within 24 hours with a copy of your application and payment instructions for securing your future placement.';
-                
-                // Update step 4 for future placement
-                document.querySelector('#thankYouPage .step:nth-child(4) h4').textContent = 'Secure Your Placement';
-                document.querySelector('#thankYouPage .step:nth-child(4) p').textContent = 'Your payment reserves your place in the Memorial Garden. Once received, your placement rights are secured and your wishes will be honored when the time comes.';
-                
-                // Update step 5 for future placement
-                document.querySelector('#thankYouPage .step:nth-child(5) h4').textContent = 'Your Wishes Are Recorded';
-                document.querySelector('#thankYouPage .step:nth-child(5) p').textContent = 'Your placement preferences are safely on file. Your family or designated contact can notify the Memorial Garden Committee when the time comes, and we will coordinate all details according to your wishes.';
-                
-                // Update timeline items for future placement
-                const timelineItems = document.querySelectorAll('#thankYouPage .timeline-item');
-                timelineItems[3].innerHTML = '<strong>Upon payment:</strong> Your placement is secured and wishes recorded';
-                timelineItems[4].innerHTML = '<strong>Peace of mind:</strong> Everything is arranged for when the time comes';
-                
-                // Update payment reminder text
-                const paymentSection = document.querySelector('#thankYouPage .payment-info-display');
-                const newParagraph = document.createElement('p');
-                newParagraph.style.marginTop = '10px';
-                newParagraph.style.color = '#2c5aa0';
-                newParagraph.innerHTML = '<em>Note: Your payment today ensures your wishes will be honored. This one-time fee covers all future costs, providing peace of mind that everything is arranged.</em>';
-                paymentSection.insertBefore(newParagraph, paymentSection.querySelector('.payment-option').parentElement);
-            } else {
-                // Update for immediate placement
-                const timelineItems = document.querySelectorAll('#thankYouPage .timeline-item');
-                timelineItems[3].innerHTML = '<strong>Upon payment:</strong> Service coordination begins';
-                timelineItems[4].innerHTML = '<strong>4-6 weeks:</strong> Placement ceremony scheduled (weather permitting)';
-                
-                // Add note about timing for immediate placement
-                const paymentSection = document.querySelector('#thankYouPage .payment-info-display');
-                const newParagraph = document.createElement('p');
-                newParagraph.style.marginTop = '10px';
-                newParagraph.style.color = '#2c5aa0';
-                newParagraph.innerHTML = '<em>Note: For immediate placements, prompt payment helps ensure timely scheduling of the placement ceremony.</em>';
-                paymentSection.insertBefore(newParagraph, paymentSection.querySelector('.payment-option').parentElement);
+            try {
+                if (submittedData['Application Type'] === 'future') {
+                    // Update step 1 for future placement
+                    document.querySelector('#thankYouPage .step:nth-child(1) p').textContent = 'You will receive a confirmation email within 24 hours with a copy of your application and payment instructions for securing your future placement.';
+                    
+                    // Update step 4 for future placement
+                    document.querySelector('#thankYouPage .step:nth-child(4) h4').textContent = 'Secure Your Placement';
+                    document.querySelector('#thankYouPage .step:nth-child(4) p').textContent = 'Your payment reserves your place in the Memorial Garden. Once received, your placement rights are secured and your wishes will be honored when the time comes.';
+                    
+                    // Update step 5 for future placement
+                    document.querySelector('#thankYouPage .step:nth-child(5) h4').textContent = 'Your Wishes Are Recorded';
+                    document.querySelector('#thankYouPage .step:nth-child(5) p').textContent = 'Your placement preferences are safely on file. Your family or designated contact can notify the Memorial Garden Committee when the time comes, and we will coordinate all details according to your wishes.';
+                    
+                    // Update timeline items for future placement
+                    const timelineItems = document.querySelectorAll('#thankYouPage .timeline-item');
+                    if (timelineItems.length >= 5) {
+                        timelineItems[3].innerHTML = '<strong>Upon payment:</strong> Your placement is secured and wishes recorded';
+                        timelineItems[4].innerHTML = '<strong>Peace of mind:</strong> Everything is arranged for when the time comes';
+                    }
+                    
+                    // Update payment reminder text
+                    const paymentSection = document.querySelector('#thankYouPage .payment-info-display');
+                    if (paymentSection) {
+                        const paymentOptions = paymentSection.querySelector('.payment-option');
+                        if (paymentOptions && paymentOptions.parentElement) {
+                            const newParagraph = document.createElement('p');
+                            newParagraph.style.marginTop = '10px';
+                            newParagraph.style.color = '#2c5aa0';
+                            newParagraph.innerHTML = '<em>Note: Your payment today ensures your wishes will be honored. This one-time fee covers all future costs, providing peace of mind that everything is arranged.</em>';
+                            paymentSection.insertBefore(newParagraph, paymentOptions.parentElement);
+                        }
+                    }
+                } else {
+                    // Update for immediate placement
+                    const timelineItems = document.querySelectorAll('#thankYouPage .timeline-item');
+                    if (timelineItems.length >= 5) {
+                        timelineItems[3].innerHTML = '<strong>Upon payment:</strong> Service coordination begins';
+                        timelineItems[4].innerHTML = '<strong>4-6 weeks:</strong> Placement ceremony scheduled (weather permitting)';
+                    }
+                    
+                    // Add note about timing for immediate placement
+                    const paymentSection = document.querySelector('#thankYouPage .payment-info-display');
+                    if (paymentSection) {
+                        const paymentOptions = paymentSection.querySelector('.payment-option');
+                        if (paymentOptions && paymentOptions.parentElement) {
+                            const newParagraph = document.createElement('p');
+                            newParagraph.style.marginTop = '10px';
+                            newParagraph.style.color = '#2c5aa0';
+                            newParagraph.innerHTML = '<em>Note: For immediate placements, prompt payment helps ensure timely scheduling of the placement ceremony.</em>';
+                            paymentSection.insertBefore(newParagraph, paymentOptions.parentElement);
+                        }
+                    }
+                }
+            } catch (error) {
+                console.error('Error updating thank you page content:', error);
             }
             
             // Show in-person option for members
