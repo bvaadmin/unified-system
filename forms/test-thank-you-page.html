@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Thank You Page</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .step { margin: 20px 0; padding: 15px; border: 1px solid #ddd; }
+        .timeline-item { margin: 10px 0; }
+        .payment-info-display { margin: 20px 0; padding: 15px; background: #f0f0f0; }
+        .payment-option { margin: 10px 0; }
+        .debug { background: #ffffcc; padding: 10px; margin: 10px 0; }
+    </style>
+</head>
+<body>
+    <h1>Test Thank You Page - Future Placement</h1>
+    
+    <div class="debug">
+        <h3>Debug Info:</h3>
+        <p>Application Type: <span id="debugAppType">future</span></p>
+        <p>Status: <span id="debugStatus">Testing...</span></p>
+    </div>
+
+    <div id="thankYouPage">
+        <h2 style="color: #28a745;">Application Successfully Submitted!</h2>
+        
+        <div class="next-steps">
+            <h3>What Happens Next?</h3>
+            <div class="step">
+                <h4>Step 1</h4>
+                <p>Original text for step 1</p>
+            </div>
+            <div class="step">
+                <h4>Step 2</h4>
+                <p>Original text for step 2</p>
+            </div>
+            <div class="step">
+                <h4>Step 3</h4>
+                <p>Original text for step 3</p>
+            </div>
+            <div class="step">
+                <h4>Step 4</h4>
+                <p>Original text for step 4</p>
+            </div>
+            <div class="step">
+                <h4>Step 5</h4>
+                <p>Original text for step 5</p>
+            </div>
+        </div>
+        
+        <div class="timeline">
+            <div class="timeline-item">Timeline 1</div>
+            <div class="timeline-item">Timeline 2</div>
+            <div class="timeline-item">Timeline 3</div>
+            <div class="timeline-item">Timeline 4</div>
+            <div class="timeline-item">Timeline 5</div>
+        </div>
+        
+        <div class="payment-info-display">
+            <h3>Payment Information</h3>
+            <div class="payment-option">Payment option 1</div>
+            <div class="payment-option">Payment option 2</div>
+        </div>
+    </div>
+
+    <script>
+        // Simulate the submittedData
+        const submittedData = {
+            'Application Type': 'future',
+            'Contact Name': 'Test User'
+        };
+
+        // Test the thank you page update logic
+        try {
+            console.log('Debug - Application Type value:', submittedData['Application Type']);
+            console.log('Debug - Full submittedData:', submittedData);
+            
+            const appType = submittedData['Application Type'];
+            if (appType === 'future' || appType === 'Future' || appType === 'Future Placement') {
+                console.log('Debug - Updating for future placement');
+                
+                // Update step 1 for future placement
+                const step1 = document.querySelector('#thankYouPage .next-steps .step:nth-of-type(1) p');
+                if (step1) {
+                    step1.textContent = 'You will receive a confirmation email within 24 hours with a copy of your application and payment instructions for securing your future placement.';
+                    console.log('✅ Step 1 updated');
+                } else {
+                    console.error('❌ Step 1 not found');
+                }
+                
+                // Update step 4 for future placement
+                const step4Title = document.querySelector('#thankYouPage .next-steps .step:nth-of-type(4) h4');
+                const step4Text = document.querySelector('#thankYouPage .next-steps .step:nth-of-type(4) p');
+                if (step4Title && step4Text) {
+                    step4Title.textContent = 'Secure Your Placement';
+                    step4Text.textContent = 'Your payment reserves your place in the Memorial Garden. Once received, your placement rights are secured and your wishes will be honored when the time comes.';
+                    console.log('✅ Step 4 updated');
+                } else {
+                    console.error('❌ Step 4 not found');
+                }
+                
+                // Update step 5 for future placement
+                const step5Title = document.querySelector('#thankYouPage .next-steps .step:nth-of-type(5) h4');
+                const step5Text = document.querySelector('#thankYouPage .next-steps .step:nth-of-type(5) p');
+                if (step5Title && step5Text) {
+                    step5Title.textContent = 'Your Wishes Are Recorded';
+                    step5Text.textContent = 'Your placement preferences are safely on file. Your family or designated contact can notify the Memorial Garden Committee when the time comes, and we will coordinate all details according to your wishes.';
+                    console.log('✅ Step 5 updated');
+                } else {
+                    console.error('❌ Step 5 not found');
+                }
+                
+                // Update timeline items for future placement
+                const timelineItems = document.querySelectorAll('#thankYouPage .timeline-item');
+                console.log('Debug - Found timeline items:', timelineItems.length);
+                if (timelineItems.length >= 5) {
+                    timelineItems[3].innerHTML = '<strong>Upon payment:</strong> Your placement is secured and wishes recorded';
+                    timelineItems[4].innerHTML = '<strong>Peace of mind:</strong> Everything is arranged for when the time comes';
+                    console.log('✅ Timeline updated');
+                }
+                
+                // Update payment reminder text
+                const paymentSection = document.querySelector('#thankYouPage .payment-info-display');
+                console.log('Debug - Payment section found:', !!paymentSection);
+                if (paymentSection) {
+                    const paymentOptions = paymentSection.querySelector('.payment-option');
+                    if (paymentOptions && paymentOptions.parentElement) {
+                        const existingNote = paymentSection.querySelector('p[style*="color: #2c5aa0"]');
+                        if (!existingNote) {
+                            const newParagraph = document.createElement('p');
+                            newParagraph.style.marginTop = '10px';
+                            newParagraph.style.color = '#2c5aa0';
+                            newParagraph.innerHTML = '<em>Note: Your payment today ensures your wishes will be honored. This one-time fee covers all future costs, providing peace of mind that everything is arranged.</em>';
+                            paymentSection.insertBefore(newParagraph, paymentOptions.parentElement);
+                            console.log('✅ Added peace of mind language');
+                        }
+                    }
+                }
+                
+                document.getElementById('debugStatus').textContent = 'All updates applied successfully!';
+                document.getElementById('debugStatus').style.color = 'green';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            document.getElementById('debugStatus').textContent = 'Error: ' + error.message;
+            document.getElementById('debugStatus').style.color = 'red';
+        }
+    </script>
+</body>
+</html>

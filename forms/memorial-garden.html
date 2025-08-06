@@ -1194,18 +1194,30 @@
                 if (appType === 'future' || appType === 'Future' || appType === 'Future Placement') {
                     console.log('Debug - Updating for future placement');
                     // Update step 1 for future placement
-                    document.querySelector('#thankYouPage .step:nth-child(1) p').textContent = 'You will receive a confirmation email within 24 hours with a copy of your application and payment instructions for securing your future placement.';
+                    const step1 = document.querySelector('#thankYouPage .next-steps .step:nth-of-type(1) p');
+                    if (step1) {
+                        step1.textContent = 'You will receive a confirmation email within 24 hours with a copy of your application and payment instructions for securing your future placement.';
+                    }
                     
                     // Update step 4 for future placement
-                    document.querySelector('#thankYouPage .step:nth-child(4) h4').textContent = 'Secure Your Placement';
-                    document.querySelector('#thankYouPage .step:nth-child(4) p').textContent = 'Your payment reserves your place in the Memorial Garden. Once received, your placement rights are secured and your wishes will be honored when the time comes.';
+                    const step4Title = document.querySelector('#thankYouPage .next-steps .step:nth-of-type(4) h4');
+                    const step4Text = document.querySelector('#thankYouPage .next-steps .step:nth-of-type(4) p');
+                    if (step4Title && step4Text) {
+                        step4Title.textContent = 'Secure Your Placement';
+                        step4Text.textContent = 'Your payment reserves your place in the Memorial Garden. Once received, your placement rights are secured and your wishes will be honored when the time comes.';
+                    }
                     
                     // Update step 5 for future placement
-                    document.querySelector('#thankYouPage .step:nth-child(5) h4').textContent = 'Your Wishes Are Recorded';
-                    document.querySelector('#thankYouPage .step:nth-child(5) p').textContent = 'Your placement preferences are safely on file. Your family or designated contact can notify the Memorial Garden Committee when the time comes, and we will coordinate all details according to your wishes.';
+                    const step5Title = document.querySelector('#thankYouPage .next-steps .step:nth-of-type(5) h4');
+                    const step5Text = document.querySelector('#thankYouPage .next-steps .step:nth-of-type(5) p');
+                    if (step5Title && step5Text) {
+                        step5Title.textContent = 'Your Wishes Are Recorded';
+                        step5Text.textContent = 'Your placement preferences are safely on file. Your family or designated contact can notify the Memorial Garden Committee when the time comes, and we will coordinate all details according to your wishes.';
+                    }
                     
                     // Update timeline items for future placement
                     const timelineItems = document.querySelectorAll('#thankYouPage .timeline-item');
+                    console.log('Debug - Found timeline items:', timelineItems.length);
                     if (timelineItems.length >= 5) {
                         timelineItems[3].innerHTML = '<strong>Upon payment:</strong> Your placement is secured and wishes recorded';
                         timelineItems[4].innerHTML = '<strong>Peace of mind:</strong> Everything is arranged for when the time comes';
@@ -1213,14 +1225,19 @@
                     
                     // Update payment reminder text
                     const paymentSection = document.querySelector('#thankYouPage .payment-info-display');
+                    console.log('Debug - Payment section found:', !!paymentSection);
                     if (paymentSection) {
                         const paymentOptions = paymentSection.querySelector('.payment-option');
                         if (paymentOptions && paymentOptions.parentElement) {
-                            const newParagraph = document.createElement('p');
-                            newParagraph.style.marginTop = '10px';
-                            newParagraph.style.color = '#2c5aa0';
-                            newParagraph.innerHTML = '<em>Note: Your payment today ensures your wishes will be honored. This one-time fee covers all future costs, providing peace of mind that everything is arranged.</em>';
-                            paymentSection.insertBefore(newParagraph, paymentOptions.parentElement);
+                            const existingNote = paymentSection.querySelector('p[style*="color: #2c5aa0"]');
+                            if (!existingNote) {
+                                const newParagraph = document.createElement('p');
+                                newParagraph.style.marginTop = '10px';
+                                newParagraph.style.color = '#2c5aa0';
+                                newParagraph.innerHTML = '<em>Note: Your payment today ensures your wishes will be honored. This one-time fee covers all future costs, providing peace of mind that everything is arranged.</em>';
+                                paymentSection.insertBefore(newParagraph, paymentOptions.parentElement);
+                                console.log('Debug - Added peace of mind language');
+                            }
                         }
                     }
                 } else if (appType === 'immediate' || appType === 'Immediate' || appType === 'Immediate Placement') {
