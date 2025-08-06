@@ -1186,7 +1186,13 @@
             
             // Update timeline and next steps based on application type
             try {
-                if (submittedData['Application Type'] === 'future') {
+                console.log('Debug - Application Type value:', submittedData['Application Type']);
+                console.log('Debug - Full submittedData:', submittedData);
+                
+                // Check multiple possible values for future placement
+                const appType = submittedData['Application Type'];
+                if (appType === 'future' || appType === 'Future' || appType === 'Future Placement') {
+                    console.log('Debug - Updating for future placement');
                     // Update step 1 for future placement
                     document.querySelector('#thankYouPage .step:nth-child(1) p').textContent = 'You will receive a confirmation email within 24 hours with a copy of your application and payment instructions for securing your future placement.';
                     
@@ -1217,7 +1223,8 @@
                             paymentSection.insertBefore(newParagraph, paymentOptions.parentElement);
                         }
                     }
-                } else {
+                } else if (appType === 'immediate' || appType === 'Immediate' || appType === 'Immediate Placement') {
+                    console.log('Debug - Updating for immediate placement');
                     // Update for immediate placement
                     const timelineItems = document.querySelectorAll('#thankYouPage .timeline-item');
                     if (timelineItems.length >= 5) {
@@ -1237,6 +1244,8 @@
                             paymentSection.insertBefore(newParagraph, paymentOptions.parentElement);
                         }
                     }
+                } else {
+                    console.warn('Debug - Unexpected Application Type:', appType);
                 }
             } catch (error) {
                 console.error('Error updating thank you page content:', error);
