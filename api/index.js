@@ -41,6 +41,16 @@ const routes = {
   'GET /api/health': health,
   'OPTIONS /api/health': health,
   'GET /api/diagnostic/check-db-url': checkDbUrl,
+  
+  // Temporary deployment test
+  'GET /api/deployment-test': (req, res) => {
+    return res.status(200).json({
+      message: 'Direct deployment test',
+      timestamp: new Date().toISOString(),
+      version: '2025-08-06-21:50-direct',
+      hasCleanUrl: !!process.env.DATABASE_URL_CLEAN
+    });
+  }
 };
 
 export default async function handler(req, res) {
