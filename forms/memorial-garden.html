@@ -596,9 +596,9 @@
 </div>
 <!-- Bay View Membership - Moved to top for fee calculation -->
 <div class="form-section">
-<h2>Bay View Membership Information</h2>
+<h2>What's your Bay View connection?</h2>
 <div class="form-group">
-<label>Is the person whose ashes are to be placed in the Garden a Bay View member or relative of a member? <span class="required">*</span></label>
+<label>Are you a Bay View member or relative? <span class="required">*</span></label>
 <div class="radio-group">
 <input id="member_yes" name="is_member" required="" type="radio" value="Yes"/>
 <label for="member_yes">Yes - Bay View member or relative</label>
@@ -642,8 +642,8 @@
 </div>
 <!-- Prepayment Information Section (only for prepayment) -->
 <div class="form-section" id="prepaymentInfoSection" style="display: none;">
-<h2 id="prepaymentInfoTitle">Prepayment Coverage Information</h2>
-<p style="color: #666; margin-bottom: 20px;">Please provide only the names of those covered by this prepayment. Full biographical information will be collected when needed in the future.</p>
+<h2 id="prepaymentInfoTitle">Let's get the names</h2>
+<p style="color: #666; margin-bottom: 20px;">Just the names for now – we'll handle everything else when the time comes.</p>
 
 <!-- Dynamic prepayment name fields will be shown based on selection -->
 <div id="prepaymentSimpleNames" style="display: none;">
@@ -685,7 +685,7 @@
 </div>
 <!-- Service Planning Section -->
 <div class="form-section service-planning-section" id="servicePlanningSection">
-<h2>Service Planning</h2>
+<h2>Planning a memorial service?</h2>
 <div class="two-column">
 <div class="form-group">
 <label for="requested_service_date">Requested Date for Service</label>
@@ -724,7 +724,7 @@
 </div>
 <!-- Payment Information -->
 <div class="form-section">
-<h2>Payment Information</h2>
+<h2>Almost done! Let's handle payment</h2>
 <div class="payment-section">
 <div class="form-group">
 <label for="payment_amount">Amount Due ($) <span class="required">*</span></label>
@@ -778,7 +778,7 @@
 
 <!-- Personal History Information -->
 <div class="form-section" id="personalHistorySection">
-<h2 id="personalHistoryTitle">Personal Information</h2>
+<h2 id="personalHistoryTitle">Tell us about your loved one</h2>
 <p id="personalHistoryDescription" style="margin-bottom: 15px; font-style: italic;">Please provide information for the memorial garden archival file.</p>
 <div class="two-column">
 <div class="form-group">
@@ -849,8 +849,8 @@
 </div>
 <!-- Contact Information -->
 <div class="form-section">
-<h2 id="contactSectionTitle">Your Contact Information</h2>
-<p id="contactSectionDescription" style="margin-bottom: 15px; font-style: italic;">How can we reach you regarding this application?</p>
+<h2 id="contactSectionTitle">How can we reach you?</h2>
+<p id="contactSectionDescription" style="margin-bottom: 15px; font-style: italic;">We'll keep you updated every step of the way</p>
 <div class="form-group">
 <label for="contact_name">Full Name <span class="required">*</span></label>
 <input id="contact_name" name="contact_name" required="" type="text"/>
@@ -877,7 +877,7 @@
 </div>
 <!-- Policies -->
 <div class="form-section">
-<h2>Memorial Garden Policies</h2>
+<h2>One last thing</h2>
 <div class="policy-note">
 <h3>Important Information</h3>
 <ul style="margin-left: 20px;">
@@ -919,7 +919,7 @@
 </div>
 <div style="text-align: center;">
 <div class="checkmark"></div>
-<h2 style="color: #28a745; margin: 20px 0;">Application Successfully Submitted!</h2>
+<h2 style="color: #28a745; margin: 20px 0;">All set!</h2>
 </div>
 <div class="submission-details">
 <h3>Your Submission Details</h3>
@@ -1224,8 +1224,8 @@
                         secondPersonDescription.textContent = 'Please provide information for the second person this prepayment covers.';
                         // Show contact section for applicant info
                         contactSection.style.display = 'block';
-                        contactSectionTitle.textContent = 'Your Contact Information (Applicant)';
-                        contactSectionDescription.textContent = 'Since this prepayment is for others, please provide your contact information as the applicant.';
+                        contactSectionTitle.textContent = 'How can we reach you? (Applicant)';
+                        contactSectionDescription.textContent = 'Since this is for others, we'll need your contact info as the applicant.';
                         if (prepaymentField) {
                             prepaymentField.value = 'Two other people (not myself)';
                         }
@@ -1282,8 +1282,8 @@
                         personalHistoryDescription.textContent = 'Please provide information about the deceased for the memorial garden archival file.';
                         // Show contact section for immediate placement
                         contactSection.style.display = 'block';
-                        contactSectionTitle.textContent = 'Your Contact Information';
-                        contactSectionDescription.textContent = 'How can we reach you regarding this application?';
+                        contactSectionTitle.textContent = 'How can we reach you?';
+                        contactSectionDescription.textContent = 'We'll keep you updated every step of the way';
                     }
                 }
                 
