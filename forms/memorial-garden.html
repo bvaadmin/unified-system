@@ -683,8 +683,8 @@
 <!-- Hidden summary field for backwards compatibility -->
 <input id="prepayment_names" name="prepayment_names" type="hidden"/>
 </div>
-<!-- Service Planning Section -->
-<div class="form-section service-planning-section" id="servicePlanningSection">
+<!-- Service Planning Section (only for immediate placement) -->
+<div class="form-section service-planning-section" id="servicePlanningSection" style="display: none;">
 <h2>Planning a memorial service?</h2>
 <div class="two-column">
 <div class="form-group">
@@ -1378,7 +1378,7 @@
                     deathDateGroup.style.display = 'none';
                     personalHistorySection.style.display = 'none'; // HIDE - not needed for prepayment
                     deceasedNameGroup.style.display = 'none';
-                    servicePlanningSection.style.display = 'none';
+                    servicePlanningSection.style.display = 'none'; // No service planning for prepayments
                     
                     // Hide second person section entirely for prepayments
                     document.getElementById('secondPersonSection').style.display = 'none';
@@ -1427,8 +1427,8 @@
                     document.getElementById('father_name').value = '';
                     document.getElementById('bayview_history').value = '';
                     
-                } else {
-                    // Show fields for immediate placement
+                } else if (this.value === 'immediate') {
+                    // Show fields for immediate placement only
                     deathDateGroup.style.display = 'block';
                     personalHistorySection.style.display = 'block';
                     deceasedNameGroup.style.display = 'block';
