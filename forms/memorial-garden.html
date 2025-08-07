@@ -1379,7 +1379,7 @@
                     deathDateGroup.style.display = 'none';
                     personalHistorySection.style.display = 'none'; // HIDE - not needed for prepayment
                     deceasedNameGroup.style.display = 'none';
-                    servicePlanningSection.style.display = 'none'; // No service planning for prepayments
+                    servicePlanningSection.style.setProperty('display', 'none', 'important'); // No service planning for prepayments
                     
                     // Hide second person section entirely for prepayments
                     document.getElementById('secondPersonSection').style.display = 'none';
@@ -1433,8 +1433,8 @@
                     deathDateGroup.style.display = 'block';
                     personalHistorySection.style.display = 'block';
                     deceasedNameGroup.style.display = 'block';
-                    // Show service planning section for immediate placement
-                    servicePlanningSection.style.display = 'block';
+                    // Show service planning section for immediate placement - use !important to override CSS
+                    servicePlanningSection.style.setProperty('display', 'block', 'important');
                     
                     // Show second person death fields if two placements selected
                     if (isForTwo) {
