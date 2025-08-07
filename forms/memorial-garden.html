@@ -740,8 +740,8 @@
 
 <!-- Second Person Information (for Two Placements) -->
 <div class="form-section" id="secondPersonSection" style="display: none;">
-<h2 id="secondPersonTitle">Second Person Information</h2>
-<p id="secondPersonDescription" style="color: #666; margin-bottom: 15px;">Please provide information for the second placement</p>
+<h2 id="secondPersonTitle">Tell us about the second person</h2>
+<p id="secondPersonDescription" style="color: #666; margin-bottom: 15px;">We'd like to know about them too</p>
 <div class="form-row">
 <div class="form-group">
 <label for="second_first_name">First Name <span class="required">*</span></label>
@@ -1177,8 +1177,10 @@
                 
                 // Determine if this is for two people
                 const isForTwo = (this.value === 'self_and_other' || this.value === 'two_others' || this.value === 'two_people');
+                const applicationType = document.querySelector('input[name="applicationType"]:checked')?.value;
                 
-                if (isForTwo) {
+                // Only show second person section for immediate placements with two people
+                if (isForTwo && applicationType !== 'future') {
                     secondPersonSection.style.display = 'block';
                     placementNote.style.display = 'block';
                     
@@ -1209,8 +1211,8 @@
                         placementNoteText.textContent = 'This prepayment covers both you and one other person. Please provide both sets of information below.';
                         personalHistoryTitle.textContent = 'Your Information';
                         personalHistoryDescription.textContent = 'Please provide your personal information for memorial placement.';
-                        secondPersonTitle.textContent = 'Other Person\'s Information';
-                        secondPersonDescription.textContent = 'Please provide information for the other person to be memorialized.';
+                        secondPersonTitle.textContent = 'Tell us about the other person';
+                        secondPersonDescription.textContent = 'We\'d like to know about them too.';
                         // Hide contact section - redundant with personal history
                         contactSection.style.display = 'none';
                         if (prepaymentField) {
