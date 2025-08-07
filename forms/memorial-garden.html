@@ -642,12 +642,46 @@
 </div>
 <!-- Prepayment Information Section (only for prepayment) -->
 <div class="form-section" id="prepaymentInfoSection" style="display: none;">
-<h2 id="prepaymentInfoTitle">Prepayment Details</h2>
-<div class="form-group" id="prepaymentNamesGroup" style="display: none;">
-<label for="prepayment_names">Memorial placement coverage summary</label>
-<input id="prepayment_names" name="prepayment_names" type="text" readonly style="background-color: #f5f5f5;"/>
-<small style="color: #666; font-style: italic;">Automatically filled based on your selection</small>
+<h2 id="prepaymentInfoTitle">Prepayment Coverage Information</h2>
+<p style="color: #666; margin-bottom: 20px;">Please provide only the names of those covered by this prepayment. Full biographical information will be collected when needed in the future.</p>
+
+<!-- Dynamic prepayment name fields will be shown based on selection -->
+<div id="prepaymentSimpleNames" style="display: none;">
+    <!-- For self -->
+    <div id="prepaymentSelfSection" style="display: none;">
+        <div class="form-group">
+            <label for="prepayment_your_name">Your Name <span class="required">*</span></label>
+            <input id="prepayment_your_name" name="prepayment_your_name" type="text" placeholder="Enter your full name"/>
+        </div>
+    </div>
+    
+    <!-- For self_and_other -->
+    <div id="prepaymentSelfAndOtherSection" style="display: none;">
+        <div class="form-group">
+            <label for="prepayment_person1_name">Your Name <span class="required">*</span></label>
+            <input id="prepayment_person1_name" name="prepayment_person1_name" type="text" placeholder="Enter your full name"/>
+        </div>
+        <div class="form-group">
+            <label for="prepayment_person2_name">Other Person's Name <span class="required">*</span></label>
+            <input id="prepayment_person2_name" name="prepayment_person2_name" type="text" placeholder="Enter the other person's full name"/>
+        </div>
+    </div>
+    
+    <!-- For two_others -->
+    <div id="prepaymentTwoOthersSection" style="display: none;">
+        <div class="form-group">
+            <label for="prepayment_other1_name">First Person's Name <span class="required">*</span></label>
+            <input id="prepayment_other1_name" name="prepayment_other1_name" type="text" placeholder="Enter the first person's full name"/>
+        </div>
+        <div class="form-group">
+            <label for="prepayment_other2_name">Second Person's Name <span class="required">*</span></label>
+            <input id="prepayment_other2_name" name="prepayment_other2_name" type="text" placeholder="Enter the second person's full name"/>
+        </div>
+    </div>
 </div>
+
+<!-- Hidden summary field for backwards compatibility -->
+<input id="prepayment_names" name="prepayment_names" type="hidden"/>
 </div>
 <!-- Service Planning Section -->
 <div class="form-section service-planning-section" id="servicePlanningSection">
@@ -815,8 +849,8 @@
 </div>
 <!-- Contact Information -->
 <div class="form-section">
-<h2>Your Contact Information</h2>
-<p style="margin-bottom: 15px; font-style: italic;">How can we reach you regarding this application?</p>
+<h2 id="contactSectionTitle">Your Contact Information</h2>
+<p id="contactSectionDescription" style="margin-bottom: 15px; font-style: italic;">How can we reach you regarding this application?</p>
 <div class="form-group">
 <label for="contact_name">Full Name <span class="required">*</span></label>
 <input id="contact_name" name="contact_name" required="" type="text"/>
@@ -1044,6 +1078,50 @@
             feeNote.textContent = 'Please select membership status above to see your fee';
         });
         
+        // Function to update prepayment name fields based on placement type
+        function updatePrepaymentNameFields() {
+            const placementType = document.querySelector('input[name="placementType"]:checked')?.value;
+            const applicationType = document.querySelector('input[name="applicationType"]:checked')?.value;
+            
+            // Hide all prepayment name sections first
+            document.getElementById('prepaymentSelfSection').style.display = 'none';
+            document.getElementById('prepaymentSelfAndOtherSection').style.display = 'none';
+            document.getElementById('prepaymentTwoOthersSection').style.display = 'none';
+            
+            // Clear required attributes
+            document.getElementById('prepayment_your_name').removeAttribute('required');
+            document.getElementById('prepayment_person1_name').removeAttribute('required');
+            document.getElementById('prepayment_person2_name').removeAttribute('required');
+            document.getElementById('prepayment_other1_name').removeAttribute('required');
+            document.getElementById('prepayment_other2_name').removeAttribute('required');
+            
+            if (applicationType === 'future' && placementType) {
+                const prepaymentNamesField = document.getElementById('prepayment_names');
+                
+                if (placementType === 'self') {
+                    document.getElementById('prepaymentSelfSection').style.display = 'block';
+                    document.getElementById('prepayment_your_name').setAttribute('required', 'required');
+                    if (prepaymentNamesField) {
+                        prepaymentNamesField.value = 'Myself';
+                    }
+                } else if (placementType === 'self_and_other') {
+                    document.getElementById('prepaymentSelfAndOtherSection').style.display = 'block';
+                    document.getElementById('prepayment_person1_name').setAttribute('required', 'required');
+                    document.getElementById('prepayment_person2_name').setAttribute('required', 'required');
+                    if (prepaymentNamesField) {
+                        prepaymentNamesField.value = 'Myself and one other person';
+                    }
+                } else if (placementType === 'two_others') {
+                    document.getElementById('prepaymentTwoOthersSection').style.display = 'block';
+                    document.getElementById('prepayment_other1_name').setAttribute('required', 'required');
+                    document.getElementById('prepayment_other2_name').setAttribute('required', 'required');
+                    if (prepaymentNamesField) {
+                        prepaymentNamesField.value = 'Two other people';
+                    }
+                }
+            }
+        }
+        
         // Show/hide prepayment section based on application type
         document.querySelectorAll('input[name="applicationType"]').forEach(radio => {
             radio.addEventListener('change', function() {
@@ -1092,6 +1170,11 @@
                 const secondDeathDateGroup = document.getElementById('secondDeathDateGroup');
                 const secondDeceasedNameGroup = document.getElementById('secondDeceasedNameGroup');
                 
+                // Update prepayment name fields for future placements
+                if (applicationType === 'future') {
+                    updatePrepaymentNameFields();
+                }
+                
                 // Determine if this is for two people
                 const isForTwo = (this.value === 'self_and_other' || this.value === 'two_others' || this.value === 'two_people');
                 
@@ -1110,27 +1193,39 @@
                     const personalHistoryDescription = document.getElementById('personalHistoryDescription');
                     const prepaymentField = document.getElementById('prepayment_names');
                     
+                    const contactSection = document.querySelector('#contactSectionTitle').closest('.form-section');
+                    const contactSectionTitle = document.getElementById('contactSectionTitle');
+                    const contactSectionDescription = document.getElementById('contactSectionDescription');
+                    
                     if (this.value === 'self') {
                         personalHistoryTitle.textContent = 'Your Information';
                         personalHistoryDescription.textContent = 'Please provide your personal information for the memorial garden archival file.';
+                        // Hide contact section - redundant with personal history
+                        contactSection.style.display = 'none';
                         if (prepaymentField) {
                             prepaymentField.value = 'Myself';
                         }
                     } else if (this.value === 'self_and_other') {
                         placementNoteText.textContent = 'This prepayment covers both you and one other person. Please provide both sets of information below.';
-                        personalHistoryTitle.textContent = 'Your Information (First Person)';
-                        personalHistoryDescription.textContent = 'Please provide your personal information.';
+                        personalHistoryTitle.textContent = 'Your Information';
+                        personalHistoryDescription.textContent = 'Please provide your personal information for memorial placement.';
                         secondPersonTitle.textContent = 'Other Person\'s Information';
                         secondPersonDescription.textContent = 'Please provide information for the other person to be memorialized.';
+                        // Hide contact section - redundant with personal history
+                        contactSection.style.display = 'none';
                         if (prepaymentField) {
                             prepaymentField.value = 'Myself and one other person';
                         }
                     } else if (this.value === 'two_others') {
                         placementNoteText.textContent = 'This prepayment covers two people (not including yourself). Please provide information for both individuals below.';
-                        personalHistoryTitle.textContent = 'First Person\'s Information';
-                        personalHistoryDescription.textContent = 'Please provide information for the first person to be memorialized.';
-                        secondPersonTitle.textContent = 'Second Person\'s Information';
-                        secondPersonDescription.textContent = 'Please provide information for the second person to be memorialized.';
+                        personalHistoryTitle.textContent = 'First Person to be Memorialized';
+                        personalHistoryDescription.textContent = 'Please provide information for the first person this prepayment covers.';
+                        secondPersonTitle.textContent = 'Second Person to be Memorialized';
+                        secondPersonDescription.textContent = 'Please provide information for the second person this prepayment covers.';
+                        // Show contact section for applicant info
+                        contactSection.style.display = 'block';
+                        contactSectionTitle.textContent = 'Your Contact Information (Applicant)';
+                        contactSectionDescription.textContent = 'Since this prepayment is for others, please provide your contact information as the applicant.';
                         if (prepaymentField) {
                             prepaymentField.value = 'Two other people (not myself)';
                         }
@@ -1161,6 +1256,11 @@
                     document.getElementById('second_first_name').removeAttribute('required');
                     document.getElementById('second_last_name').removeAttribute('required');
                     
+                    // Get contact section elements
+                    const contactSection = document.querySelector('#contactSectionTitle').closest('.form-section');
+                    const contactSectionTitle = document.getElementById('contactSectionTitle');
+                    const contactSectionDescription = document.getElementById('contactSectionDescription');
+                    
                     // Reset titles for single placement
                     if (this.value === 'self') {
                         const personalHistoryTitle = document.getElementById('personalHistoryTitle');
@@ -1169,6 +1269,8 @@
                         
                         personalHistoryTitle.textContent = 'Your Information';
                         personalHistoryDescription.textContent = 'Please provide your personal information for the memorial garden archival file.';
+                        // Hide contact section - redundant
+                        contactSection.style.display = 'none';
                         if (prepaymentField) {
                             prepaymentField.value = 'Myself';
                         }
@@ -1178,6 +1280,10 @@
                         
                         personalHistoryTitle.textContent = 'Deceased Person\'s Information';
                         personalHistoryDescription.textContent = 'Please provide information about the deceased for the memorial garden archival file.';
+                        // Show contact section for immediate placement
+                        contactSection.style.display = 'block';
+                        contactSectionTitle.textContent = 'Your Contact Information';
+                        contactSectionDescription.textContent = 'How can we reach you regarding this application?';
                     }
                 }
                 
@@ -1266,21 +1372,24 @@
                 const isForTwo = placementType && (placementType === 'self_and_other' || placementType === 'two_others' || placementType === 'two_people');
                 
                 if (this.value === 'future') {
-                    // Hide fields for prepayment (planning ahead)
+                    // Hide ALL biographical sections for prepayment
                     deathDateGroup.style.display = 'none';
-                    personalHistorySection.style.display = 'none';
+                    personalHistorySection.style.display = 'none'; // HIDE - not needed for prepayment
                     deceasedNameGroup.style.display = 'none';
                     servicePlanningSection.style.display = 'none';
                     
-                    // Hide second person death fields if two placements selected
-                    if (isForTwo) {
-                        secondDeathDateGroup.style.display = 'none';
-                        secondDeceasedNameGroup.style.display = 'none';
-                    }
+                    // Hide second person section entirely for prepayments
+                    document.getElementById('secondPersonSection').style.display = 'none';
                     
                     // Show prepayment-specific fields
                     prepaymentInfoSection.style.display = 'block';
-                    prepaymentNamesInput.setAttribute('required', 'required');
+                    
+                    // Show the appropriate prepayment name fields based on placement type
+                    const prepaymentSimpleNames = document.getElementById('prepaymentSimpleNames');
+                    if (prepaymentSimpleNames) {
+                        prepaymentSimpleNames.style.display = 'block';
+                        updatePrepaymentNameFields();
+                    }
                     
                     // Remove required attributes for immediate placement fields
                     deathDateInput.removeAttribute('required');
@@ -1557,42 +1666,82 @@
             
             // Collect form data
             const submissionId = 'MG-' + Date.now();
+            const applicationType = document.querySelector('input[name="applicationType"]:checked')?.value || '';
+            const placementType = document.querySelector('input[name="placementType"]:checked')?.value || '';
+            
+            // Build base form data
             const formData = {
                 'Submission ID': submissionId,
                 'Submission Date': new Date().toISOString(),
                 'date:Submission Date:start': new Date().toISOString().split('T')[0],
                 'Status': 'Submitted',
-                'Application Type': document.querySelector('input[name="applicationType"]:checked')?.value || '',
-                'Placement Type': document.querySelector('input[name="placementType"]:checked')?.value || '',
+                'Application Type': applicationType,
+                'Placement Type': placementType,
                 'Bay View Member': membershipSelected.value,
-                'Contact Name': document.getElementById('contact_name').value,
-                'Contact Phone': document.getElementById('contact_phone').value,
-                'Contact Email': document.getElementById('contact_email').value || '',
-                'Contact Address': combineAddress(
+                'Member Name': document.getElementById('member_name').value || '',
+                'Member Relationship': document.getElementById('member_relationship').value || '',
+                'Fee Amount': parseFloat(document.getElementById('payment_amount').value) || 0,
+                'Policy Agreement': document.getElementById('policy_agreement').checked ? '__YES__' : '__NO__',
+                'Prepayment Made': document.querySelector('input[name="prepaymentMade"]:checked')?.value || ''
+            };
+            
+            // For prepayments (future), collect simplified data
+            if (applicationType === 'future') {
+                formData['Simplified'] = true;  // Flag to indicate simplified prepayment
+                formData['Prepayment Names'] = document.getElementById('prepayment_names').value || '';
+                
+                // Collect specific prepayment names based on placement type
+                if (placementType === 'self') {
+                    formData['Prepayment Person 1'] = document.getElementById('prepayment_your_name').value || '';
+                } else if (placementType === 'self_and_other') {
+                    formData['Prepayment Person 1'] = document.getElementById('prepayment_person1_name').value || '';
+                    formData['Prepayment Person 2'] = document.getElementById('prepayment_person2_name').value || '';
+                } else if (placementType === 'two_others') {
+                    formData['Prepayment Person 1'] = document.getElementById('prepayment_other1_name').value || '';
+                    formData['Prepayment Person 2'] = document.getElementById('prepayment_other2_name').value || '';
+                }
+                
+                // Always collect contact info for prepayments
+                formData['Contact Name'] = document.getElementById('contact_name').value;
+                formData['Contact Phone'] = document.getElementById('contact_phone').value;
+                formData['Contact Email'] = document.getElementById('contact_email').value || '';
+                formData['Contact Address'] = combineAddress(
                     document.getElementById('contact_street').value,
                     document.getElementById('contact_city').value,
                     document.getElementById('contact_state').value,
                     document.getElementById('contact_zip').value
-                ),
-                'Deceased Name': document.getElementById('deceased_name').value || '',
-                'Member Name': document.getElementById('member_name').value || '',
-                'Member Relationship': document.getElementById('member_relationship').value || '',
-                'Bay View History': document.getElementById('bayview_history').value || '',
-                'Personal History JSON': collectPersonalHistory(),
-                'Prepayment Names': document.getElementById('prepayment_names').value || '',
-                'Second Person First Name': document.getElementById('second_first_name').value || '',
-                'Second Person Middle Name': document.getElementById('second_middle_name').value || '',
-                'Second Person Last Name': document.getElementById('second_last_name').value || '',
-                'Second Person Maiden Name': document.getElementById('second_maiden_name').value || '',
-                'Second Person Birth Date': document.getElementById('second_birth_date').value || '',
-                'Second Person Death Date': document.getElementById('second_death_date').value || '',
-                'Second Person Deceased Name': document.getElementById('second_deceased_name').value || '',
-                'Fee Amount': parseFloat(document.getElementById('payment_amount').value) || 0,
-                'Policy Agreement': document.getElementById('policy_agreement').checked ? '__YES__' : '__NO__',
-                'date:Service Date:start': document.getElementById('requested_service_date').value || '',
-                'Celebrant Requested': document.querySelector('input[name="celebrant_requested"]:checked')?.value || '',
-                'Prepayment Made': document.querySelector('input[name="prepaymentMade"]:checked')?.value || ''
-            };
+                );
+                
+                // No biographical data for prepayments
+                formData['Personal History JSON'] = '{}';
+                formData['Bay View History'] = '';
+                formData['Deceased Name'] = '';
+                
+            } else {
+                // For immediate placements, collect full data
+                formData['Contact Name'] = document.getElementById('contact_name').value;
+                formData['Contact Phone'] = document.getElementById('contact_phone').value;
+                formData['Contact Email'] = document.getElementById('contact_email').value || '';
+                formData['Contact Address'] = combineAddress(
+                    document.getElementById('contact_street').value,
+                    document.getElementById('contact_city').value,
+                    document.getElementById('contact_state').value,
+                    document.getElementById('contact_zip').value
+                );
+                formData['Deceased Name'] = document.getElementById('deceased_name').value || '';
+                formData['Bay View History'] = document.getElementById('bayview_history').value || '';
+                formData['Personal History JSON'] = collectPersonalHistory();
+                formData['Prepayment Names'] = '';
+                formData['Second Person First Name'] = document.getElementById('second_first_name').value || '';
+                formData['Second Person Middle Name'] = document.getElementById('second_middle_name').value || '';
+                formData['Second Person Last Name'] = document.getElementById('second_last_name').value || '';
+                formData['Second Person Maiden Name'] = document.getElementById('second_maiden_name').value || '';
+                formData['Second Person Birth Date'] = document.getElementById('second_birth_date').value || '';
+                formData['Second Person Death Date'] = document.getElementById('second_death_date').value || '';
+                formData['Second Person Deceased Name'] = document.getElementById('second_deceased_name').value || '';
+                formData['date:Service Date:start'] = document.getElementById('requested_service_date').value || '';
+                formData['Celebrant Requested'] = document.querySelector('input[name="celebrant_requested"]:checked')?.value || '';
+            }
             
             // Store for thank you page
             submittedData = formData;
