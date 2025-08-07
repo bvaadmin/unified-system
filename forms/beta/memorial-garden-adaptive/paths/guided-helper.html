@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Helping Someone - Memorial Garden - Bay View Association</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .header h1 {
+            color: #2c5aa0;
+            margin-bottom: 15px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .helper-message {
+            background: #f0f8ff;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+            border-left: 4px solid #2c5aa0;
+        }
+        
+        .helper-message p {
+            margin: 0;
+            color: #555;
+            font-size: 1.05em;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section h2 {
+            color: #2c5aa0;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+        
+        .role-cards {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .role-card {
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .role-card:hover {
+            border-color: #2c5aa0;
+            background: #f0f8ff;
+        }
+        
+        .role-card.selected {
+            border-color: #2c5aa0;
+            background: #e8f4ff;
+        }
+        
+        .role-card h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        
+        .role-card p {
+            margin: 0;
+            font-size: 0.95em;
+            color: #666;
+        }
+        
+        .authorization-notice {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+        
+        .authorization-notice h3 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .authorization-notice p {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+        
+        .required {
+            color: #dc3545;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+        
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #2c5aa0;
+        }
+        
+        .checkbox-group {
+            margin: 20px 0;
+        }
+        
+        .checkbox-option {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .checkbox-option input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-top: 2px;
+            cursor: pointer;
+        }
+        
+        .checkbox-option label {
+            margin: 0;
+            font-weight: normal;
+            cursor: pointer;
+        }
+        
+        .next-steps-box {
+            background: #e8f4ff;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .next-steps-box h3 {
+            color: #2c5aa0;
+            margin-bottom: 15px;
+        }
+        
+        .next-steps-box ol {
+            margin: 0;
+            padding-left: 25px;
+            color: #555;
+        }
+        
+        .next-steps-box li {
+            margin-bottom: 10px;
+        }
+        
+        .btn {
+            padding: 15px 40px;
+            border-radius: 5px;
+            font-size: 1.1em;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: #2c5aa0;
+            color: white;
+            width: 100%;
+        }
+        
+        .btn-primary:hover {
+            background: #1e3d6f;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #2c5aa0;
+            border: 1px solid #2c5aa0;
+        }
+        
+        .btn-secondary:hover {
+            background: #f0f8ff;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Helping with Memorial Garden Application</h1>
+            <p>We appreciate your assistance during this difficult time</p>
+        </div>
+        
+        <div class="helper-message">
+            <p>Thank you for helping. We'll guide you through what information is needed and how to proceed.</p>
+        </div>
+        
+        <form id="helperForm">
+            <div class="section">
+                <h2>Your Role</h2>
+                <p style="margin-bottom: 20px; color: #666;">Please let us know how you're helping:</p>
+                
+                <div class="role-cards">
+                    <div class="role-card" onclick="selectRole('executor')">
+                        <h3>Executor or Personal Representative</h3>
+                        <p>I'm legally authorized to handle estate matters</p>
+                    </div>
+                    
+                    <div class="role-card" onclick="selectRole('funeral')">
+                        <h3>Funeral Director or Professional</h3>
+                        <p>I'm assisting in a professional capacity</p>
+                    </div>
+                    
+                    <div class="role-card" onclick="selectRole('friend')">
+                        <h3>Friend or Community Member</h3>
+                        <p>I'm helping as a friend or fellow Bay View member</p>
+                    </div>
+                    
+                    <div class="role-card" onclick="selectRole('clergy')">
+                        <h3>Clergy or Religious Leader</h3>
+                        <p>I'm providing spiritual support and guidance</p>
+                    </div>
+                </div>
+                
+                <input type="hidden" id="helperRole" name="helperRole" required>
+            </div>
+            
+            <div id="authorizationSection" style="display: none;">
+                <div class="authorization-notice">
+                    <h3>Authorization Required</h3>
+                    <p>To complete this application on behalf of someone else, we need to verify that you have proper authorization from the family or estate.</p>
+                    
+                    <div class="checkbox-group">
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="hasAuthorization" name="hasAuthorization" required>
+                            <label for="hasAuthorization">
+                                I confirm that I have authorization from the family or legal authority to submit this application
+                            </label>
+                        </div>
+                        
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="willProvideFamily" name="willProvideFamily">
+                            <label for="willProvideFamily">
+                                I will provide family contact information for verification if needed
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section" id="contactSection" style="display: none;">
+                <h2>Your Contact Information</h2>
+                
+                <div class="form-group">
+                    <label for="yourName">Your name <span class="required">*</span></label>
+                    <input type="text" id="yourName" name="yourName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="yourTitle">Title or relationship</label>
+                    <input type="text" id="yourTitle" name="yourTitle" placeholder="e.g., Executor, Pastor, Friend">
+                </div>
+                
+                <div class="form-group">
+                    <label for="yourOrganization">Organization (if applicable)</label>
+                    <input type="text" id="yourOrganization" name="yourOrganization">
+                </div>
+                
+                <div class="form-group">
+                    <label for="yourPhone">Phone number <span class="required">*</span></label>
+                    <input type="tel" id="yourPhone" name="yourPhone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="yourEmail">Email address <span class="required">*</span></label>
+                    <input type="email" id="yourEmail" name="yourEmail" required>
+                </div>
+            </div>
+            
+            <div class="section" id="familySection" style="display: none;">
+                <h2>Family Contact</h2>
+                <p style="margin-bottom: 20px; color: #666;">Please provide at least one family member we can contact:</p>
+                
+                <div class="form-group">
+                    <label for="familyName">Family member's name <span class="required">*</span></label>
+                    <input type="text" id="familyName" name="familyName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="familyRelationship">Their relationship to the deceased</label>
+                    <input type="text" id="familyRelationship" name="familyRelationship" placeholder="e.g., Spouse, Child, Sibling">
+                </div>
+                
+                <div class="form-group">
+                    <label for="familyPhone">Their phone number <span class="required">*</span></label>
+                    <input type="tel" id="familyPhone" name="familyPhone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="familyEmail">Their email address</label>
+                    <input type="email" id="familyEmail" name="familyEmail">
+                </div>
+            </div>
+            
+            <div class="section" id="helpTypeSection" style="display: none;">
+                <h2>How Would You Like to Proceed?</h2>
+                
+                <div class="form-group">
+                    <label for="helpNeeded">What kind of help do you need?</label>
+                    <textarea id="helpNeeded" name="helpNeeded" placeholder="Please describe what information you have and what assistance you need"></textarea>
+                </div>
+                
+                <div class="next-steps-box">
+                    <h3>Next Steps</h3>
+                    <ol>
+                        <li>We'll review your information</li>
+                        <li>A staff member will contact you within one business day</li>
+                        <li>We'll work together to gather any missing information</li>
+                        <li>Once complete, we'll process the application with the family's approval</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" id="submitBtn" style="display: none;">
+                Submit Request for Assistance
+            </button>
+        </form>
+    </div>
+    
+    <script>
+        let selectedRole = null;
+        const sections = ['authorizationSection', 'contactSection', 'familySection', 'helpTypeSection'];
+        let currentSectionIndex = 0;
+        
+        function selectRole(role) {
+            selectedRole = role;
+            document.getElementById('helperRole').value = role;
+            
+            // Update visual selection
+            document.querySelectorAll('.role-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            
+            // Show next sections based on role
+            showNextSection();
+        }
+        
+        function showNextSection() {
+            // Hide all sections first
+            sections.forEach(id => {
+                document.getElementById(id).style.display = 'none';
+            });
+            
+            // Show appropriate sections based on role
+            if (selectedRole === 'executor' || selectedRole === 'funeral') {
+                // Professional roles - show all sections
+                document.getElementById('authorizationSection').style.display = 'block';
+                document.getElementById('contactSection').style.display = 'block';
+                document.getElementById('familySection').style.display = 'block';
+                document.getElementById('helpTypeSection').style.display = 'block';
+            } else {
+                // Friend/clergy - show contact and help sections
+                document.getElementById('contactSection').style.display = 'block';
+                document.getElementById('familySection').style.display = 'block';
+                document.getElementById('helpTypeSection').style.display = 'block';
+            }
+            
+            // Show submit button
+            document.getElementById('submitBtn').style.display = 'block';
+            
+            // Scroll to first new section
+            document.getElementById('contactSection').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Handle authorization checkbox
+        document.getElementById('hasAuthorization').addEventListener('change', function() {
+            if (!this.checked) {
+                alert('Authorization is required to proceed on behalf of someone else. Please contact the family to obtain proper authorization.');
+            }
+        });
+        
+        // Form submission
+        document.getElementById('helperForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate required fields
+            const requiredFields = this.querySelectorAll('[required]');
+            let valid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value && field.type !== 'checkbox') {
+                    field.style.borderColor = '#dc3545';
+                    valid = false;
+                } else if (field.type === 'checkbox' && !field.checked) {
+                    valid = false;
+                } else {
+                    field.style.borderColor = '#ddd';
+                }
+            });
+            
+            if (!valid) {
+                alert('Please complete all required fields.');
+                return;
+            }
+            
+            // Collect form data
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            data.timestamp = new Date().toISOString();
+            data.referenceNumber = 'HR-' + Date.now().toString(36).toUpperCase();
+            
+            // Save to session
+            sessionStorage.setItem('helperRequest', JSON.stringify(data));
+            
+            // In production, submit to API
+            console.log('Helper request:', data);
+            
+            alert(`Thank you for your assistance. Your reference number is ${data.referenceNumber}. We will contact you within one business day.`);
+            
+            // Redirect to confirmation or home
+            window.location.href = '../';
+        });
+    </script>
+</body>
+</html>

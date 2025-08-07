@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Future Planning - Step 2 - Bay View Memorial Garden</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            color: #2c5aa0;
+            margin-bottom: 15px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .confirmation-box {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 25px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .confirmation-box h2 {
+            margin-bottom: 15px;
+        }
+        
+        .confirmation-box p {
+            margin-bottom: 10px;
+        }
+        
+        .next-steps {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .next-steps h3 {
+            color: #2c5aa0;
+            margin-bottom: 20px;
+        }
+        
+        .next-steps ol {
+            margin: 0;
+            padding-left: 25px;
+        }
+        
+        .next-steps li {
+            margin-bottom: 10px;
+            color: #555;
+        }
+        
+        .reference-number {
+            background: #e8f4ff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .reference-number h3 {
+            color: #2c5aa0;
+            margin-bottom: 10px;
+        }
+        
+        .reference-number .number {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #2c5aa0;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 2px;
+        }
+        
+        .btn {
+            padding: 15px 40px;
+            border-radius: 5px;
+            font-size: 1.1em;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+        
+        .btn-primary {
+            background: #2c5aa0;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1e3d6f;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #2c5aa0;
+            border: 2px solid #2c5aa0;
+        }
+        
+        .btn-secondary:hover {
+            background: #f0f8ff;
+        }
+        
+        .action-buttons {
+            text-align: center;
+            margin-top: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .btn {
+                display: block;
+                width: 100%;
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Application Submitted Successfully</h1>
+            <p>Your future planning application has been received</p>
+        </div>
+        
+        <div class="confirmation-box">
+            <h2>✓ Thank You for Planning Ahead</h2>
+            <p>We've received your prepayment application for the Bay View Memorial Garden.</p>
+            <p>This secures your place and locks in the current member rate of $400.</p>
+        </div>
+        
+        <div class="reference-number">
+            <h3>Your Reference Number</h3>
+            <div class="number" id="refNumber">FP-XXXXXX</div>
+            <p style="margin-top: 10px; color: #666; font-size: 0.9em;">Please save this number for your records</p>
+        </div>
+        
+        <div class="next-steps">
+            <h3>What Happens Next</h3>
+            <ol>
+                <li><strong>Review:</strong> We'll review your application within 2-3 business days</li>
+                <li><strong>Confirmation:</strong> You'll receive an email confirmation with payment instructions</li>
+                <li><strong>Payment:</strong> Send payment to secure your prepayment at the current rate</li>
+                <li><strong>Documentation:</strong> Receive your official prepayment certificate and documentation</li>
+                <li><strong>Peace of Mind:</strong> Your place is secured - no further action needed until the time comes</li>
+            </ol>
+        </div>
+        
+        <div style="background: #f0f8ff; padding: 25px; border-radius: 8px; text-align: center;">
+            <h3 style="color: #2c5aa0; margin-bottom: 15px;">Questions?</h3>
+            <p style="margin-bottom: 20px;">Our staff is happy to help with any questions about your prepayment.</p>
+            <p style="font-size: 1.1em;">
+                <strong>Call:</strong> <a href="tel:231-347-6225" style="color: #2c5aa0; text-decoration: none;">(231) 347-6225</a><br>
+                <strong>Email:</strong> <a href="mailto:memorial@bayviewassociation.org" style="color: #2c5aa0; text-decoration: none;">memorial@bayviewassociation.org</a>
+            </p>
+        </div>
+        
+        <div class="action-buttons">
+            <a href="../" class="btn btn-primary">Return to Home</a>
+            <a href="javascript:window.print()" class="btn btn-secondary">Print This Page</a>
+        </div>
+    </div>
+    
+    <script>
+        // Generate reference number
+        const refNumber = 'FP-' + Date.now().toString(36).toUpperCase();
+        document.getElementById('refNumber').textContent = refNumber;
+        
+        // Load form data if available
+        const formData = sessionStorage.getItem('futurePlanningData');
+        if (formData) {
+            const data = JSON.parse(formData);
+            data.referenceNumber = refNumber;
+            data.submittedAt = new Date().toISOString();
+            
+            // Save updated data
+            sessionStorage.setItem('futurePlanningData', JSON.stringify(data));
+            
+            // In production, this would be sent to the API
+            console.log('Future planning application:', data);
+        }
+    </script>
+</body>
+</html>

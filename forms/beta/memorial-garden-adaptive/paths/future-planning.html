@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plan for the Future - Memorial Garden - Bay View Association</title>
+    <link rel="stylesheet" href="../css/base.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .header h1 {
+            color: #2c5aa0;
+            margin-bottom: 15px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .progress-bar {
+            background: #e0e0e0;
+            height: 6px;
+            border-radius: 3px;
+            margin-bottom: 40px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            background: #2c5aa0;
+            height: 100%;
+            width: 20%;
+            transition: width 0.3s ease;
+        }
+        
+        .form-section {
+            margin-bottom: 40px;
+        }
+        
+        .form-section h2 {
+            color: #2c5aa0;
+            margin-bottom: 10px;
+            font-size: 1.4em;
+        }
+        
+        .form-section p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #2c5aa0;
+        }
+        
+        .radio-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+        }
+        
+        .radio-group label {
+            display: flex;
+            align-items: center;
+            font-weight: normal;
+            margin-bottom: 0;
+        }
+        
+        .radio-group input[type="radio"] {
+            margin-right: 8px;
+        }
+        
+        .name-fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .peace-of-mind {
+            background: #f0f8ff;
+            padding: 25px;
+            border-radius: 8px;
+            margin: 30px 0;
+            border-left: 4px solid #2c5aa0;
+        }
+        
+        .peace-of-mind h3 {
+            color: #2c5aa0;
+            margin-bottom: 10px;
+        }
+        
+        .peace-of-mind ul {
+            margin: 0;
+            padding-left: 25px;
+        }
+        
+        .peace-of-mind li {
+            margin-bottom: 8px;
+            color: #666;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-size: 1em;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: #2c5aa0;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1e3d6f;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #2c5aa0;
+            border: 1px solid #2c5aa0;
+        }
+        
+        .btn-secondary:hover {
+            background: #f0f8ff;
+        }
+        
+        .save-progress {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .save-progress a {
+            color: #2c5aa0;
+            text-decoration: none;
+            font-size: 0.95em;
+        }
+        
+        .save-progress a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .name-fields {
+                grid-template-columns: 1fr;
+            }
+            
+            .radio-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Planning for Your Future</h1>
+            <p>Let's secure your place in the Bay View Memorial Garden</p>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+        
+        <form id="futurePlanningForm">
+            <div class="form-section">
+                <h2>What Information We Need</h2>
+                <p style="margin-bottom: 15px;">For future planning, we only need basic information from you now:</p>
+                
+                <div style="background: #f0f8ff; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+                    <h3 style="color: #2c5aa0; margin-bottom: 15px; font-size: 1.1em;">Required Information:</h3>
+                    <ul style="margin-bottom: 0; color: #555;">
+                        <li>Your full name</li>
+                        <li>Your contact information</li>
+                        <li>Bay View membership status</li>
+                        <li>Payment method preference</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h2>Tell us about yourself</h2>
+                <p>This information helps us prepare your memorial garden documentation.</p>
+                
+                <div class="name-fields">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h2>Your Bay View Connection</h2>
+                
+                <div class="form-group">
+                    <label>Are you a Bay View member?</label>
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="membership" value="yes" required>
+                            Yes, I'm a member
+                        </label>
+                        <label>
+                            <input type="radio" name="membership" value="no" required>
+                            No, but I have family who are
+                        </label>
+                    </div>
+                </div>
+                
+                <div id="membershipDetails" style="display: none;">
+                    <div class="form-group">
+                        <label for="memberName">Member Name (if not you)</label>
+                        <input type="text" id="memberName" name="memberName">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="peace-of-mind">
+                <h3>Peace of Mind Benefits</h3>
+                <ul>
+                    <li>Lock in today's pricing - no future increases</li>
+                    <li>Your wishes are documented and secure</li>
+                    <li>Reduce burden on your family during difficult times</li>
+                    <li>Transferable if your plans change</li>
+                    <li>Full refund available if needed</li>
+                </ul>
+            </div>
+            
+            <div class="navigation">
+                <a href="../" class="btn btn-secondary">
+                    ← Back
+                </a>
+                <button type="button" onclick="continueToNext()" class="btn btn-primary">
+                    Continue →
+                </button>
+            </div>
+            
+            <div class="save-progress">
+                <a href="#" onclick="saveProgress(); return false;">Save my progress and return later</a>
+            </div>
+        </form>
+    </div>
+    
+    <script>
+        // Load any saved data
+        const savedData = JSON.parse(localStorage.getItem('memorialGardenFuture') || '{}');
+        
+        // Populate form with saved data
+        Object.keys(savedData).forEach(key => {
+            const field = document.querySelector(`[name="${key}"]`);
+            if (field) {
+                if (field.type === 'radio') {
+                    const radio = document.querySelector(`[name="${key}"][value="${savedData[key]}"]`);
+                    if (radio) radio.checked = true;
+                } else {
+                    field.value = savedData[key];
+                }
+            }
+        });
+        
+        // Handle membership selection
+        document.querySelectorAll('input[name="membership"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const details = document.getElementById('membershipDetails');
+                details.style.display = this.value === 'no' ? 'block' : 'none';
+            });
+        });
+        
+        // Save form data automatically
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('change', saveFormData);
+            input.addEventListener('blur', saveFormData);
+        });
+        
+        function saveFormData() {
+            const formData = {};
+            document.querySelectorAll('input').forEach(input => {
+                if (input.type === 'radio') {
+                    if (input.checked) {
+                        formData[input.name] = input.value;
+                    }
+                } else {
+                    formData[input.name] = input.value;
+                }
+            });
+            localStorage.setItem('memorialGardenFuture', JSON.stringify(formData));
+        }
+        
+        function continueToNext() {
+            // Validate required fields
+            const form = document.getElementById('futurePlanningForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            saveFormData();
+            
+            // Continue to next step
+            window.location.href = 'future-planning-step2.html';
+        }
+        
+        function saveProgress() {
+            saveFormData();
+            alert('Your progress has been saved. You can return anytime to continue where you left off.');
+        }
+        
+        // Check if returning user
+        if (savedData.firstName) {
+            const header = document.querySelector('.header p');
+            header.textContent = `Welcome back! Let's continue securing your place.`;
+        }
+    </script>
+</body>
+</html>

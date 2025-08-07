@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memorial Garden Application - Express Form - Bay View Association</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #2c5aa0;
+        }
+        
+        .header h1 {
+            color: #2c5aa0;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .notice {
+            background: #e8f4ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid #2c5aa0;
+        }
+        
+        .notice h3 {
+            margin-top: 0;
+            color: #2c5aa0;
+        }
+        
+        .coming-soon {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        
+        .coming-soon h2 {
+            color: #2c5aa0;
+            margin-bottom: 20px;
+        }
+        
+        .coming-soon p {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .options {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: #2c5aa0;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1e3d6f;
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #2c5aa0;
+            border: 2px solid #2c5aa0;
+        }
+        
+        .btn-secondary:hover {
+            background: #f0f8ff;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .options {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Memorial Garden Application</h1>
+            <p>Express Form - For those with all information ready</p>
+        </div>
+        
+        <div class="notice">
+            <h3>Express Form Coming Soon</h3>
+            <p>We're building a streamlined version of our form for users who have all their information ready. This will allow you to complete your application quickly and efficiently.</p>
+        </div>
+        
+        <div class="coming-soon">
+            <h2>This Feature is Under Development</h2>
+            <p>The express form will be available soon. In the meantime, you have two options:</p>
+            
+            <div class="options">
+                <a href="../../memorial-garden.html" class="btn btn-primary">
+                    Use Current Form
+                </a>
+                <a href="../" class="btn btn-secondary">
+                    Try Another Path
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For a Family Member - Memorial Garden - Bay View Association</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .header h1 {
+            color: #2c5aa0;
+            margin-bottom: 15px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .compassion-message {
+            background: #f0f8ff;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+            border-left: 4px solid #2c5aa0;
+        }
+        
+        .compassion-message p {
+            margin: 0;
+            color: #555;
+            font-size: 1.05em;
+        }
+        
+        .progress-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            padding: 0 20px;
+        }
+        
+        .progress-step {
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+        
+        .progress-step::after {
+            content: '';
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            width: 100%;
+            height: 2px;
+            background: #e0e0e0;
+            z-index: -1;
+        }
+        
+        .progress-step:last-child::after {
+            display: none;
+        }
+        
+        .progress-circle {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .progress-step.active .progress-circle {
+            background: #2c5aa0;
+        }
+        
+        .progress-step.completed .progress-circle {
+            background: #28a745;
+        }
+        
+        .progress-label {
+            font-size: 0.85em;
+            color: #666;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section h2 {
+            color: #2c5aa0;
+            margin-bottom: 25px;
+            font-size: 1.4em;
+        }
+        
+        .relationship-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .relationship-card {
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .relationship-card:hover {
+            border-color: #2c5aa0;
+            background: #f0f8ff;
+        }
+        
+        .relationship-card.selected {
+            border-color: #2c5aa0;
+            background: #e8f4ff;
+        }
+        
+        .relationship-card h3 {
+            margin: 0 0 5px 0;
+            color: #333;
+        }
+        
+        .relationship-card p {
+            margin: 0;
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+        
+        .required {
+            color: #dc3545;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+        
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #2c5aa0;
+        }
+        
+        .info-gathering {
+            background: #fffbf0;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #ffc107;
+        }
+        
+        .info-gathering h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+        
+        .info-gathering p {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+        
+        .info-source {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .info-source input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-size: 1em;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: #2c5aa0;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1e3d6f;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #2c5aa0;
+            border: 1px solid #2c5aa0;
+        }
+        
+        .btn-secondary:hover {
+            background: #f0f8ff;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .progress-indicator {
+                padding: 0;
+            }
+            
+            .progress-label {
+                display: none;
+            }
+            
+            .relationship-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Memorial Garden Application</h1>
+            <p>For a family member</p>
+        </div>
+        
+        <div class="compassion-message">
+            <p>We'll help you gather the necessary information step by step. Don't worry if you don't have everything right now.</p>
+        </div>
+        
+        <div class="progress-indicator">
+            <div class="progress-step active" id="step1">
+                <div class="progress-circle">1</div>
+                <div class="progress-label">Relationship</div>
+            </div>
+            <div class="progress-step" id="step2">
+                <div class="progress-circle">2</div>
+                <div class="progress-label">Basic Info</div>
+            </div>
+            <div class="progress-step" id="step3">
+                <div class="progress-circle">3</div>
+                <div class="progress-label">Details</div>
+            </div>
+            <div class="progress-step" id="step4">
+                <div class="progress-circle">4</div>
+                <div class="progress-label">Contact</div>
+            </div>
+            <div class="progress-step" id="step5">
+                <div class="progress-circle">5</div>
+                <div class="progress-label">Review</div>
+            </div>
+        </div>
+        
+        <form id="familyForm">
+            <div class="section" id="section1">
+                <h2>Your Relationship</h2>
+                <p style="margin-bottom: 20px; color: #666;">Please select your relationship to the person you're arranging services for:</p>
+                
+                <div class="relationship-cards">
+                    <div class="relationship-card" onclick="selectRelationship('parent')">
+                        <h3>Parent</h3>
+                        <p>Mother or Father</p>
+                    </div>
+                    
+                    <div class="relationship-card" onclick="selectRelationship('grandparent')">
+                        <h3>Grandparent</h3>
+                        <p>Grandmother or Grandfather</p>
+                    </div>
+                    
+                    <div class="relationship-card" onclick="selectRelationship('sibling')">
+                        <h3>Sibling</h3>
+                        <p>Brother or Sister</p>
+                    </div>
+                    
+                    <div class="relationship-card" onclick="selectRelationship('child')">
+                        <h3>Child</h3>
+                        <p>Son or Daughter</p>
+                    </div>
+                    
+                    <div class="relationship-card" onclick="selectRelationship('other')">
+                        <h3>Other Family</h3>
+                        <p>Aunt, Uncle, Cousin, etc.</p>
+                    </div>
+                </div>
+                
+                <input type="hidden" id="relationship" name="relationship" required>
+                
+                <div id="otherRelationship" style="display: none;">
+                    <div class="form-group">
+                        <label for="relationshipDetail">Please specify your relationship</label>
+                        <input type="text" id="relationshipDetail" name="relationshipDetail" placeholder="e.g., Aunt, Uncle, Cousin">
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section" id="section2" style="display: none;">
+                <h2>Basic Information</h2>
+                
+                <div class="info-gathering">
+                    <h3>Information We'll Need</h3>
+                    <p><strong>Required information:</strong></p>
+                    <ul style="margin-bottom: 15px;">
+                        <li>Their full name</li>
+                        <li>Date of passing</li>
+                        <li>Your contact information</li>
+                    </ul>
+                    
+                    <p><strong>Helpful but not required:</strong></p>
+                    <ul style="margin-bottom: 15px;">
+                        <li>Date of birth</li>
+                        <li>Place of birth</li>
+                        <li>Parents' names</li>
+                        <li>Bay View history/membership</li>
+                    </ul>
+                    
+                    <p style="color: #666; font-size: 0.95em;">You can find this information in:</p>
+                    <div class="info-source">
+                        <input type="checkbox" id="source1">
+                        <label for="source1">Death certificate</label>
+                    </div>
+                    <div class="info-source">
+                        <input type="checkbox" id="source2">
+                        <label for="source2">Obituary or funeral program</label>
+                    </div>
+                    <div class="info-source">
+                        <input type="checkbox" id="source3">
+                        <label for="source3">Family records or Bible</label>
+                    </div>
+                    <div class="info-source">
+                        <input type="checkbox" id="source4">
+                        <label for="source4">Other family members</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="fullName">Their full name <span class="required">*</span></label>
+                    <input type="text" id="fullName" name="fullName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="dateOfBirth">Date of birth</label>
+                    <input type="date" id="dateOfBirth" name="dateOfBirth">
+                    <p class="help-text">Leave blank if unknown</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="dateOfDeath">Date of passing <span class="required">*</span></label>
+                    <input type="date" id="dateOfDeath" name="dateOfDeath" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="placeOfBirth">Place of birth</label>
+                    <input type="text" id="placeOfBirth" name="placeOfBirth" placeholder="City, State/Country">
+                </div>
+            </div>
+            
+            <div class="section" id="section3" style="display: none;">
+                <h2>Additional Details</h2>
+                
+                <div class="form-group">
+                    <label for="parentsNames">Parents' names</label>
+                    <input type="text" id="parentsNames" name="parentsNames" placeholder="Mother and Father's names">
+                    <p class="help-text">This helps with genealogy records</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="bayviewConnection">Connection to Bay View</label>
+                    <textarea id="bayviewConnection" name="bayviewConnection" placeholder="Were they a member? How were they connected to Bay View?"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="personalHistory">Personal history or memories to share</label>
+                    <textarea id="personalHistory" name="personalHistory" placeholder="Share what you'd like remembered about them"></textarea>
+                </div>
+            </div>
+            
+            <div class="section" id="section4" style="display: none;">
+                <h2>Your Contact Information</h2>
+                
+                <div class="form-group">
+                    <label for="yourName">Your name <span class="required">*</span></label>
+                    <input type="text" id="yourName" name="yourName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="yourPhone">Phone number <span class="required">*</span></label>
+                    <input type="tel" id="yourPhone" name="yourPhone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="yourEmail">Email address</label>
+                    <input type="email" id="yourEmail" name="yourEmail">
+                </div>
+                
+                <div class="form-group">
+                    <label for="bestContact">Best way to contact you</label>
+                    <select id="bestContact" name="bestContact">
+                        <option value="phone">Phone</option>
+                        <option value="email">Email</option>
+                        <option value="either">Either is fine</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="section" id="section5" style="display: none;">
+                <h2>Review Your Information</h2>
+                <div id="reviewContent">
+                    <!-- Populated by JavaScript -->
+                </div>
+            </div>
+        </form>
+        
+        <div class="navigation">
+            <button type="button" class="btn btn-secondary" id="prevBtn" onclick="changeSection(-1)" style="display: none;">
+                ← Previous
+            </button>
+            <button type="button" class="btn btn-primary" id="nextBtn" onclick="changeSection(1)" disabled>
+                Next →
+            </button>
+            <button type="submit" class="btn btn-primary" id="submitBtn" style="display: none;">
+                Submit Application
+            </button>
+        </div>
+    </div>
+    
+    <script>
+        let currentSection = 1;
+        const totalSections = 5;
+        let selectedRelationship = null;
+        
+        function selectRelationship(type) {
+            selectedRelationship = type;
+            document.getElementById('relationship').value = type;
+            
+            // Update visual selection
+            document.querySelectorAll('.relationship-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            
+            // Show/hide other relationship field
+            document.getElementById('otherRelationship').style.display = 
+                type === 'other' ? 'block' : 'none';
+            
+            // Enable next button
+            document.getElementById('nextBtn').disabled = false;
+        }
+        
+        function updateProgress() {
+            for (let i = 1; i <= totalSections; i++) {
+                const step = document.getElementById(`step${i}`);
+                if (i < currentSection) {
+                    step.classList.add('completed');
+                    step.classList.remove('active');
+                } else if (i === currentSection) {
+                    step.classList.add('active');
+                    step.classList.remove('completed');
+                } else {
+                    step.classList.remove('active', 'completed');
+                }
+            }
+        }
+        
+        function changeSection(direction) {
+            // Validate current section before moving forward
+            if (direction > 0 && !validateSection(currentSection)) {
+                return;
+            }
+            
+            // Hide current section
+            document.getElementById(`section${currentSection}`).style.display = 'none';
+            
+            // Update section number
+            currentSection += direction;
+            
+            // Show new section
+            document.getElementById(`section${currentSection}`).style.display = 'block';
+            
+            // Update progress
+            updateProgress();
+            
+            // Update navigation
+            updateNavigation();
+            
+            // Prepare review section if needed
+            if (currentSection === 5) {
+                prepareReview();
+            }
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+        
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            prevBtn.style.display = currentSection > 1 ? 'inline-block' : 'none';
+            
+            if (currentSection === totalSections) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'inline-block';
+            } else {
+                nextBtn.style.display = 'inline-block';
+                submitBtn.style.display = 'none';
+            }
+        }
+        
+        function validateSection(section) {
+            const sectionEl = document.getElementById(`section${section}`);
+            const requiredFields = sectionEl.querySelectorAll('[required]:not([type="hidden"])');
+            let valid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value) {
+                    field.style.borderColor = '#dc3545';
+                    valid = false;
+                } else {
+                    field.style.borderColor = '#ddd';
+                }
+            });
+            
+            // Special validation for section 1
+            if (section === 1 && !selectedRelationship) {
+                alert('Please select your relationship to continue.');
+                return false;
+            }
+            
+            if (!valid) {
+                alert('Please fill in all required fields before continuing.');
+            }
+            
+            return valid;
+        }
+        
+        function prepareReview() {
+            const reviewContent = document.getElementById('reviewContent');
+            const formData = new FormData(document.getElementById('familyForm'));
+            
+            let html = '<div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">';
+            html += '<h3 style="color: #2c5aa0; margin-bottom: 20px;">Please review your information:</h3>';
+            
+            // Add formatted review content
+            const relationship = formData.get('relationship') === 'other' ? 
+                formData.get('relationshipDetail') : formData.get('relationship');
+            
+            html += `
+                <p><strong>Relationship:</strong> ${relationship}</p>
+                <p><strong>Name:</strong> ${formData.get('fullName')}</p>
+                <p><strong>Date of birth:</strong> ${formData.get('dateOfBirth') || 'Not provided'}</p>
+                <p><strong>Date of passing:</strong> ${formData.get('dateOfDeath')}</p>
+                <p><strong>Your name:</strong> ${formData.get('yourName')}</p>
+                <p><strong>Contact:</strong> ${formData.get('yourPhone')}</p>
+            `;
+            
+            html += '</div>';
+            html += '<p style="margin-top: 20px; color: #666;">If everything looks correct, click Submit Application below.</p>';
+            
+            reviewContent.innerHTML = html;
+        }
+        
+        // Form submission
+        document.getElementById('submitBtn').addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(document.getElementById('familyForm'));
+            const data = Object.fromEntries(formData);
+            
+            // Save to session
+            sessionStorage.setItem('familyFormData', JSON.stringify(data));
+            
+            // In production, submit to API
+            console.log('Submitting family member application:', data);
+            
+            alert('Application submitted successfully. We will contact you within 2-3 business days.');
+            window.location.href = '../';
+        });
+    </script>
+</body>
+</html>
