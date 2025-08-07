@@ -548,6 +548,43 @@
     </div>
 </div>
 
+<!-- Number of Placements (Dynamic based on application type) -->
+<div class="form-group" id="placementOptionsGroup" style="margin-top: 20px; display: none;">
+    <label class="required">This application is:</label>
+    
+    <!-- Options for Prepayment (Future) -->
+    <div id="futurePlacementOptions" class="radio-group" style="display: none;">
+        <label>
+            <input type="radio" name="placementType" value="self" required>
+            For myself
+        </label>
+        <label>
+            <input type="radio" name="placementType" value="self_and_other" required>
+            For myself and one other person
+        </label>
+        <label>
+            <input type="radio" name="placementType" value="two_others" required>
+            For two other people (not me)
+        </label>
+    </div>
+    
+    <!-- Options for Immediate -->
+    <div id="immediatePlacementOptions" class="radio-group" style="display: none;">
+        <label>
+            <input type="radio" name="placementType" value="one_person" required>
+            For one person
+        </label>
+        <label>
+            <input type="radio" name="placementType" value="two_people" required>
+            For two people
+        </label>
+    </div>
+    
+    <div id="placementNote" style="display: none; margin-top: 10px; padding: 10px; background-color: #f0f8ff; border-left: 3px solid #2c5aa0;">
+        <strong>Note:</strong> <span id="placementNoteText"></span>
+    </div>
+</div>
+
 <!-- Conditional Prepayment Section -->
 <div id="prepaymentSection" style="display: none;">
     <div class="checkbox-group">
@@ -666,6 +703,45 @@
 </div>
 </div>
 </div>
+
+<!-- Second Person Information (for Two Placements) -->
+<div class="form-section" id="secondPersonSection" style="display: none;">
+<h2 id="secondPersonTitle">Second Person Information</h2>
+<p id="secondPersonDescription" style="color: #666; margin-bottom: 15px;">Please provide information for the second placement</p>
+<div class="form-row">
+<div class="form-group">
+<label for="second_first_name">First Name <span class="required">*</span></label>
+<input id="second_first_name" name="second_first_name" type="text"/>
+</div>
+<div class="form-group">
+<label for="second_middle_name">Middle Name</label>
+<input id="second_middle_name" name="second_middle_name" type="text"/>
+</div>
+<div class="form-group">
+<label for="second_last_name">Last Name <span class="required">*</span></label>
+<input id="second_last_name" name="second_last_name" type="text"/>
+</div>
+</div>
+<div class="form-group">
+<label for="second_maiden_name">Maiden Name (if applicable)</label>
+<input id="second_maiden_name" name="second_maiden_name" type="text"/>
+</div>
+<div class="form-row">
+<div class="form-group">
+<label for="second_birth_date">Date of Birth</label>
+<input id="second_birth_date" name="second_birth_date" type="date"/>
+</div>
+<div class="form-group" id="secondDeathDateGroup">
+<label for="second_death_date">Date of Death</label>
+<input id="second_death_date" name="second_death_date" type="date"/>
+</div>
+</div>
+<div class="form-group" id="secondDeceasedNameGroup">
+<label for="second_deceased_name">Name(s) of second deceased</label>
+<input id="second_deceased_name" name="second_deceased_name" type="text"/>
+</div>
+</div>
+
 <!-- Personal History Information -->
 <div class="form-section" id="personalHistorySection">
 <h2>Personal History Information</h2>
@@ -953,7 +1029,9 @@
         // Fee structure
         const fees = {
             member: 400.00,
-            nonMember: 1500.00
+            nonMember: 1500.00,
+            memberDouble: 800.00,     // Two placements for members
+            nonMemberDouble: 3000.00  // Two placements for non-members
         };
         
         // Store form data for thank you page
@@ -970,25 +1048,144 @@
             radio.addEventListener('change', function() {
                 const prepaymentSection = document.getElementById('prepaymentSection');
                 const paymentTimingNote = document.getElementById('paymentTimingNote');
+                const placementOptionsGroup = document.getElementById('placementOptionsGroup');
+                const futurePlacementOptions = document.getElementById('futurePlacementOptions');
+                const immediatePlacementOptions = document.getElementById('immediatePlacementOptions');
+                
+                // Show placement options group
+                placementOptionsGroup.style.display = 'block';
+                
+                // Clear any previous selections
+                document.querySelectorAll('input[name="placementType"]').forEach(input => {
+                    input.checked = false;
+                });
+                
+                // Hide second person section until placement type is selected
+                document.getElementById('secondPersonSection').style.display = 'none';
                 
                 if (this.value === 'immediate') {
                     prepaymentSection.style.display = 'block';
                     paymentTimingNote.innerHTML = 'For immediate placement, <strong>payment is due upon approval</strong>. Please make checks payable to "Bay View Association," with memo of "Memorial Garden."';
+                    
+                    // Show immediate placement options
+                    futurePlacementOptions.style.display = 'none';
+                    immediatePlacementOptions.style.display = 'block';
                 } else {
                     prepaymentSection.style.display = 'none';
                     paymentTimingNote.innerHTML = 'For future placement, you may prepay now or payment will be due when placement is needed. Please make checks payable to "Bay View Association," with memo of "Memorial Garden."';
+                    
+                    // Show future placement options
+                    futurePlacementOptions.style.display = 'block';
+                    immediatePlacementOptions.style.display = 'none';
                 }
             });
         });
+        
+        // Handle placement type selection
+        document.querySelectorAll('input[name="placementType"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const placementNote = document.getElementById('placementNote');
+                const placementNoteText = document.getElementById('placementNoteText');
+                const secondPersonSection = document.getElementById('secondPersonSection');
+                const applicationType = document.querySelector('input[name="applicationType"]:checked')?.value;
+                const secondDeathDateGroup = document.getElementById('secondDeathDateGroup');
+                const secondDeceasedNameGroup = document.getElementById('secondDeceasedNameGroup');
+                
+                // Determine if this is for two people
+                const isForTwo = (this.value === 'self_and_other' || this.value === 'two_others' || this.value === 'two_people');
+                
+                if (isForTwo) {
+                    secondPersonSection.style.display = 'block';
+                    placementNote.style.display = 'block';
+                    
+                    // Make second person fields required
+                    document.getElementById('second_first_name').setAttribute('required', 'required');
+                    document.getElementById('second_last_name').setAttribute('required', 'required');
+                    
+                    // Set appropriate note text and section titles
+                    const secondPersonTitle = document.getElementById('secondPersonTitle');
+                    const secondPersonDescription = document.getElementById('secondPersonDescription');
+                    
+                    if (this.value === 'self_and_other') {
+                        placementNoteText.textContent = 'Please provide your information in the first section and the other person\'s information in the second section. The fee covers both placements.';
+                        secondPersonTitle.textContent = 'Other Person Information';
+                        secondPersonDescription.textContent = 'Please provide information for the other person';
+                    } else if (this.value === 'two_others') {
+                        placementNoteText.textContent = 'Please provide information for both individuals. The fee covers both placements.';
+                        secondPersonTitle.textContent = 'Second Person Information';
+                        secondPersonDescription.textContent = 'Please provide information for the second person';
+                    } else {
+                        placementNoteText.textContent = 'Please provide information for both individuals. The fee covers both placements.';
+                        secondPersonTitle.textContent = 'Second Person Information';
+                        secondPersonDescription.textContent = 'Please provide information for the second person';
+                    }
+                    
+                    // Show/hide death date for second person based on application type
+                    if (applicationType === 'future') {
+                        secondDeathDateGroup.style.display = 'none';
+                        secondDeceasedNameGroup.style.display = 'none';
+                    } else {
+                        secondDeathDateGroup.style.display = 'block';
+                        secondDeceasedNameGroup.style.display = 'block';
+                    }
+                } else {
+                    secondPersonSection.style.display = 'none';
+                    placementNote.style.display = 'none';
+                    
+                    // Remove required from second person fields
+                    document.getElementById('second_first_name').removeAttribute('required');
+                    document.getElementById('second_last_name').removeAttribute('required');
+                }
+                
+                // Update fee if membership is already selected
+                const membershipSelected = document.querySelector('input[name="is_member"]:checked');
+                if (membershipSelected) {
+                    updateFeeDisplay();
+                }
+            });
+        });
+        
+        // Function to update fee display
+        function updateFeeDisplay() {
+            const membershipSelected = document.querySelector('input[name="is_member"]:checked');
+            const placementTypeSelected = document.querySelector('input[name="placementType"]:checked');
+            const feeDisplay = document.getElementById('feeDisplay');
+            const feeAmount = document.getElementById('feeAmount');
+            const feeNote = document.getElementById('feeNote');
+            const paymentAmount = document.getElementById('payment_amount');
+            
+            if (!membershipSelected) return;
+            
+            // Determine if it's for two people
+            let isDouble = false;
+            if (placementTypeSelected) {
+                isDouble = (placementTypeSelected.value === 'self_and_other' || 
+                           placementTypeSelected.value === 'two_others' || 
+                           placementTypeSelected.value === 'two_people');
+            }
+            
+            const isMember = membershipSelected.value === 'Yes';
+            
+            feeDisplay.style.display = 'block';
+            
+            let fee, note;
+            if (isMember) {
+                fee = isDouble ? fees.memberDouble : fees.member;
+                note = isDouble ? 'Bay View Member/Relative Rate (Two Placements)' : 'Bay View Member/Relative Rate';
+            } else {
+                fee = isDouble ? fees.nonMemberDouble : fees.nonMember;
+                note = isDouble ? 'Non-Member Rate (Two Placements)' : 'Non-Member Rate';
+            }
+            
+            feeAmount.textContent = `$${fee.toFixed(2)}`;
+            feeNote.textContent = note;
+            paymentAmount.value = fee.toFixed(2);
+        }
         
         // Show/hide member details and update fee display based on membership selection
         document.querySelectorAll('input[name="is_member"]').forEach(radio => {
             radio.addEventListener('change', function() {
                 const memberDetails = document.getElementById('memberDetails');
-                const feeDisplay = document.getElementById('feeDisplay');
-                const feeAmount = document.getElementById('feeAmount');
-                const feeNote = document.getElementById('feeNote');
-                const paymentAmount = document.getElementById('payment_amount');
                 const inPersonOption = document.getElementById('inPersonOption');
                 
                 // Show/hide member details
@@ -1001,18 +1198,8 @@
                     inPersonOption.style.display = 'none';
                 }
                 
-                // Show fee display and update amounts
-                feeDisplay.style.display = 'block';
-                
-                if (this.value === 'Yes') {
-                    feeAmount.textContent = `$${fees.member.toFixed(2)}`;
-                    feeNote.textContent = 'Bay View Member/Relative Rate';
-                    paymentAmount.value = fees.member.toFixed(2);
-                } else {
-                    feeAmount.textContent = `$${fees.nonMember.toFixed(2)}`;
-                    feeNote.textContent = 'Non-Member Rate';
-                    paymentAmount.value = fees.nonMember.toFixed(2);
-                }
+                // Update fee display using the new function
+                updateFeeDisplay();
             });
         });
         
@@ -1029,6 +1216,10 @@
                 const prepaymentInfoSection = document.getElementById('prepaymentInfoSection');
                 const prepaymentNamesInput = document.getElementById('prepayment_names');
                 const servicePlanningSection = document.getElementById('servicePlanningSection');
+                const placementType = document.querySelector('input[name="placementType"]:checked')?.value;
+                const secondDeathDateGroup = document.getElementById('secondDeathDateGroup');
+                const secondDeceasedNameGroup = document.getElementById('secondDeceasedNameGroup');
+                const isForTwo = placementType && (placementType === 'self_and_other' || placementType === 'two_others' || placementType === 'two_people');
                 
                 if (this.value === 'future') {
                     // Hide fields for prepayment (planning ahead)
@@ -1036,6 +1227,12 @@
                     personalHistorySection.style.display = 'none';
                     deceasedNameGroup.style.display = 'none';
                     servicePlanningSection.style.display = 'none';
+                    
+                    // Hide second person death fields if two placements selected
+                    if (isForTwo) {
+                        secondDeathDateGroup.style.display = 'none';
+                        secondDeceasedNameGroup.style.display = 'none';
+                    }
                     
                     // Show prepayment-specific fields
                     prepaymentInfoSection.style.display = 'block';
@@ -1081,6 +1278,12 @@
                     personalHistorySection.style.display = 'block';
                     deceasedNameGroup.style.display = 'block';
                     servicePlanningSection.style.display = 'block';
+                    
+                    // Show second person death fields if two placements selected
+                    if (isForTwo) {
+                        secondDeathDateGroup.style.display = 'block';
+                        secondDeceasedNameGroup.style.display = 'block';
+                    }
                     
                     // Hide prepayment-specific fields
                     prepaymentInfoSection.style.display = 'none';
@@ -1316,6 +1519,7 @@
                 'date:Submission Date:start': new Date().toISOString().split('T')[0],
                 'Status': 'Submitted',
                 'Application Type': document.querySelector('input[name="applicationType"]:checked')?.value || '',
+                'Placement Type': document.querySelector('input[name="placementType"]:checked')?.value || '',
                 'Bay View Member': membershipSelected.value,
                 'Contact Name': document.getElementById('contact_name').value,
                 'Contact Phone': document.getElementById('contact_phone').value,
@@ -1332,6 +1536,13 @@
                 'Bay View History': document.getElementById('bayview_history').value || '',
                 'Personal History JSON': collectPersonalHistory(),
                 'Prepayment Names': document.getElementById('prepayment_names').value || '',
+                'Second Person First Name': document.getElementById('second_first_name').value || '',
+                'Second Person Middle Name': document.getElementById('second_middle_name').value || '',
+                'Second Person Last Name': document.getElementById('second_last_name').value || '',
+                'Second Person Maiden Name': document.getElementById('second_maiden_name').value || '',
+                'Second Person Birth Date': document.getElementById('second_birth_date').value || '',
+                'Second Person Death Date': document.getElementById('second_death_date').value || '',
+                'Second Person Deceased Name': document.getElementById('second_deceased_name').value || '',
                 'Fee Amount': parseFloat(document.getElementById('payment_amount').value) || 0,
                 'Policy Agreement': document.getElementById('policy_agreement').checked ? '__YES__' : '__NO__',
                 'date:Service Date:start': document.getElementById('requested_service_date').value || '',

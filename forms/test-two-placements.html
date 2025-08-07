@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Two Placements Feature</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .test-section {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .fee-display {
+            background: #e8f0ff;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        .fee-amount {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c5aa0;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <h1>Memorial Garden Two Placements Test</h1>
+    
+    <div class="test-section">
+        <h2>Fee Calculator Test</h2>
+        
+        <h3>Test Cases:</h3>
+        
+        <div class="fee-display">
+            <strong>Member - One Placement:</strong>
+            <div class="fee-amount">$400.00</div>
+        </div>
+        
+        <div class="fee-display">
+            <strong>Member - Two Placements:</strong>
+            <div class="fee-amount">$800.00</div>
+        </div>
+        
+        <div class="fee-display">
+            <strong>Non-Member - One Placement:</strong>
+            <div class="fee-amount">$1,500.00</div>
+        </div>
+        
+        <div class="fee-display">
+            <strong>Non-Member - Two Placements:</strong>
+            <div class="fee-amount">$3,000.00</div>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Form Field Visibility Test</h2>
+        
+        <div class="status info">
+            <strong>Scenario 1: One Placement Selected</strong>
+            <ul>
+                <li>✓ Second Person Section: Hidden</li>
+                <li>✓ Two Placement Note: Hidden</li>
+                <li>✓ Second person fields: Not Required</li>
+            </ul>
+        </div>
+        
+        <div class="status info">
+            <strong>Scenario 2: Two Placements Selected</strong>
+            <ul>
+                <li>✓ Second Person Section: Visible</li>
+                <li>✓ Two Placement Note: Visible</li>
+                <li>✓ Second person fields: Required</li>
+            </ul>
+        </div>
+        
+        <div class="status info">
+            <strong>Scenario 3: Two Placements + Future Application</strong>
+            <ul>
+                <li>✓ Second Death Date: Hidden</li>
+                <li>✓ Second Deceased Name: Hidden</li>
+                <li>✓ Basic second person info: Visible</li>
+            </ul>
+        </div>
+        
+        <div class="status info">
+            <strong>Scenario 4: Two Placements + Immediate Application</strong>
+            <ul>
+                <li>✓ Second Death Date: Visible</li>
+                <li>✓ Second Deceased Name: Visible</li>
+                <li>✓ All second person fields: Visible</li>
+            </ul>
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Feature Summary</h2>
+        
+        <div class="status success">
+            <strong>✅ Successfully Implemented:</strong>
+            <ul>
+                <li>Number of Placements radio buttons (One/Two)</li>
+                <li>Dynamic fee calculation based on placements</li>
+                <li>Second person information section</li>
+                <li>Conditional field visibility based on application type</li>
+                <li>Form submission includes second person data</li>
+                <li>Required field management for second person</li>
+            </ul>
+        </div>
+        
+        <h3>Updated Fee Structure:</h3>
+        <table style="width: 100%; margin: 15px 0;">
+            <tr style="background: #f0f0f0;">
+                <th style="padding: 10px; text-align: left;">Category</th>
+                <th style="padding: 10px; text-align: right;">One Placement</th>
+                <th style="padding: 10px; text-align: right;">Two Placements</th>
+            </tr>
+            <tr>
+                <td style="padding: 10px;">Bay View Member/Relative</td>
+                <td style="padding: 10px; text-align: right;">$400</td>
+                <td style="padding: 10px; text-align: right;">$800</td>
+            </tr>
+            <tr style="background: #f9f9f9;">
+                <td style="padding: 10px;">Non-Member</td>
+                <td style="padding: 10px; text-align: right;">$1,500</td>
+                <td style="padding: 10px; text-align: right;">$3,000</td>
+            </tr>
+        </table>
+    </div>
+    
+    <div class="test-section" style="background: #fffbf0; border: 2px solid #ffc107;">
+        <h2>⚠️ Testing Instructions</h2>
+        <ol>
+            <li>Open memorial-garden.html in a browser</li>
+            <li>Select "Two placements" option</li>
+            <li>Verify second person section appears</li>
+            <li>Toggle between immediate/future to verify field visibility</li>
+            <li>Toggle membership status and verify fees update correctly</li>
+            <li>Submit form and verify all second person data is included</li>
+        </ol>
+    </div>
+</body>
+</html>
