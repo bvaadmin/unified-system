@@ -642,11 +642,11 @@
 </div>
 <!-- Prepayment Information Section (only for prepayment) -->
 <div class="form-section" id="prepaymentInfoSection" style="display: none;">
-<h2>Prepayment Information</h2>
-<div class="form-group">
-<label for="prepayment_names">Name(s) of individual(s) for whom prepayment is being made <span class="required">*</span></label>
-<input id="prepayment_names" name="prepayment_names" type="text"/>
-<small style="color: #666; font-style: italic;">Enter the name(s) of the person(s) this prepayment covers</small>
+<h2 id="prepaymentInfoTitle">Prepayment Details</h2>
+<div class="form-group" id="prepaymentNamesGroup" style="display: none;">
+<label for="prepayment_names">Memorial placement coverage summary</label>
+<input id="prepayment_names" name="prepayment_names" type="text" readonly style="background-color: #f5f5f5;"/>
+<small style="color: #666; font-style: italic;">Automatically filled based on your selection</small>
 </div>
 </div>
 <!-- Service Planning Section -->
@@ -744,8 +744,8 @@
 
 <!-- Personal History Information -->
 <div class="form-section" id="personalHistorySection">
-<h2>Personal History Information</h2>
-<p style="margin-bottom: 15px; font-style: italic;">The following information about the individual(s) whose cremains are to be placed is requested for the Memorial Garden archival file.</p>
+<h2 id="personalHistoryTitle">Personal Information</h2>
+<p id="personalHistoryDescription" style="margin-bottom: 15px; font-style: italic;">Please provide information for the memorial garden archival file.</p>
 <div class="two-column">
 <div class="form-group">
 <label for="first_name">First Name <span class="required">*</span></label>
@@ -815,9 +815,10 @@
 </div>
 <!-- Contact Information -->
 <div class="form-section">
-<h2>Contact Information</h2>
+<h2>Your Contact Information</h2>
+<p style="margin-bottom: 15px; font-style: italic;">How can we reach you regarding this application?</p>
 <div class="form-group">
-<label for="contact_name">Contact Person Name <span class="required">*</span></label>
+<label for="contact_name">Full Name <span class="required">*</span></label>
 <input id="contact_name" name="contact_name" required="" type="text"/>
 </div>
 <div class="form-group">
@@ -1105,19 +1106,43 @@
                     // Set appropriate note text and section titles
                     const secondPersonTitle = document.getElementById('secondPersonTitle');
                     const secondPersonDescription = document.getElementById('secondPersonDescription');
+                    const personalHistoryTitle = document.getElementById('personalHistoryTitle');
+                    const personalHistoryDescription = document.getElementById('personalHistoryDescription');
+                    const prepaymentField = document.getElementById('prepayment_names');
                     
-                    if (this.value === 'self_and_other') {
-                        placementNoteText.textContent = 'Please provide your information in the first section and the other person\'s information in the second section. The fee covers both placements.';
-                        secondPersonTitle.textContent = 'Other Person Information';
-                        secondPersonDescription.textContent = 'Please provide information for the other person';
+                    if (this.value === 'self') {
+                        personalHistoryTitle.textContent = 'Your Information';
+                        personalHistoryDescription.textContent = 'Please provide your personal information for the memorial garden archival file.';
+                        if (prepaymentField) {
+                            prepaymentField.value = 'Myself';
+                        }
+                    } else if (this.value === 'self_and_other') {
+                        placementNoteText.textContent = 'This prepayment covers both you and one other person. Please provide both sets of information below.';
+                        personalHistoryTitle.textContent = 'Your Information (First Person)';
+                        personalHistoryDescription.textContent = 'Please provide your personal information.';
+                        secondPersonTitle.textContent = 'Other Person\'s Information';
+                        secondPersonDescription.textContent = 'Please provide information for the other person to be memorialized.';
+                        if (prepaymentField) {
+                            prepaymentField.value = 'Myself and one other person';
+                        }
                     } else if (this.value === 'two_others') {
-                        placementNoteText.textContent = 'Please provide information for both individuals. The fee covers both placements.';
-                        secondPersonTitle.textContent = 'Second Person Information';
-                        secondPersonDescription.textContent = 'Please provide information for the second person';
-                    } else {
-                        placementNoteText.textContent = 'Please provide information for both individuals. The fee covers both placements.';
-                        secondPersonTitle.textContent = 'Second Person Information';
-                        secondPersonDescription.textContent = 'Please provide information for the second person';
+                        placementNoteText.textContent = 'This prepayment covers two people (not including yourself). Please provide information for both individuals below.';
+                        personalHistoryTitle.textContent = 'First Person\'s Information';
+                        personalHistoryDescription.textContent = 'Please provide information for the first person to be memorialized.';
+                        secondPersonTitle.textContent = 'Second Person\'s Information';
+                        secondPersonDescription.textContent = 'Please provide information for the second person to be memorialized.';
+                        if (prepaymentField) {
+                            prepaymentField.value = 'Two other people (not myself)';
+                        }
+                    } else if (this.value === 'one_person') {
+                        personalHistoryTitle.textContent = 'Deceased Person\'s Information';
+                        personalHistoryDescription.textContent = 'Please provide information about the deceased for the memorial garden archival file.';
+                    } else if (this.value === 'two_people') {
+                        placementNoteText.textContent = 'Please provide information for both deceased individuals. The fee covers both placements.';
+                        personalHistoryTitle.textContent = 'First Deceased Person\'s Information';
+                        personalHistoryDescription.textContent = 'Please provide information for the first deceased person.';
+                        secondPersonTitle.textContent = 'Second Deceased Person\'s Information';
+                        secondPersonDescription.textContent = 'Please provide information for the second deceased person.';
                     }
                     
                     // Show/hide death date for second person based on application type
@@ -1135,6 +1160,25 @@
                     // Remove required from second person fields
                     document.getElementById('second_first_name').removeAttribute('required');
                     document.getElementById('second_last_name').removeAttribute('required');
+                    
+                    // Reset titles for single placement
+                    if (this.value === 'self') {
+                        const personalHistoryTitle = document.getElementById('personalHistoryTitle');
+                        const personalHistoryDescription = document.getElementById('personalHistoryDescription');
+                        const prepaymentField = document.getElementById('prepayment_names');
+                        
+                        personalHistoryTitle.textContent = 'Your Information';
+                        personalHistoryDescription.textContent = 'Please provide your personal information for the memorial garden archival file.';
+                        if (prepaymentField) {
+                            prepaymentField.value = 'Myself';
+                        }
+                    } else if (this.value === 'one_person') {
+                        const personalHistoryTitle = document.getElementById('personalHistoryTitle');
+                        const personalHistoryDescription = document.getElementById('personalHistoryDescription');
+                        
+                        personalHistoryTitle.textContent = 'Deceased Person\'s Information';
+                        personalHistoryDescription.textContent = 'Please provide information about the deceased for the memorial garden archival file.';
+                    }
                 }
                 
                 // Update fee if membership is already selected
