@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memorial Garden - Bay View Association</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/journey.css">
+    <style>
+        /* Entry portal specific styles */
+        .portal-container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+        }
+        
+        .welcome-section {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .welcome-section h1 {
+            color: #2c5aa0;
+            margin-bottom: 20px;
+        }
+        
+        .welcome-section p {
+            font-size: 1.2em;
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .journey-selector {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .journey-question {
+            font-size: 1.4em;
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .journey-options {
+            display: grid;
+            gap: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .journey-option {
+            display: flex;
+            align-items: flex-start;
+            padding: 20px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+        
+        .journey-option:hover {
+            border-color: #2c5aa0;
+            background: #f8fbff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(44, 90, 160, 0.15);
+        }
+        
+        .journey-option input[type="radio"] {
+            margin-right: 15px;
+            margin-top: 3px;
+        }
+        
+        .journey-option-content {
+            flex: 1;
+        }
+        
+        .journey-option-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+        
+        .journey-option-description {
+            color: #666;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        
+        .continue-section {
+            margin-top: 40px;
+            text-align: center;
+        }
+        
+        .continue-btn {
+            background: #2c5aa0;
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            disabled: opacity 0.5;
+        }
+        
+        .continue-btn:hover:not(:disabled) {
+            background: #1e3d6f;
+        }
+        
+        .continue-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .help-section {
+            margin-top: 50px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .help-section h3 {
+            color: #2c5aa0;
+            margin-bottom: 15px;
+        }
+        
+        .help-section p {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        
+        .help-options {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .help-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #2c5aa0;
+            text-decoration: none;
+            padding: 10px 20px;
+            border: 1px solid #2c5aa0;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .help-option:hover {
+            background: #2c5aa0;
+            color: white;
+        }
+        
+        @media (max-width: 768px) {
+            .portal-container {
+                margin: 20px auto;
+                padding: 15px;
+            }
+            
+            .journey-option {
+                padding: 15px;
+            }
+            
+            .help-options {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="portal-container">
+        <div class="welcome-section">
+            <h1>Bay View Association Memorial Garden</h1>
+            <p>We're here to help you through this process. Let's start by understanding how we can best assist you today.</p>
+        </div>
+        
+        <form id="journeyForm" class="journey-selector">
+            <h2 class="journey-question">What brings you to the Memorial Garden today?</h2>
+            
+            <div class="journey-options">
+                <label class="journey-option">
+                    <input type="radio" name="journey" value="immediate-self" />
+                    <div class="journey-option-content">
+                        <div class="journey-option-title">I need to arrange placement now</div>
+                        <div class="journey-option-description">Someone has passed away and I'm handling the arrangements</div>
+                    </div>
+                </label>
+                
+                <label class="journey-option">
+                    <input type="radio" name="journey" value="future-self" />
+                    <div class="journey-option-content">
+                        <div class="journey-option-title">I want to plan ahead for the future</div>
+                        <div class="journey-option-description">Secure your place in the Memorial Garden with prepayment</div>
+                    </div>
+                </label>
+                
+                <label class="journey-option">
+                    <input type="radio" name="journey" value="verify-prepaid" />
+                    <div class="journey-option-content">
+                        <div class="journey-option-title">Someone already prepaid - I need to verify or use it</div>
+                        <div class="journey-option-description">Check existing prepayment or arrange placement for someone who prepaid</div>
+                    </div>
+                </label>
+                
+                <label class="journey-option">
+                    <input type="radio" name="journey" value="helping-other" />
+                    <div class="journey-option-content">
+                        <div class="journey-option-title">I'm helping someone else with their arrangements</div>
+                        <div class="journey-option-description">Assisting a friend, neighbor, or family member</div>
+                    </div>
+                </label>
+                
+                <label class="journey-option">
+                    <input type="radio" name="journey" value="questions" />
+                    <div class="journey-option-content">
+                        <div class="journey-option-title">I have questions before deciding</div>
+                        <div class="journey-option-description">Learn about the Memorial Garden, costs, and process</div>
+                    </div>
+                </label>
+                
+                <label class="journey-option">
+                    <input type="radio" name="journey" value="unsure" />
+                    <div class="journey-option-content">
+                        <div class="journey-option-title">I'm not sure what I need</div>
+                        <div class="journey-option-description">Let us help you figure out the best next steps</div>
+                    </div>
+                </label>
+            </div>
+            
+            <div class="continue-section">
+                <button type="button" id="continueBtn" class="continue-btn" disabled>
+                    Continue
+                </button>
+            </div>
+        </form>
+        
+        <div class="help-section">
+            <h3>Need immediate assistance?</h3>
+            <p>We understand this can be a difficult time. We're here to help in whatever way works best for you.</p>
+            <div class="help-options">
+                <a href="tel:231-347-6225" class="help-option">
+                    <span>📞</span>
+                    <span>Call us: (231) 347-6225</span>
+                </a>
+                <a href="mailto:memorial@bayviewassociation.org" class="help-option">
+                    <span>✉️</span>
+                    <span>Email for assistance</span>
+                </a>
+                <a href="#" class="help-option" onclick="requestCallback(); return false;">
+                    <span>📱</span>
+                    <span>Request a callback</span>
+                </a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Journey determination logic
+        const journeyForm = document.getElementById('journeyForm');
+        const continueBtn = document.getElementById('continueBtn');
+        const journeyOptions = document.querySelectorAll('input[name="journey"]');
+        
+        // Enable continue button when option selected
+        journeyOptions.forEach(option => {
+            option.addEventListener('change', () => {
+                continueBtn.disabled = false;
+            });
+        });
+        
+        // Journey routing
+        continueBtn.addEventListener('click', () => {
+            const selectedJourney = document.querySelector('input[name="journey"]:checked');
+            if (!selectedJourney) return;
+            
+            // Store journey context
+            sessionStorage.setItem('memorialGardenJourney', selectedJourney.value);
+            sessionStorage.setItem('journeyStartTime', new Date().toISOString());
+            
+            // Route to appropriate path
+            switch(selectedJourney.value) {
+                case 'immediate-self':
+                    // Determine information readiness
+                    showInformationReadiness('immediate');
+                    break;
+                    
+                case 'future-self':
+                    // Simpler flow for future planning
+                    window.location.href = 'paths/future-planning.html';
+                    break;
+                    
+                case 'verify-prepaid':
+                    // Verification flow
+                    window.location.href = 'paths/verify-prepayment.html';
+                    break;
+                    
+                case 'helping-other':
+                    // Relationship determination
+                    showRelationshipQuestion();
+                    break;
+                    
+                case 'questions':
+                    // Information pages
+                    window.location.href = 'information/memorial-garden-guide.html';
+                    break;
+                    
+                case 'unsure':
+                    // Guided discovery
+                    showGuidedQuestions();
+                    break;
+            }
+        });
+        
+        // Secondary questions for journey refinement
+        function showInformationReadiness(type) {
+            const formContent = `
+                <h2 class="journey-question">Do you have the information you need to complete the application?</h2>
+                <div class="journey-options">
+                    <label class="journey-option">
+                        <input type="radio" name="readiness" value="ready" />
+                        <div class="journey-option-content">
+                            <div class="journey-option-title">Yes, I have everything ready</div>
+                            <div class="journey-option-description">Names, dates, membership information, etc.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="journey-option">
+                        <input type="radio" name="readiness" value="partial" />
+                        <div class="journey-option-content">
+                            <div class="journey-option-title">I have some information but not everything</div>
+                            <div class="journey-option-description">May need to look up details or contact family</div>
+                        </div>
+                    </label>
+                    
+                    <label class="journey-option">
+                        <input type="radio" name="readiness" value="minimal" />
+                        <div class="journey-option-content">
+                            <div class="journey-option-title">I need help gathering information</div>
+                            <div class="journey-option-description">Not sure what's needed or where to find it</div>
+                        </div>
+                    </label>
+                </div>
+            `;
+            
+            journeyForm.innerHTML = formContent + `
+                <div class="continue-section">
+                    <button type="button" onclick="routeByReadiness('${type}')" class="continue-btn">
+                        Continue
+                    </button>
+                </div>
+            `;
+        }
+        
+        function routeByReadiness(type) {
+            const readiness = document.querySelector('input[name="readiness"]:checked')?.value;
+            if (!readiness) return;
+            
+            sessionStorage.setItem('informationReadiness', readiness);
+            
+            if (type === 'immediate') {
+                switch(readiness) {
+                    case 'ready':
+                        window.location.href = 'paths/express.html';
+                        break;
+                    case 'partial':
+                        window.location.href = 'paths/guided.html';
+                        break;
+                    case 'minimal':
+                        window.location.href = 'paths/assisted.html';
+                        break;
+                }
+            }
+        }
+        
+        function showRelationshipQuestion() {
+            const formContent = `
+                <h2 class="journey-question">What is your relationship to the person you're helping?</h2>
+                <div class="journey-options">
+                    <label class="journey-option">
+                        <input type="radio" name="relationship" value="family" />
+                        <div class="journey-option-content">
+                            <div class="journey-option-title">Family member</div>
+                            <div class="journey-option-description">Child, sibling, grandchild, etc.</div>
+                        </div>
+                    </label>
+                    
+                    <label class="journey-option">
+                        <input type="radio" name="relationship" value="executor" />
+                        <div class="journey-option-content">
+                            <div class="journey-option-title">Executor or legal representative</div>
+                            <div class="journey-option-description">Legally designated to handle affairs</div>
+                        </div>
+                    </label>
+                    
+                    <label class="journey-option">
+                        <input type="radio" name="relationship" value="friend" />
+                        <div class="journey-option-content">
+                            <div class="journey-option-title">Friend or neighbor</div>
+                            <div class="journey-option-description">Helping out of care and concern</div>
+                        </div>
+                    </label>
+                </div>
+            `;
+            
+            journeyForm.innerHTML = formContent + `
+                <div class="continue-section">
+                    <button type="button" onclick="routeByRelationship()" class="continue-btn">
+                        Continue
+                    </button>
+                </div>
+            `;
+        }
+        
+        function routeByRelationship() {
+            const relationship = document.querySelector('input[name="relationship"]:checked')?.value;
+            if (!relationship) return;
+            
+            sessionStorage.setItem('helperRelationship', relationship);
+            
+            // All helpers go through collaborative path with different permissions
+            window.location.href = 'paths/collaborative.html';
+        }
+        
+        function showGuidedQuestions() {
+            // Series of questions to determine need
+            window.location.href = 'paths/discovery.html';
+        }
+        
+        function requestCallback() {
+            // Store request for callback
+            sessionStorage.setItem('callbackRequested', 'true');
+            window.location.href = 'contact/callback-request.html';
+        }
+        
+        // Analytics (if implemented)
+        function trackJourneyStart(journey) {
+            if (typeof gtag !== 'undefined') {
+                gtag('event', 'journey_start', {
+                    'event_category': 'memorial_garden',
+                    'event_label': journey
+                });
+            }
+        }
+    </script>
+</body>
+</html>

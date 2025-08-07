@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beta - Memorial Garden Forms - Bay View Association</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .beta-notice {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px 20px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        
+        .beta-notice h2 {
+            margin-top: 0;
+            color: #856404;
+        }
+        
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #2c5aa0;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        @media (max-width: 768px) {
+            .comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .option {
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .option:hover {
+            border-color: #2c5aa0;
+            box-shadow: 0 4px 12px rgba(44, 90, 160, 0.15);
+        }
+        
+        .option h3 {
+            color: #2c5aa0;
+            margin-bottom: 15px;
+        }
+        
+        .option p {
+            color: #666;
+            margin-bottom: 20px;
+            min-height: 60px;
+        }
+        
+        .option a {
+            display: inline-block;
+            padding: 12px 30px;
+            background: #2c5aa0;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+        
+        .option a:hover {
+            background: #1e3d6f;
+        }
+        
+        .option.beta {
+            border-color: #ffa500;
+        }
+        
+        .beta-tag {
+            display: inline-block;
+            background: #ffa500;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        
+        .features {
+            margin-top: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .features h3 {
+            color: #2c5aa0;
+            margin-bottom: 20px;
+        }
+        
+        .features ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .features li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        .features li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #28a745;
+            font-weight: bold;
+        }
+        
+        .feedback {
+            margin-top: 40px;
+            text-align: center;
+            padding: 30px;
+            background: #e8f4ff;
+            border-radius: 8px;
+        }
+        
+        .feedback h3 {
+            color: #2c5aa0;
+            margin-bottom: 15px;
+        }
+        
+        .feedback p {
+            margin-bottom: 20px;
+        }
+        
+        .feedback a {
+            color: #2c5aa0;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .feedback a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="beta-notice">
+        <h2>🚀 Beta Testing Program</h2>
+        <p>Welcome to our beta testing area! We're developing a new, more intuitive way to complete Memorial Garden applications. Your feedback helps us improve the experience for everyone.</p>
+    </div>
+    
+    <div class="container">
+        <h1>Memorial Garden Application Forms</h1>
+        
+        <p style="text-align: center; font-size: 1.1em; color: #666; margin-bottom: 40px;">
+            Choose the version that works best for you. Both lead to the same result - we're just testing different approaches.
+        </p>
+        
+        <div class="comparison">
+            <div class="option">
+                <h3>Current Form</h3>
+                <p>Our traditional single-page form with all options. Best if you have all information ready.</p>
+                <a href="../memorial-garden.html">Use Current Form</a>
+            </div>
+            
+            <div class="option beta">
+                <h3>New Adaptive Form <span class="beta-tag">BETA</span></h3>
+                <p>Personalized experience that adapts to your situation. Guides you step-by-step.</p>
+                <a href="memorial-garden-adaptive/">Try Beta Version</a>
+            </div>
+        </div>
+        
+        <div class="features">
+            <h3>What's New in the Beta Version?</h3>
+            <ul>
+                <li>Personalized experience based on your specific situation</li>
+                <li>Save your progress and return anytime</li>
+                <li>Get help when you're missing information</li>
+                <li>Collaborate with family members on the application</li>
+                <li>Gentler approach for those dealing with recent loss</li>
+                <li>Clearer guidance for future planning</li>
+            </ul>
+        </div>
+        
+        <div class="feedback">
+            <h3>Help Us Improve</h3>
+            <p>Your feedback is invaluable as we refine this new approach.</p>
+            <p>
+                <a href="mailto:memorial@bayviewassociation.org?subject=Beta%20Form%20Feedback">Send Feedback</a> | 
+                <a href="tel:231-347-6225">Call Us: (231) 347-6225</a>
+            </p>
+        </div>
+    </div>
+    
+    <script>
+        // Track beta page visits
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'page_view', {
+                'page_title': 'Memorial Garden Beta Landing',
+                'page_location': window.location.href,
+                'page_path': '/forms/beta/'
+            });
+        }
+        
+        // Track which version users choose
+        document.querySelectorAll('.option a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const isBeta = this.href.includes('adaptive');
+                const choice = isBeta ? 'beta' : 'current';
+                
+                if (typeof gtag !== 'undefined') {
+                    gtag('event', 'form_version_selected', {
+                        'event_category': 'memorial_garden_beta',
+                        'event_label': choice
+                    });
+                }
+                
+                // Store choice for analytics
+                sessionStorage.setItem('memorialFormChoice', choice);
+                sessionStorage.setItem('choiceTimestamp', new Date().toISOString());
+            });
+        });
+    </script>
+</body>
+</html>
