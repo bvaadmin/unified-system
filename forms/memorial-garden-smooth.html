@@ -1,0 +1,1115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bay View Memorial Garden Application</title>
+    <style>
+        :root {
+            --primary: #2c5aa0;
+            --primary-dark: #1e3a6f;
+            --success: #28a745;
+            --light-gray: #f8f9fa;
+            --text-dark: #333;
+            --text-muted: #6c757d;
+            --border: #dee2e6;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+            --transition: all 0.4s cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 700px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+            min-height: 600px;
+        }
+
+        .progress-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--light-gray);
+            z-index: 10;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .form-header {
+            padding: 2rem;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .form-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-header p {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        .form-content {
+            padding: 3rem 2rem;
+            min-height: 400px;
+            position: relative;
+        }
+
+        .question-container {
+            display: none;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+
+        .question-container.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .question-container.sliding-out {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+
+        .question-container.sliding-in {
+            animation: slideIn 0.5s ease forwards;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .question-number {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .question-title {
+            font-size: 1.5rem;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .question-subtitle {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .input-group input[type="text"],
+        .input-group input[type="email"],
+        .input-group input[type="tel"],
+        .input-group input[type="date"],
+        .input-group textarea,
+        .input-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: var(--transition);
+            background: white;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(44, 90, 160, 0.1);
+        }
+
+        .input-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .radio-group,
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .radio-option,
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .radio-option:hover,
+        .checkbox-option:hover {
+            border-color: var(--primary);
+            background: var(--light-gray);
+        }
+
+        .radio-option input,
+        .checkbox-option input {
+            position: absolute;
+            opacity: 0;
+        }
+
+        .radio-option .radio-custom,
+        .checkbox-option .checkbox-custom {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            margin-right: 1rem;
+            position: relative;
+            transition: var(--transition);
+        }
+
+        .checkbox-option .checkbox-custom {
+            border-radius: 4px;
+        }
+
+        .radio-option input:checked ~ .radio-custom {
+            border-color: var(--primary);
+            background: var(--primary);
+        }
+
+        .radio-option input:checked ~ .radio-custom::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .checkbox-option input:checked ~ .checkbox-custom {
+            border-color: var(--primary);
+            background: var(--primary);
+        }
+
+        .checkbox-option input:checked ~ .checkbox-custom::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+        }
+
+        .radio-option input:checked ~ .radio-label,
+        .checkbox-option input:checked ~ .checkbox-label {
+            font-weight: 500;
+        }
+
+        .radio-option.selected,
+        .checkbox-option.selected {
+            border-color: var(--primary);
+            background: rgba(44, 90, 160, 0.05);
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            padding: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn {
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(44, 90, 160, 0.3);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .btn:disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        .keyboard-hint {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .keyboard-hint kbd {
+            background: var(--light-gray);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            font-family: monospace;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        .welcome-screen,
+        .thank-you-screen {
+            text-align: center;
+            padding: 3rem;
+        }
+
+        .welcome-screen h2,
+        .thank-you-screen h2 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .welcome-screen p,
+        .thank-you-screen p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .checkmark {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 2rem;
+            background: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: scaleIn 0.5s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        .checkmark::after {
+            content: '✓';
+            color: white;
+            font-size: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                margin: 1rem;
+                border-radius: 12px;
+            }
+
+            .form-content {
+                padding: 2rem 1.5rem;
+            }
+
+            .question-title {
+                font-size: 1.3rem;
+            }
+
+            .btn {
+                padding: 0.6rem 1.5rem;
+                font-size: 0.9rem;
+            }
+        }
+
+        /* Loading spinner */
+        .spinner {
+            border: 3px solid var(--light-gray);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Smooth transitions */
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressBar"></div>
+        </div>
+
+        <div class="form-header">
+            <h1>Bay View Memorial Garden</h1>
+            <p>Application for Memorial Placement</p>
+        </div>
+
+        <form id="memorialForm">
+            <div class="form-content">
+                <!-- Welcome Screen -->
+                <div class="question-container active" data-question="0">
+                    <div class="welcome-screen">
+                        <h2>Welcome</h2>
+                        <p>Thank you for considering the Bay View Memorial Garden for your loved one's final resting place. This application will guide you through the process step by step.</p>
+                        <p>The process takes about 5-10 minutes to complete.</p>
+                        <button type="button" class="btn btn-primary" onclick="nextQuestion()">Start Application</button>
+                    </div>
+                </div>
+
+                <!-- Question 1: Application Type -->
+                <div class="question-container" data-question="1">
+                    <span class="question-number">1</span>
+                    <h2 class="question-title">What type of application is this?</h2>
+                    <p class="question-subtitle">This helps us understand your immediate needs</p>
+                    
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="applicationType" value="immediate" required>
+                            <span class="radio-custom"></span>
+                            <span class="radio-label">
+                                <strong>Immediate Placement</strong><br>
+                                <small>For a recent or imminent passing</small>
+                            </span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="applicationType" value="future" required>
+                            <span class="radio-custom"></span>
+                            <span class="radio-label">
+                                <strong>Future Placement (Prepayment)</strong><br>
+                                <small>Planning ahead at today's rates</small>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Question 2: Placement Type -->
+                <div class="question-container" data-question="2">
+                    <span class="question-number">2</span>
+                    <h2 class="question-title">Who is this placement for?</h2>
+                    <p class="question-subtitle">Select the option that best describes your situation</p>
+                    
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="placementType" value="self" required>
+                            <span class="radio-custom"></span>
+                            <span class="radio-label">
+                                <strong>Myself</strong><br>
+                                <small>Single placement</small>
+                            </span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="placementType" value="other" required>
+                            <span class="radio-custom"></span>
+                            <span class="radio-label">
+                                <strong>Someone else</strong><br>
+                                <small>Single placement for another person</small>
+                            </span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="placementType" value="self_and_other" required>
+                            <span class="radio-custom"></span>
+                            <span class="radio-label">
+                                <strong>Myself and one other</strong><br>
+                                <small>Companion placement</small>
+                            </span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="placementType" value="two_others" required>
+                            <span class="radio-custom"></span>
+                            <span class="radio-label">
+                                <strong>Two other people</strong><br>
+                                <small>Companion placement for others</small>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Question 3: Names (for prepayment) -->
+                <div class="question-container" data-question="3" data-condition="prepayment">
+                    <span class="question-number">3</span>
+                    <h2 class="question-title">Names for placement</h2>
+                    <p class="question-subtitle">We'll collect full biographical details when the time comes</p>
+                    
+                    <div id="prepaymentNamesSection">
+                        <!-- Dynamically populated based on placement type -->
+                    </div>
+                </div>
+
+                <!-- Question 3: Deceased Information (for immediate) -->
+                <div class="question-container" data-question="3" data-condition="immediate">
+                    <span class="question-number">3</span>
+                    <h2 class="question-title">Information about the deceased</h2>
+                    <p class="question-subtitle">Please provide the following details</p>
+                    
+                    <div class="input-group">
+                        <label>Full Name</label>
+                        <input type="text" name="deceasedName" placeholder="Enter full name">
+                        <span class="error-message">This field is required</span>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Date of Birth</label>
+                        <input type="date" name="birthDate">
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Date of Death</label>
+                        <input type="date" name="deathDate">
+                    </div>
+                </div>
+
+                <!-- Question 4: Bay View Membership -->
+                <div class="question-container" data-question="4">
+                    <span class="question-number">4</span>
+                    <h2 class="question-title">Are you a Bay View member?</h2>
+                    <p class="question-subtitle">Membership affects pricing and requirements</p>
+                    
+                    <div class="radio-group">
+                        <label class="radio-option">
+                            <input type="radio" name="membership" value="yes" required>
+                            <span class="radio-custom"></span>
+                            <span class="radio-label">
+                                <strong>Yes</strong><br>
+                                <small>I am a current Bay View member</small>
+                            </span>
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="membership" value="no" required>
+                            <span class="radio-custom"></span>
+                            <span class="radio-label">
+                                <strong>No</strong><br>
+                                <small>I will need member sponsorship</small>
+                            </span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Question 5: Member Sponsor (conditional) -->
+                <div class="question-container" data-question="5" data-condition="non-member">
+                    <span class="question-number">5</span>
+                    <h2 class="question-title">Bay View member sponsor</h2>
+                    <p class="question-subtitle">A Bay View member must sponsor your application</p>
+                    
+                    <div class="input-group">
+                        <label>Sponsor's Name</label>
+                        <input type="text" name="sponsorName" placeholder="Enter sponsor's full name">
+                        <span class="error-message">This field is required</span>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Relationship to Sponsor</label>
+                        <input type="text" name="sponsorRelationship" placeholder="e.g., Friend, Colleague">
+                    </div>
+                </div>
+
+                <!-- Question 6: Contact Information -->
+                <div class="question-container" data-question="6">
+                    <span class="question-number">6</span>
+                    <h2 class="question-title">Your contact information</h2>
+                    <p class="question-subtitle">We'll use this to communicate about your application</p>
+                    
+                    <div class="input-group">
+                        <label>Your Name</label>
+                        <input type="text" name="contactName" required placeholder="Enter your full name">
+                        <span class="error-message">This field is required</span>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Phone Number</label>
+                        <input type="tel" name="contactPhone" required placeholder="(231) 555-0100">
+                        <span class="error-message">This field is required</span>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label>Email Address</label>
+                        <input type="email" name="contactEmail" placeholder="your@email.com">
+                    </div>
+                </div>
+
+                <!-- Question 7: Bay View History (for immediate) -->
+                <div class="question-container" data-question="7" data-condition="immediate">
+                    <span class="question-number">7</span>
+                    <h2 class="question-title">Connection to Bay View</h2>
+                    <p class="question-subtitle">Tell us about your relationship with Bay View</p>
+                    
+                    <div class="input-group">
+                        <label>Bay View History</label>
+                        <textarea name="bayviewHistory" rows="4" placeholder="Describe your or your loved one's connection to Bay View..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Question 8: Payment Information -->
+                <div class="question-container" data-question="8">
+                    <span class="question-number">8</span>
+                    <h2 class="question-title">Payment details</h2>
+                    <p class="question-subtitle" id="feeDisplay">Your fee will be calculated based on membership status</p>
+                    
+                    <div class="input-group">
+                        <label>Payment Method</label>
+                        <select name="paymentMethod" required>
+                            <option value="">Select payment method</option>
+                            <option value="check">Check</option>
+                            <option value="venmo">Venmo</option>
+                            <option value="zelle">Zelle</option>
+                        </select>
+                    </div>
+                    
+                    <p style="margin-top: 1rem; padding: 1rem; background: var(--light-gray); border-radius: 8px;">
+                        <strong>Fee Amount:</strong> <span id="feeAmount">$0</span><br>
+                        <small>Payment instructions will be provided after submission</small>
+                    </p>
+                </div>
+
+                <!-- Question 9: Policy Agreement -->
+                <div class="question-container" data-question="9">
+                    <span class="question-number">9</span>
+                    <h2 class="question-title">Policy acknowledgment</h2>
+                    <p class="question-subtitle">Please review and accept our policies</p>
+                    
+                    <div class="checkbox-group">
+                        <label class="checkbox-option">
+                            <input type="checkbox" name="policyAgreement" required>
+                            <span class="checkbox-custom"></span>
+                            <span class="checkbox-label">
+                                I understand and agree to the Memorial Garden policies and procedures
+                            </span>
+                        </label>
+                    </div>
+                    
+                    <div style="margin-top: 1rem; padding: 1rem; background: var(--light-gray); border-radius: 8px;">
+                        <small>By checking this box, you acknowledge that you have read and agree to the Bay View Memorial Garden policies regarding placement, maintenance, and visitation.</small>
+                    </div>
+                </div>
+
+                <!-- Thank You Screen -->
+                <div class="question-container" data-question="10">
+                    <div class="thank-you-screen">
+                        <div class="checkmark"></div>
+                        <h2>Application Submitted!</h2>
+                        <p>Thank you for your application to the Bay View Memorial Garden.</p>
+                        <p><strong>Your Reference Number:</strong></p>
+                        <p style="font-size: 1.5rem; color: var(--primary); font-weight: bold;" id="confirmationId">MG-123456</p>
+                        <p style="margin-top: 2rem;">You will receive a confirmation email within 24 hours with payment instructions and next steps.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="navigation">
+                <button type="button" class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()" style="visibility: hidden;">
+                    Previous
+                </button>
+                <button type="button" class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">
+                    Continue
+                </button>
+                <div class="keyboard-hint">
+                    Press <kbd>Enter</kbd> to continue
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        let currentQuestion = 0;
+        const totalQuestions = 10;
+        let formData = {};
+        let questionFlow = [];
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            updateProgress();
+            
+            // Auto-focus first input on question change
+            observeQuestionChanges();
+        });
+
+        function setupEventListeners() {
+            // Keyboard navigation
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    const activeTextarea = document.activeElement.tagName === 'TEXTAREA';
+                    if (!activeTextarea) {
+                        e.preventDefault();
+                        nextQuestion();
+                    }
+                }
+                if (e.key === 'Escape') {
+                    prevQuestion();
+                }
+            });
+
+            // Radio button selection animation
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    // Remove selected class from all options in this group
+                    const groupName = this.name;
+                    document.querySelectorAll(`input[name="${groupName}"]`).forEach(r => {
+                        r.closest('.radio-option').classList.remove('selected');
+                    });
+                    // Add selected class to current option
+                    this.closest('.radio-option').classList.add('selected');
+                    
+                    // Auto-advance for certain questions
+                    if (['applicationType', 'placementType', 'membership'].includes(groupName)) {
+                        setTimeout(() => {
+                            if (validateCurrentQuestion()) {
+                                nextQuestion();
+                            }
+                        }, 500);
+                    }
+                });
+            });
+
+            // Checkbox animation
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    this.closest('.checkbox-option').classList.toggle('selected', this.checked);
+                });
+            });
+
+            // Dynamic fee calculation
+            document.querySelector('input[name="membership"]')?.addEventListener('change', function() {
+                updateFeeDisplay();
+            });
+        }
+
+        function updateProgress() {
+            const progress = (currentQuestion / totalQuestions) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function validateCurrentQuestion() {
+            const activeContainer = document.querySelector(`.question-container[data-question="${currentQuestion}"]`);
+            if (!activeContainer) return true;
+
+            const requiredInputs = activeContainer.querySelectorAll('input[required], select[required], textarea[required]');
+            let isValid = true;
+
+            requiredInputs.forEach(input => {
+                const errorMsg = input.closest('.input-group')?.querySelector('.error-message');
+                
+                if (input.type === 'radio') {
+                    const radioGroup = activeContainer.querySelectorAll(`input[name="${input.name}"]`);
+                    const isChecked = Array.from(radioGroup).some(r => r.checked);
+                    if (!isChecked) {
+                        isValid = false;
+                    }
+                } else if (input.type === 'checkbox') {
+                    if (!input.checked) {
+                        isValid = false;
+                        if (errorMsg) errorMsg.classList.add('show');
+                    } else {
+                        if (errorMsg) errorMsg.classList.remove('show');
+                    }
+                } else {
+                    if (!input.value.trim()) {
+                        isValid = false;
+                        if (errorMsg) errorMsg.classList.add('show');
+                    } else {
+                        if (errorMsg) errorMsg.classList.remove('show');
+                    }
+                }
+            });
+
+            return isValid;
+        }
+
+        function collectFormData() {
+            const activeContainer = document.querySelector(`.question-container[data-question="${currentQuestion}"]`);
+            if (!activeContainer) return;
+
+            const inputs = activeContainer.querySelectorAll('input, select, textarea');
+            inputs.forEach(input => {
+                if (input.type === 'radio' && input.checked) {
+                    formData[input.name] = input.value;
+                } else if (input.type === 'checkbox') {
+                    formData[input.name] = input.checked;
+                } else if (input.type !== 'radio') {
+                    formData[input.name] = input.value;
+                }
+            });
+        }
+
+        function nextQuestion() {
+            if (currentQuestion > 0 && !validateCurrentQuestion()) {
+                return;
+            }
+
+            collectFormData();
+
+            // Hide current question
+            const currentContainer = document.querySelector('.question-container.active');
+            if (currentContainer) {
+                currentContainer.classList.remove('active');
+                currentContainer.classList.add('sliding-out');
+            }
+
+            // Determine next question based on conditions
+            currentQuestion++;
+            skipConditionalQuestions();
+
+            // Show next question
+            setTimeout(() => {
+                if (currentContainer) {
+                    currentContainer.classList.remove('sliding-out');
+                }
+
+                const nextContainer = document.querySelector(`.question-container[data-question="${currentQuestion}"]`);
+                if (nextContainer) {
+                    // Handle conditional display
+                    const condition = nextContainer.dataset.condition;
+                    if (shouldShowQuestion(condition)) {
+                        nextContainer.classList.add('active', 'sliding-in');
+                        setTimeout(() => {
+                            nextContainer.classList.remove('sliding-in');
+                        }, 500);
+                    } else {
+                        currentQuestion++;
+                        nextQuestion();
+                        return;
+                    }
+                }
+
+                updateProgress();
+                updateNavigation();
+                
+                // Auto-focus first input
+                setTimeout(() => {
+                    const firstInput = nextContainer?.querySelector('input:not([type="radio"]):not([type="checkbox"]), select, textarea');
+                    if (firstInput) {
+                        firstInput.focus();
+                    }
+                }, 100);
+
+                // Special handling for final submission
+                if (currentQuestion === totalQuestions) {
+                    submitForm();
+                }
+            }, 300);
+        }
+
+        function prevQuestion() {
+            if (currentQuestion <= 0) return;
+
+            const currentContainer = document.querySelector('.question-container.active');
+            if (currentContainer) {
+                currentContainer.classList.remove('active');
+            }
+
+            currentQuestion--;
+            skipConditionalQuestions(true);
+
+            const prevContainer = document.querySelector(`.question-container[data-question="${currentQuestion}"]`);
+            if (prevContainer) {
+                prevContainer.classList.add('active');
+            }
+
+            updateProgress();
+            updateNavigation();
+        }
+
+        function skipConditionalQuestions(goingBack = false) {
+            const direction = goingBack ? -1 : 1;
+            
+            while (currentQuestion > 0 && currentQuestion < totalQuestions) {
+                const container = document.querySelector(`.question-container[data-question="${currentQuestion}"]`);
+                if (!container) break;
+                
+                const condition = container.dataset.condition;
+                if (!shouldShowQuestion(condition)) {
+                    currentQuestion += direction;
+                } else {
+                    break;
+                }
+            }
+        }
+
+        function shouldShowQuestion(condition) {
+            if (!condition) return true;
+
+            switch (condition) {
+                case 'prepayment':
+                    return formData.applicationType === 'future';
+                case 'immediate':
+                    return formData.applicationType === 'immediate';
+                case 'non-member':
+                    return formData.membership === 'no';
+                default:
+                    return true;
+            }
+        }
+
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            // Show/hide previous button
+            prevBtn.style.visibility = currentQuestion > 0 ? 'visible' : 'hidden';
+
+            // Update next button text
+            if (currentQuestion === 9) {
+                nextBtn.textContent = 'Submit Application';
+            } else if (currentQuestion === totalQuestions) {
+                nextBtn.style.display = 'none';
+            } else {
+                nextBtn.textContent = 'Continue';
+            }
+        }
+
+        function updateFeeDisplay() {
+            const isMember = formData.membership === 'yes';
+            const placementType = formData.placementType;
+            
+            let baseFee = isMember ? 150 : 300;
+            if (placementType === 'self_and_other' || placementType === 'two_others') {
+                baseFee *= 2;
+            }
+
+            document.getElementById('feeAmount').textContent = `$${baseFee}`;
+            document.getElementById('feeDisplay').textContent = 
+                `${isMember ? 'Member' : 'Non-member'} rate for ${
+                    placementType?.includes('other') ? 'companion' : 'single'
+                } placement`;
+        }
+
+        function observeQuestionChanges() {
+            // Set up dynamic content updates based on selections
+            const appTypeRadios = document.querySelectorAll('input[name="applicationType"]');
+            appTypeRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'future') {
+                        setupPrepaymentNames();
+                    }
+                });
+            });
+
+            const placementRadios = document.querySelectorAll('input[name="placementType"]');
+            placementRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (formData.applicationType === 'future') {
+                        setupPrepaymentNames();
+                    }
+                });
+            });
+        }
+
+        function setupPrepaymentNames() {
+            const section = document.getElementById('prepaymentNamesSection');
+            if (!section) return;
+
+            const placementType = formData.placementType;
+            let html = '';
+
+            switch (placementType) {
+                case 'self':
+                    html = `
+                        <div class="input-group">
+                            <label>Your Name</label>
+                            <input type="text" name="prepaymentName1" required placeholder="Enter your full name">
+                            <span class="error-message">This field is required</span>
+                        </div>
+                    `;
+                    break;
+                case 'self_and_other':
+                    html = `
+                        <div class="input-group">
+                            <label>Your Name</label>
+                            <input type="text" name="prepaymentName1" required placeholder="Enter your full name">
+                            <span class="error-message">This field is required</span>
+                        </div>
+                        <div class="input-group">
+                            <label>Other Person's Name</label>
+                            <input type="text" name="prepaymentName2" required placeholder="Enter their full name">
+                            <span class="error-message">This field is required</span>
+                        </div>
+                    `;
+                    break;
+                case 'two_others':
+                    html = `
+                        <div class="input-group">
+                            <label>First Person's Name</label>
+                            <input type="text" name="prepaymentName1" required placeholder="Enter their full name">
+                            <span class="error-message">This field is required</span>
+                        </div>
+                        <div class="input-group">
+                            <label>Second Person's Name</label>
+                            <input type="text" name="prepaymentName2" required placeholder="Enter their full name">
+                            <span class="error-message">This field is required</span>
+                        </div>
+                    `;
+                    break;
+                default:
+                    html = `
+                        <div class="input-group">
+                            <label>Name(s) for Placement</label>
+                            <input type="text" name="prepaymentNames" required placeholder="Enter name(s)">
+                            <span class="error-message">This field is required</span>
+                        </div>
+                    `;
+            }
+
+            section.innerHTML = html;
+        }
+
+        async function submitForm() {
+            collectFormData();
+            
+            // Generate submission ID
+            const submissionId = 'MG-' + Date.now();
+            document.getElementById('confirmationId').textContent = submissionId;
+
+            // Prepare submission data
+            const submissionData = {
+                'Submission ID': submissionId,
+                'Application Type': formData.applicationType,
+                'Placement Type': formData.placementType,
+                'Bay View Member': formData.membership === 'yes' ? 'Yes' : 'No',
+                'Contact Name': formData.contactName,
+                'Contact Phone': formData.contactPhone,
+                'Contact Email': formData.contactEmail,
+                'Policy Agreement': formData.policyAgreement ? '__YES__' : '__NO__',
+                'Simplified': formData.applicationType === 'future',
+                ...formData
+            };
+
+            // Submit to API
+            try {
+                const response = await fetch('https://unified-system.vercel.app/api/memorial/submit-garden', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ properties: submissionData })
+                });
+
+                const result = await response.json();
+                
+                if (result.success) {
+                    document.getElementById('confirmationId').textContent = result.submissionId || submissionId;
+                }
+            } catch (error) {
+                console.error('Submission error:', error);
+            }
+        }
+    </script>
+</body>
+</html>
