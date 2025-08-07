@@ -1073,10 +1073,27 @@
         // Store form data for thank you page
         let submittedData = {};
         
-        // Initialize fee display with default message
+        // Initialize everything when DOM is ready
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOMContentLoaded fired');
+            
+            // Initialize fee display with default message
             const feeNote = document.getElementById('feeNote');
-            feeNote.textContent = 'Please select membership status above to see your fee';
+            if (feeNote) {
+                feeNote.textContent = 'Please select membership status above to see your fee';
+            } else {
+                console.error('feeNote element not found');
+            }
+            
+            // Set minimum dates to today
+            const today = new Date().toISOString().split('T')[0];
+            const serviceDateInput = document.getElementById('requested_service_date');
+            if (serviceDateInput) {
+                serviceDateInput.min = today;
+            }
+            
+            // Initialize all event listeners here...
+            initializeEventListeners();
         });
         
         // Function to update prepayment name fields based on placement type
@@ -1123,8 +1140,12 @@
             }
         }
         
-        // Show/hide prepayment section based on application type
-        document.querySelectorAll('input[name="applicationType"]').forEach(radio => {
+        // Initialize all event listeners
+        function initializeEventListeners() {
+            console.log('Initializing event listeners');
+            
+            // Show/hide prepayment section based on application type
+            document.querySelectorAll('input[name="applicationType"]').forEach(radio => {
             radio.addEventListener('change', function() {
                 const prepaymentSection = document.getElementById('prepaymentSection');
                 const paymentTimingNote = document.getElementById('paymentTimingNote');
@@ -1356,9 +1377,13 @@
             });
         });
         
-        // Show/hide fields based on application purpose
-        document.querySelectorAll('input[name="applicationType"]').forEach(radio => {
+            // Show/hide fields based on application purpose
+            console.log('Attaching applicationType listeners');
+            const applicationTypeRadios = document.querySelectorAll('input[name="applicationType"]');
+            console.log('Found', applicationTypeRadios.length, 'applicationType radios');
+            applicationTypeRadios.forEach(radio => {
             radio.addEventListener('change', function() {
+                console.log('Application type changed to:', this.value);
                 const deathDateGroup = document.getElementById('deathDateGroup');
                 const deathDateInput = document.getElementById('death_date');
                 const personalHistorySection = document.getElementById('personalHistorySection');
@@ -1455,9 +1480,10 @@
             });
         });
         
-        // Set minimum dates to today
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('requested_service_date').min = today;
+        // End of initializeEventListeners function
+        }
+        
+        // Removed - now handled in DOMContentLoaded
         
         // Auto-populate deceased name when first/last name changes
         function updateDeceasedName() {
