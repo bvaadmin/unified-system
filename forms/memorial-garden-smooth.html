@@ -468,9 +468,9 @@
                 <!-- Welcome Screen -->
                 <div class="question-container active" data-question="0">
                     <div class="welcome-screen">
-                        <h2>Welcome</h2>
-                        <p>Thank you for considering the Bay View Memorial Garden for your loved one's final resting place. This application will guide you through the process step by step.</p>
-                        <p>The process takes about 5-10 minutes to complete.</p>
+                        <h2>Welcome to Bay View Memorial Garden</h2>
+                        <p>We're honored you're considering this peaceful place for remembrance. Let's walk through this together, step by step.</p>
+                        <p>This will take about 5 minutes.</p>
                         <button type="button" class="btn btn-primary" onclick="nextQuestion()">Start Application</button>
                     </div>
                 </div>
@@ -546,8 +546,8 @@
                 <!-- Question 3: Names (for prepayment) -->
                 <div class="question-container" data-question="3" data-condition="prepayment">
                     <span class="question-number">3</span>
-                    <h2 class="question-title">Names for placement</h2>
-                    <p class="question-subtitle">We'll collect full biographical details when the time comes</p>
+                    <h2 class="question-title">Let's get the names</h2>
+                    <p class="question-subtitle">Just the names for now – we'll handle everything else when the time comes</p>
                     
                     <div id="prepaymentNamesSection">
                         <!-- Dynamically populated based on placement type -->
@@ -557,8 +557,8 @@
                 <!-- Question 3: Deceased Information (for immediate) -->
                 <div class="question-container" data-question="3" data-condition="immediate">
                     <span class="question-number">3</span>
-                    <h2 class="question-title">Information about the deceased</h2>
-                    <p class="question-subtitle">Please provide the following details</p>
+                    <h2 class="question-title">Tell us about your loved one</h2>
+                    <p class="question-subtitle">These details help us honor their memory properly</p>
                     
                     <div class="input-group">
                         <label>Full Name</label>
@@ -581,7 +581,7 @@
                 <div class="question-container" data-question="4">
                     <span class="question-number">4</span>
                     <h2 class="question-title">Are you a Bay View member?</h2>
-                    <p class="question-subtitle">Membership affects pricing and requirements</p>
+                    <p class="question-subtitle">This helps us determine your rate</p>
                     
                     <div class="radio-group">
                         <label class="radio-option">
@@ -606,8 +606,8 @@
                 <!-- Question 5: Member Sponsor (conditional) -->
                 <div class="question-container" data-question="5" data-condition="non-member">
                     <span class="question-number">5</span>
-                    <h2 class="question-title">Bay View member sponsor</h2>
-                    <p class="question-subtitle">A Bay View member must sponsor your application</p>
+                    <h2 class="question-title">Who's your Bay View connection?</h2>
+                    <p class="question-subtitle">We'll need a member to sponsor your application</p>
                     
                     <div class="input-group">
                         <label>Sponsor's Name</label>
@@ -624,8 +624,8 @@
                 <!-- Question 6: Contact Information -->
                 <div class="question-container" data-question="6">
                     <span class="question-number">6</span>
-                    <h2 class="question-title">Your contact information</h2>
-                    <p class="question-subtitle">We'll use this to communicate about your application</p>
+                    <h2 class="question-title">How can we reach you?</h2>
+                    <p class="question-subtitle">We'll keep you updated every step of the way</p>
                     
                     <div class="input-group">
                         <label>Your Name</label>
@@ -648,8 +648,8 @@
                 <!-- Question 7: Bay View History (for immediate) -->
                 <div class="question-container" data-question="7" data-condition="immediate">
                     <span class="question-number">7</span>
-                    <h2 class="question-title">Connection to Bay View</h2>
-                    <p class="question-subtitle">Tell us about your relationship with Bay View</p>
+                    <h2 class="question-title">What's your Bay View story?</h2>
+                    <p class="question-subtitle">Share your connection to this special place</p>
                     
                     <div class="input-group">
                         <label>Bay View History</label>
@@ -660,8 +660,8 @@
                 <!-- Question 8: Payment Information -->
                 <div class="question-container" data-question="8">
                     <span class="question-number">8</span>
-                    <h2 class="question-title">Payment details</h2>
-                    <p class="question-subtitle" id="feeDisplay">Your fee will be calculated based on membership status</p>
+                    <h2 class="question-title">Almost done! Let's handle payment</h2>
+                    <p class="question-subtitle" id="feeDisplay">Choose how you'd like to pay</p>
                     
                     <div class="input-group">
                         <label>Payment Method</label>
@@ -682,8 +682,8 @@
                 <!-- Question 9: Policy Agreement -->
                 <div class="question-container" data-question="9">
                     <span class="question-number">9</span>
-                    <h2 class="question-title">Policy acknowledgment</h2>
-                    <p class="question-subtitle">Please review and accept our policies</p>
+                    <h2 class="question-title">One last thing</h2>
+                    <p class="question-subtitle">Just need your agreement to our guidelines</p>
                     
                     <div class="checkbox-group">
                         <label class="checkbox-option">
@@ -704,8 +704,8 @@
                 <div class="question-container" data-question="10">
                     <div class="thank-you-screen">
                         <div class="checkmark"></div>
-                        <h2>Application Submitted!</h2>
-                        <p>Thank you for your application to the Bay View Memorial Garden.</p>
+                        <h2>All set!</h2>
+                        <p>Your application has been received. Thank you for choosing Bay View Memorial Garden.</p>
                         <p><strong>Your Reference Number:</strong></p>
                         <p style="font-size: 1.5rem; color: var(--primary); font-weight: bold;" id="confirmationId">MG-123456</p>
                         <p style="margin-top: 2rem;">You will receive a confirmation email within 24 hours with payment instructions and next steps.</p>
