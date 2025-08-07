@@ -1524,24 +1524,99 @@
             // Show the thank you page
             document.getElementById('thankYouPage').style.display = 'block';
             
-            // Update the main success message based on application type
-            const successHeading = document.querySelector('#thankYouPage h2[style*="color: #28a745"]');
-            if (submittedData['Application Type'] === 'future') {
-                successHeading.textContent = 'Future Placement Application Successfully Submitted!';
-            } else {
-                successHeading.textContent = 'Memorial Garden Application Successfully Submitted!';
-            }
+            const applicationType = submittedData['Application Type'];
+            const placementType = submittedData['Placement Type'];
             
-            // Populate confirmation details
-            document.getElementById('confirmationId').textContent = submittedData['Submission ID'];
-            document.getElementById('confirmationDate').textContent = new Date().toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-            document.getElementById('confirmationType').textContent = submittedData['Application Type'] === 'future' ? 'Future Placement' : 'Immediate Placement';
-            document.getElementById('confirmationContact').textContent = submittedData['Contact Name'];
-            document.getElementById('confirmationFee').textContent = `$${parseFloat(submittedData['Fee Amount']).toFixed(2)}`;
+            // For prepayments, create a special confirmation display
+            if (applicationType === 'future') {
+                // Build list of names covered
+                const names = [];
+                if (submittedData['Prepayment Person 1']) {
+                    names.push(submittedData['Prepayment Person 1']);
+                }
+                if (submittedData['Prepayment Person 2']) {
+                    names.push(submittedData['Prepayment Person 2']);
+                }
+                if (names.length === 0 && submittedData['Prepayment Names']) {
+                    // Fallback to prepayment names field
+                    names.push(submittedData['Prepayment Names']);
+                }
+                
+                // Update the header for prepayments
+                const headerSection = document.querySelector('#thankYouPage .header');
+                headerSection.innerHTML = `
+                    <h1>Bay View Association</h1>
+                    <h2>Memorial Garden Prepayment</h2>
+                    <p>Confirmation of Future Placement</p>
+                `;
+                
+                // Update the success message
+                const successSection = document.querySelector('#thankYouPage div[style*="text-align: center"]');
+                successSection.innerHTML = `
+                    <div class="checkmark"></div>
+                    <h2 style="color: #28a745; margin: 20px 0;">Prepayment Secured!</h2>
+                    <p style="font-size: 1.1em; color: #666;">Your placement has been reserved at today's rates.</p>
+                `;
+                
+                // Update the submission details with prepayment-specific info
+                const submissionDetails = document.querySelector('#thankYouPage .submission-details');
+                submissionDetails.innerHTML = `
+                    <h3>Prepayment Details</h3>
+                    <div class="detail-row">
+                        <span class="detail-label">Reference Number:</span>
+                        <span class="detail-value" style="font-weight: bold; color: #2c5aa0;">${submittedData['Submission ID']}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Date Secured:</span>
+                        <span class="detail-value">${new Date().toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        })}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Prepayment Covers:</span>
+                        <span class="detail-value">
+                            ${names.length > 0 ? names.map(name => `<div style="margin: 2px 0;">• ${name}</div>`).join('') : submittedData['Prepayment Names']}
+                        </span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Purchaser:</span>
+                        <span class="detail-value">${submittedData['Contact Name']}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Amount Secured:</span>
+                        <span class="detail-value" style="font-weight: bold;">$${parseFloat(submittedData['Fee Amount']).toFixed(2)}</span>
+                    </div>
+                    <div style="margin-top: 20px; padding: 15px; background-color: #f0f8ff; border-left: 4px solid #2c5aa0;">
+                        <p style="margin: 0; color: #555;">
+                            <strong>Important:</strong> Save this reference number. When the time comes, your designee can provide 
+                            the Memorial Garden Committee with reference number <strong style="color: #2c5aa0;">${submittedData['Submission ID']}</strong>. 
+                            We'll collect the biographical information then and coordinate all details.
+                        </p>
+                    </div>
+                    <div style="margin-top: 15px; padding: 10px; background-color: #d4edda; border-radius: 5px;">
+                        <p style="margin: 0; color: #155724; text-align: center;">
+                            <strong>✓ This prepayment secures placement at today's rates</strong>
+                        </p>
+                    </div>
+                `;
+            } else {
+                // Original immediate placement display
+                const successHeading = document.querySelector('#thankYouPage h2[style*="color: #28a745"]');
+                successHeading.textContent = 'Memorial Garden Application Successfully Submitted!';
+                
+                // Populate standard confirmation details
+                document.getElementById('confirmationId').textContent = submittedData['Submission ID'];
+                document.getElementById('confirmationDate').textContent = new Date().toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                document.getElementById('confirmationType').textContent = 'Immediate Placement';
+                document.getElementById('confirmationContact').textContent = submittedData['Contact Name'];
+                document.getElementById('confirmationFee').textContent = `$${parseFloat(submittedData['Fee Amount']).toFixed(2)}`;
+            }
             
             // Set payment memo name
             const memoName = submittedData['Deceased Name'] || submittedData['Prepayment Names'] || 'Application';
@@ -1549,47 +1624,78 @@
             
             // Update timeline and next steps based on application type
             try {
-                console.log('Debug - Application Type value:', submittedData['Application Type']);
-                console.log('Debug - Full submittedData:', submittedData);
-                
-                // Check multiple possible values for future placement
                 const appType = submittedData['Application Type'];
-                if (appType === 'future' || appType === 'Future' || appType === 'Future Placement') {
-                    console.log('Debug - Updating for future placement');
-                    // Update step 1 for future placement
-                    const step1 = document.querySelector('#thankYouPage .next-steps .step:nth-of-type(1) p');
-                    if (step1) {
-                        step1.textContent = 'You will receive a confirmation email within 24 hours with a copy of your application and payment instructions for securing your future placement.';
+                if (appType === 'future') {
+                    // Replace entire next steps section for prepayments
+                    const nextStepsSection = document.querySelector('#thankYouPage .next-steps');
+                    if (nextStepsSection) {
+                        nextStepsSection.innerHTML = `
+                            <h3>What Happens Next?</h3>
+                            <div class="step">
+                                <div class="step-number">1</div>
+                                <div class="step-content">
+                                    <h4>Confirmation Email</h4>
+                                    <p>You'll receive an email within 24 hours confirming your prepayment and including your reference number.</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">2</div>
+                                <div class="step-content">
+                                    <h4>Submit Payment</h4>
+                                    <p>Send your payment to secure your placement at today's rates. Full payment locks in current pricing.</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">3</div>
+                                <div class="step-content">
+                                    <h4>Save Your Reference Number</h4>
+                                    <p>Keep reference number <strong style="color: #2c5aa0;">${submittedData['Submission ID']}</strong> in a safe place and share it with your family or executor.</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">4</div>
+                                <div class="step-content">
+                                    <h4>Peace of Mind</h4>
+                                    <p>Your wishes are recorded and placement secured. No further action needed until the time comes.</p>
+                                </div>
+                            </div>
+                            <div class="step">
+                                <div class="step-number">5</div>
+                                <div class="step-content">
+                                    <h4>When Needed</h4>
+                                    <p>Your designee simply provides the reference number to the Memorial Garden Committee. We'll collect biographical details then and handle all arrangements.</p>
+                                </div>
+                            </div>
+                        `;
                     }
                     
-                    // Update step 4 for future placement
-                    const step4Title = document.querySelector('#thankYouPage .next-steps .step:nth-of-type(4) h4');
-                    const step4Text = document.querySelector('#thankYouPage .next-steps .step:nth-of-type(4) p');
-                    if (step4Title && step4Text) {
-                        step4Title.textContent = 'Secure Your Placement';
-                        step4Text.textContent = 'Your payment reserves your place in the Memorial Garden. Once received, your placement rights are secured and your wishes will be honored when the time comes.';
+                    // Replace timeline section for prepayments
+                    const timelineSection = document.querySelector('#thankYouPage .timeline');
+                    if (timelineSection) {
+                        timelineSection.innerHTML = `
+                            <h3>Simple Process</h3>
+                            <div class="timeline-item">
+                                <strong>Today:</strong> Prepayment application submitted
+                            </div>
+                            <div class="timeline-item">
+                                <strong>Within 24 hours:</strong> Confirmation email sent
+                            </div>
+                            <div class="timeline-item">
+                                <strong>Upon payment:</strong> Placement secured at today's rates
+                            </div>
+                            <div class="timeline-item">
+                                <strong>Future:</strong> Reference number activates your placement when needed
+                            </div>
+                        `;
                     }
                     
-                    // Update step 5 for future placement
-                    const step5Title = document.querySelector('#thankYouPage .next-steps .step:nth-of-type(5) h4');
-                    const step5Text = document.querySelector('#thankYouPage .next-steps .step:nth-of-type(5) p');
-                    if (step5Title && step5Text) {
-                        step5Title.textContent = 'Your Wishes Are Recorded';
-                        step5Text.textContent = 'Your placement preferences are safely on file. Your family or designated contact can notify the Memorial Garden Committee when the time comes, and we will coordinate all details according to your wishes.';
-                    }
-                    
-                    // Update timeline items for future placement
-                    const timelineItems = document.querySelectorAll('#thankYouPage .timeline-item');
-                    console.log('Debug - Found timeline items:', timelineItems.length);
-                    if (timelineItems.length >= 5) {
-                        timelineItems[3].innerHTML = '<strong>Upon payment:</strong> Your placement is secured and wishes recorded';
-                        timelineItems[4].innerHTML = '<strong>Peace of mind:</strong> Everything is arranged for when the time comes';
-                    }
-                    
-                    // Update payment reminder text
+                    // Update payment reminder text for prepayments
                     const paymentSection = document.querySelector('#thankYouPage .payment-info-display');
-                    console.log('Debug - Payment section found:', !!paymentSection);
                     if (paymentSection) {
+                        const h3 = paymentSection.querySelector('h3');
+                        if (h3) {
+                            h3.textContent = 'Payment Secures Your Placement';
+                        }
                         const paymentOptions = paymentSection.querySelector('.payment-option');
                         if (paymentOptions && paymentOptions.parentElement) {
                             const existingNote = paymentSection.querySelector('p[style*="color: #2c5aa0"]');
@@ -1597,9 +1703,8 @@
                                 const newParagraph = document.createElement('p');
                                 newParagraph.style.marginTop = '10px';
                                 newParagraph.style.color = '#2c5aa0';
-                                newParagraph.innerHTML = '<em>Note: Your payment today ensures your wishes will be honored. This one-time fee covers all future costs, providing peace of mind that everything is arranged.</em>';
+                                newParagraph.innerHTML = '<em>Note: Your payment today locks in current rates and ensures your wishes will be honored. This one-time fee covers all future costs.</em>';
                                 paymentSection.insertBefore(newParagraph, paymentOptions.parentElement);
-                                console.log('Debug - Added peace of mind language');
                             }
                         }
                     }
