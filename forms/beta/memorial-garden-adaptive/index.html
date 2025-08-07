@@ -6,6 +6,7 @@
     <title>Memorial Garden - Bay View Association</title>
     <link rel="stylesheet" href="css/base.css">
     <link rel="stylesheet" href="css/journey.css">
+    <script src="js/secure-storage.js"></script>
     <style>
         /* Entry portal specific styles */
         .portal-container {
@@ -281,9 +282,15 @@
             const selectedJourney = document.querySelector('input[name="journey"]:checked');
             if (!selectedJourney) return;
             
-            // Store journey context
-            sessionStorage.setItem('memorialGardenJourney', selectedJourney.value);
-            sessionStorage.setItem('journeyStartTime', new Date().toISOString());
+            // Store journey context securely
+            SecureStorage.setItem('memorialGardenJourney', selectedJourney.value, { 
+                expiryMinutes: 120, 
+                sensitive: false 
+            });
+            SecureStorage.setItem('journeyStartTime', new Date().toISOString(), { 
+                expiryMinutes: 120, 
+                sensitive: false 
+            });
             
             // Route to appropriate path
             switch(selectedJourney.value) {
@@ -350,20 +357,42 @@
                 </div>
             `;
             
-            journeyForm.innerHTML = formContent + `
-                <div class="continue-section">
-                    <button type="button" onclick="routeByReadiness('${type}')" class="continue-btn">
-                        Continue
-                    </button>
-                </div>
-            `;
+            // Clear existing content safely
+            while (journeyForm.firstChild) {
+                journeyForm.removeChild(journeyForm.firstChild);
+            }
+            
+            // Create elements safely using DOM methods
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = formContent;
+            
+            // Append the form content
+            while (tempDiv.firstChild) {
+                journeyForm.appendChild(tempDiv.firstChild);
+            }
+            
+            // Create continue section safely
+            const continueSection = document.createElement('div');
+            continueSection.className = 'continue-section';
+            
+            const continueBtn = document.createElement('button');
+            continueBtn.type = 'button';
+            continueBtn.className = 'continue-btn';
+            continueBtn.textContent = 'Continue';
+            continueBtn.onclick = () => routeByReadiness(type);
+            
+            continueSection.appendChild(continueBtn);
+            journeyForm.appendChild(continueSection);
         }
         
         function routeByReadiness(type) {
             const readiness = document.querySelector('input[name="readiness"]:checked')?.value;
             if (!readiness) return;
             
-            sessionStorage.setItem('informationReadiness', readiness);
+            SecureStorage.setItem('informationReadiness', readiness, { 
+                expiryMinutes: 120, 
+                sensitive: false 
+            });
             
             if (type === 'immediate') {
                 switch(readiness) {
@@ -410,20 +439,42 @@
                 </div>
             `;
             
-            journeyForm.innerHTML = formContent + `
-                <div class="continue-section">
-                    <button type="button" onclick="routeByRelationship()" class="continue-btn">
-                        Continue
-                    </button>
-                </div>
-            `;
+            // Clear existing content safely
+            while (journeyForm.firstChild) {
+                journeyForm.removeChild(journeyForm.firstChild);
+            }
+            
+            // Create elements safely using DOM methods
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = formContent;
+            
+            // Append the form content
+            while (tempDiv.firstChild) {
+                journeyForm.appendChild(tempDiv.firstChild);
+            }
+            
+            // Create continue section safely
+            const continueSection = document.createElement('div');
+            continueSection.className = 'continue-section';
+            
+            const continueBtn = document.createElement('button');
+            continueBtn.type = 'button';
+            continueBtn.className = 'continue-btn';
+            continueBtn.textContent = 'Continue';
+            continueBtn.onclick = routeByRelationship;
+            
+            continueSection.appendChild(continueBtn);
+            journeyForm.appendChild(continueSection);
         }
         
         function routeByRelationship() {
             const relationship = document.querySelector('input[name="relationship"]:checked')?.value;
             if (!relationship) return;
             
-            sessionStorage.setItem('helperRelationship', relationship);
+            SecureStorage.setItem('helperRelationship', relationship, { 
+                expiryMinutes: 120, 
+                sensitive: false 
+            });
             
             // All helpers go through collaborative path with different permissions
             window.location.href = 'paths/collaborative.html';
@@ -436,7 +487,10 @@
         
         function requestCallback() {
             // Store request for callback
-            sessionStorage.setItem('callbackRequested', 'true');
+            SecureStorage.setItem('callbackRequested', 'true', { 
+                expiryMinutes: 60, 
+                sensitive: false 
+            });
             window.location.href = 'contact/callback-request.html';
         }
         

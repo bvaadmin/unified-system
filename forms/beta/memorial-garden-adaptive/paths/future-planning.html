@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plan for the Future - Memorial Garden - Bay View Association</title>
     <link rel="stylesheet" href="../css/base.css">
+    <script src="../js/secure-storage.js"></script>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
@@ -334,7 +335,7 @@
     
     <script>
         // Load any saved data
-        const savedData = JSON.parse(localStorage.getItem('memorialGardenFuture') || '{}');
+        const savedData = SecureStorage.getItem('memorialGardenFuture') || {};
         
         // Populate form with saved data
         Object.keys(savedData).forEach(key => {
@@ -374,7 +375,10 @@
                     formData[input.name] = input.value;
                 }
             });
-            localStorage.setItem('memorialGardenFuture', JSON.stringify(formData));
+            SecureStorage.setItem('memorialGardenFuture', formData, { 
+                expiryMinutes: 240, 
+                sensitive: true 
+            });
         }
         
         function continueToNext() {

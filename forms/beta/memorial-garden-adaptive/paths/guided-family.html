@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>For a Family Member - Memorial Garden - Bay View Association</title>
+    <script src="../js/secure-storage.js"></script>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
@@ -608,26 +609,48 @@
             const reviewContent = document.getElementById('reviewContent');
             const formData = new FormData(document.getElementById('familyForm'));
             
-            let html = '<div style="background: #f8f9fa; padding: 20px; border-radius: 8px;">';
-            html += '<h3 style="color: #2c5aa0; margin-bottom: 20px;">Please review your information:</h3>';
+            // Clear existing content safely
+            while (reviewContent.firstChild) {
+                reviewContent.removeChild(reviewContent.firstChild);
+            }
+            
+            // Create review container safely
+            const reviewDiv = document.createElement('div');
+            reviewDiv.style.cssText = 'background: #f8f9fa; padding: 20px; border-radius: 8px;';
+            
+            const header = document.createElement('h3');
+            header.style.cssText = 'color: #2c5aa0; margin-bottom: 20px;';
+            header.textContent = 'Please review your information:';
+            reviewDiv.appendChild(header);
+            
+            // Create review items safely
+            function createReviewItem(label, value) {
+                const p = document.createElement('p');
+                const strong = document.createElement('strong');
+                strong.textContent = label + ': ';
+                p.appendChild(strong);
+                p.appendChild(document.createTextNode(value || 'Not provided'));
+                return p;
+            }
             
             // Add formatted review content
             const relationship = formData.get('relationship') === 'other' ? 
                 formData.get('relationshipDetail') : formData.get('relationship');
             
-            html += `
-                <p><strong>Relationship:</strong> ${relationship}</p>
-                <p><strong>Name:</strong> ${formData.get('fullName')}</p>
-                <p><strong>Date of birth:</strong> ${formData.get('dateOfBirth') || 'Not provided'}</p>
-                <p><strong>Date of passing:</strong> ${formData.get('dateOfDeath')}</p>
-                <p><strong>Your name:</strong> ${formData.get('yourName')}</p>
-                <p><strong>Contact:</strong> ${formData.get('yourPhone')}</p>
-            `;
+            reviewDiv.appendChild(createReviewItem('Relationship', relationship));
+            reviewDiv.appendChild(createReviewItem('Name', formData.get('fullName')));
+            reviewDiv.appendChild(createReviewItem('Date of birth', formData.get('dateOfBirth')));
+            reviewDiv.appendChild(createReviewItem('Date of passing', formData.get('dateOfDeath')));
+            reviewDiv.appendChild(createReviewItem('Your name', formData.get('yourName')));
+            reviewDiv.appendChild(createReviewItem('Contact', formData.get('yourPhone')));
             
-            html += '</div>';
-            html += '<p style="margin-top: 20px; color: #666;">If everything looks correct, click Submit Application below.</p>';
+            reviewContent.appendChild(reviewDiv);
             
-            reviewContent.innerHTML = html;
+            // Add instruction paragraph safely
+            const instruction = document.createElement('p');
+            instruction.style.cssText = 'margin-top: 20px; color: #666;';
+            instruction.textContent = 'If everything looks correct, click Submit Application below.';
+            reviewContent.appendChild(instruction);
         }
         
         // Form submission
@@ -637,8 +660,11 @@
             const formData = new FormData(document.getElementById('familyForm'));
             const data = Object.fromEntries(formData);
             
-            // Save to session
-            sessionStorage.setItem('familyFormData', JSON.stringify(data));
+            // Save sensitive form data securely
+            SecureStorage.setItem('familyFormData', data, { 
+                expiryMinutes: 180, 
+                sensitive: true 
+            });
             
             // In production, submit to API
             console.log('Submitting family member application:', data);

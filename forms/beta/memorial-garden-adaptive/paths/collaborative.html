@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Collaborative Application - Memorial Garden - Bay View Association</title>
+    <script src="../js/secure-storage.js"></script>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
@@ -342,18 +343,40 @@
         function updateMembersList() {
             const container = document.getElementById('addedMembers');
             
+            // Clear existing content safely
+            while (container.firstChild) {
+                container.removeChild(container.firstChild);
+            }
+            
             if (invitedMembers.length === 0) {
-                container.innerHTML = '';
                 return;
             }
             
-            container.innerHTML = '<h4 style="color: #2c5aa0; margin-bottom: 10px;">Invited Members:</h4>' +
-                invitedMembers.map((member, index) => `
-                    <div style="display: flex; justify-content: space-between; align-items: center; padding: 10px; background: white; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 10px;">
-                        <span>${member.name} (${member.email})</span>
-                        <button type="button" onclick="removeMember(${index})" style="color: #dc3545; background: none; border: none; cursor: pointer;">Remove</button>
-                    </div>
-                `).join('');
+            // Create header safely
+            const header = document.createElement('h4');
+            header.style.color = '#2c5aa0';
+            header.style.marginBottom = '10px';
+            header.textContent = 'Invited Members:';
+            container.appendChild(header);
+            
+            // Create member elements safely
+            invitedMembers.forEach((member, index) => {
+                const memberDiv = document.createElement('div');
+                memberDiv.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 10px; background: white; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 10px;';
+                
+                const memberInfo = document.createElement('span');
+                memberInfo.textContent = `${member.name} (${member.email})`;
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.style.cssText = 'color: #dc3545; background: none; border: none; cursor: pointer;';
+                removeBtn.textContent = 'Remove';
+                removeBtn.onclick = () => removeMember(index);
+                
+                memberDiv.appendChild(memberInfo);
+                memberDiv.appendChild(removeBtn);
+                container.appendChild(memberDiv);
+            });
         }
         
         function removeMember(index) {
@@ -376,8 +399,11 @@
                 shareCode: 'MG-' + Date.now().toString(36).toUpperCase()
             };
             
-            // Save to session
-            sessionStorage.setItem('collaborativeSetup', JSON.stringify(formData));
+            // Save securely (contains sensitive personal information)
+            SecureStorage.setItem('collaborativeSetup', formData, { 
+                expiryMinutes: 180, 
+                sensitive: true 
+            });
             
             // In production, this would create the collaborative session
             console.log('Collaborative setup:', formData);

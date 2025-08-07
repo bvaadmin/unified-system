@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Collaborative Application Created - Memorial Garden - Bay View Association</title>
+    <script src="../js/secure-storage.js"></script>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
@@ -295,11 +296,11 @@
     </div>
     
     <script>
-        // Load collaborative setup data
-        const setupData = sessionStorage.getItem('collaborativeSetup');
+        // Load collaborative setup data securely
+        const setupData = SecureStorage.getItem('collaborativeSetup');
         
         if (setupData) {
-            const data = JSON.parse(setupData);
+            const data = setupData;
             
             // Display share code
             document.getElementById('shareCode').textContent = data.shareCode;
@@ -308,17 +309,42 @@
             const invitedList = document.getElementById('invitedList');
             
             if (data.invitedMembers && data.invitedMembers.length > 0) {
-                const membersHTML = data.invitedMembers.map(member => `
-                    <div class="invited-member">
-                        <div>
-                            <div class="name">${member.name}</div>
-                            <div style="color: #666; font-size: 0.9em;">${member.email}</div>
-                        </div>
-                        <div class="status">Invitation Pending</div>
-                    </div>
-                `).join('');
+                // Clear existing content safely
+                while (invitedList.firstChild) {
+                    invitedList.removeChild(invitedList.firstChild);
+                }
                 
-                invitedList.innerHTML = '<h3>Invited Family Members</h3>' + membersHTML;
+                // Create header safely
+                const header = document.createElement('h3');
+                header.textContent = 'Invited Family Members';
+                invitedList.appendChild(header);
+                
+                // Create member elements safely
+                data.invitedMembers.forEach(member => {
+                    const memberDiv = document.createElement('div');
+                    memberDiv.className = 'invited-member';
+                    
+                    const memberInfo = document.createElement('div');
+                    
+                    const nameDiv = document.createElement('div');
+                    nameDiv.className = 'name';
+                    nameDiv.textContent = member.name;
+                    memberInfo.appendChild(nameDiv);
+                    
+                    const emailDiv = document.createElement('div');
+                    emailDiv.style.color = '#666';
+                    emailDiv.style.fontSize = '0.9em';
+                    emailDiv.textContent = member.email;
+                    memberInfo.appendChild(emailDiv);
+                    
+                    const statusDiv = document.createElement('div');
+                    statusDiv.className = 'status';
+                    statusDiv.textContent = 'Invitation Pending';
+                    
+                    memberDiv.appendChild(memberInfo);
+                    memberDiv.appendChild(statusDiv);
+                    invitedList.appendChild(memberDiv);
+                });
             } else {
                 invitedList.style.display = 'none';
             }
