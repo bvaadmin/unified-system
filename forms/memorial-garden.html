@@ -1,1344 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-    <title>Memorial Garden Application - Bay View Association</title>
-    <!-- Externalized styles -->
-    <link rel="stylesheet" href="memorial-garden.css" />
-    <!-- NOTE: This page has been refactored to externalize CSS & JS. See memorial-garden.js for initialization logic. -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Memorial Garden Application - Bay View Association</title>
+  <link rel="stylesheet" href="memorial-garden.css" />
 </head>
-            }
-        }
-    </style>
-</head>
-<body><div style="background-color: #00457c; padding: 20px; text-align: center;"><img alt="Bay View Logo" src="https://www.bayviewassociation.org/wp-content/uploads/2020/12/new-full-logo-300x62.png" style="max-width: 300px; height: auto;"/></div>
-<div class="container">
-<!-- Application Form -->
-<div id="applicationForm">
-<div class="header">
-<h1>Bay View Association</h1>
-<h2>Memorial Garden Application</h2>
-<p>Placement of Cremains</p>
-</div>
-<!-- Success/Error Messages -->
-<div class="success-message" id="successMessage">
-<h3>✓ Application Submitted Successfully!</h3>
-<p>Your Memorial Garden application has been received.</p>
-<p>You will receive a confirmation email shortly.</p>
-</div>
-<div class="error-message" id="errorMessage">
-<h3>Submission Error</h3>
-<p id="errorText">An error occurred while submitting your application. Please try again.</p>
-</div>
-<form id="memorialGardenForm">
-<!-- Purpose of Application Section (moved to top) -->
-<div class="section-title">Purpose of Application</div>
+<body>
+  <header class="site-header">
+    <img src="https://www.bayviewassociation.org/wp-content/uploads/2020/12/new-full-logo-300x62.png" alt="Bay View Association Logo" class="logo" />
+  </header>
 
-<div class="form-group">
-    <label class="required">Select one:</label>
-    <div class="radio-group">
-        <label>
-            <input type="radio" name="applicationType" value="future" required>
-            Prepayment for future placement of ashes
-        </label>
-        <label>
-            <input type="radio" name="applicationType" value="immediate" required>
-            Payment for immediate placement of ashes
-        </label>
-    </div>
-</div>
+  <main class="container">
+    <div id="applicationForm">
+      <div class="header">
+        <h1>Bay View Association</h1>
+        <h2>Memorial Garden Application</h2>
+        <p>Placement of Cremains</p>
+      </div>
 
-<!-- Number of Placements (Dynamic based on application type) -->
-<div class="form-group" id="placementOptionsGroup" style="margin-top: 20px; display: none;">
-    <label class="required">This application is:</label>
-    
-    <!-- Options for Prepayment (Future) -->
-    <div id="futurePlacementOptions" class="radio-group" style="display: none;">
-        <label>
-            <input type="radio" name="placementType" value="self" required>
-            For myself
-        </label>
-        <label>
-            <input type="radio" name="placementType" value="self_and_other" required>
-            For myself and one other person
-        </label>
-        <label>
-            <input type="radio" name="placementType" value="two_others" required>
-            For two other people (not me)
-        </label>
-    </div>
-    
-    <!-- Options for Immediate -->
-    <div id="immediatePlacementOptions" class="radio-group" style="display: none;">
-        <label>
-            <input type="radio" name="placementType" value="one_person" required>
-            For one person
-        </label>
-        <label>
-            <input type="radio" name="placementType" value="two_people" required>
-            For two people
-        </label>
-    </div>
-    
-    <div id="placementNote" style="display: none; margin-top: 10px; padding: 10px; background-color: #f0f8ff; border-left: 3px solid #2c5aa0;">
-        <strong>Note:</strong> <span id="placementNoteText"></span>
-    </div>
-</div>
+  <div id="errorMessage" class="error-message hidden">
+        <h3>Submission Error</h3>
+        <p id="errorText">An error occurred while submitting your application. Please try again.</p>
+      </div>
 
-<!-- Conditional Prepayment Section -->
-<div id="prepaymentSection" style="display: none;">
-    <div class="checkbox-group">
-        <label>
-            <input type="checkbox" name="prepaymentMade" value="yes">
-            <strong>Prepayment already made</strong> (Check if the memorial garden fee was previously paid)
-        </label>
+  <div id="loading" class="loading hidden">Submitting…</div>
+
+      <form id="memorialGardenForm" novalidate>
+        <!-- Purpose -->
+        <section aria-labelledby="purposeHeading">
+          <h3 id="purposeHeading" class="section-title">Purpose of Application</h3>
+          <div class="form-group">
+            <label class="required">Select one:</label>
+            <div class="radio-group">
+              <label><input type="radio" name="applicationType" value="future" required> Prepayment for future placement of ashes</label>
+              <label><input type="radio" name="applicationType" value="immediate" required> Immediate placement (cremains ready)</label>
+            </div>
+          </div>
+        </section>
+
+        <!-- Membership -->
+        <section aria-labelledby="membershipHeading">
+          <h3 id="membershipHeading" class="section-title">Bay View Membership Status</h3>
+          <div class="form-group">
+            <label class="required">Are you a Bay View member or relative?</label>
+            <div class="radio-group">
+              <label><input type="radio" name="is_member" value="Yes" required> Yes</label>
+              <label><input type="radio" name="is_member" value="No" required> No</label>
+            </div>
+          </div>
+          <div id="memberDetails" class="hidden">
+            <div class="two-col">
+              <div class="form-group">
+                <label for="member_name">Member Name</label>
+                <input type="text" id="member_name" />
+              </div>
+              <div class="form-group">
+                <label for="member_relationship">Relationship</label>
+                <input type="text" id="member_relationship" />
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Placement Selection -->
+        <section aria-labelledby="placementHeading">
+          <h3 id="placementHeading" class="section-title">Placement Type</h3>
+          <div class="form-group" id="placementSelector">
+            <div class="radio-group">
+              <!-- Future options -->
+              <label><input type="radio" name="placementType" value="self"> Myself only</label>
+              <label><input type="radio" name="placementType" value="self_and_other"> Myself and another person</label>
+              <label><input type="radio" name="placementType" value="two_others"> Two other people (not myself)</label>
+              <!-- Immediate options -->
+              <label><input type="radio" name="placementType" value="one_person"> One person (immediate)</label>
+              <label><input type="radio" name="placementType" value="two_people"> Two people (immediate)</label>
+            </div>
+          </div>
+        </section>
+
+        <!-- Prepayment Names (future) -->
+  <section id="prepaymentInfoSection" aria-labelledby="prepayHeading" class="hidden">
+          <h3 id="prepayHeading" class="section-title">Prepayment Names</h3>
+            <div class="form-group">
+              <label for="prepayment_names">Names covered by this prepayment (one per line or comma separated)</label>
+              <textarea id="prepayment_names" rows="3"></textarea>
+            </div>
+            <div class="two-col">
+              <div class="form-group">
+                <label for="prepayment_person_1">Primary Name</label>
+                <input type="text" id="prepayment_person_1" />
+              </div>
+              <div class="form-group">
+                <label for="prepayment_person_2">Second Name (if applicable)</label>
+                <input type="text" id="prepayment_person_2" />
+              </div>
+            </div>
+        </section>
+
+        <!-- Personal History (immediate) -->
+  <section id="personalHistorySection" aria-labelledby="personalHistoryHeading" class="hidden">
+          <h3 id="personalHistoryHeading" class="section-title">Personal History (Immediate Placement)</h3>
+          <div class="two-col">
+            <div class="form-group"><label for="first_name" class="required">First Name</label><input id="first_name" name="first_name" type="text" /></div>
+            <div class="form-group"><label for="last_name" class="required">Last Name</label><input id="last_name" name="last_name" type="text" /></div>
+          </div>
+          <div class="two-col">
+            <div class="form-group"><label for="middle_name">Middle Name</label><input id="middle_name" type="text" /></div>
+            <div class="form-group"><label for="maiden_name">Maiden Name</label><input id="maiden_name" type="text" /></div>
+          </div>
+          <div id="deceasedNameGroup" class="form-group hidden">
+            <label for="deceased_name" class="required">Name for Memorial Record</label>
+            <input id="deceased_name" type="text" />
+          </div>
+        </section>
+
+        <!-- Second Person (immediate, two people) -->
+  <section id="secondPersonSection" aria-labelledby="secondPersonHeading" class="hidden">
+          <h3 id="secondPersonHeading" class="section-title">Second Person Details</h3>
+          <div class="two-col">
+            <div class="form-group"><label for="second_first_name">First Name</label><input id="second_first_name" type="text" /></div>
+            <div class="form-group"><label for="second_last_name">Last Name</label><input id="second_last_name" type="text" /></div>
+          </div>
+        </section>
+
+        <!-- Contact Info -->
+        <section aria-labelledby="contactHeading">
+          <h3 id="contactHeading" class="section-title">Primary Contact</h3>
+          <div class="form-group"><label for="contact_name" class="required">Contact Name</label><input id="contact_name" type="text" /></div>
+          <div class="two-col">
+            <div class="form-group"><label for="contact_phone" class="required">Phone</label><input id="contact_phone" type="tel" /></div>
+            <div class="form-group"><label for="contact_email">Email</label><input id="contact_email" type="email" /></div>
+          </div>
+          <div class="four-col">
+            <div class="form-group"><label for="contact_street" class="required">Street</label><input id="contact_street" type="text" /></div>
+            <div class="form-group"><label for="contact_city" class="required">City</label><input id="contact_city" type="text" /></div>
+            <div class="form-group"><label for="contact_state" class="required">State</label><input id="contact_state" type="text" /></div>
+            <div class="form-group"><label for="contact_zip" class="required">Zip</label><input id="contact_zip" type="text" /></div>
+          </div>
+        </section>
+
+        <!-- Service Planning (immediate) -->
+  <section id="servicePlanningSection" aria-labelledby="serviceHeading" class="hidden">
+          <h3 id="serviceHeading" class="section-title">Service Planning</h3>
+          <div class="two-col">
+            <div class="form-group"><label for="requested_service_date" class="required">Requested Service Date</label><input id="requested_service_date" type="date" /></div>
+            <div class="form-group"><label for="requested_service_time" class="required">Requested Time</label><input id="requested_service_time" type="time" /></div>
+          </div>
+          <div class="form-group"><label for="celebrant_preference">Celebrant Preference</label><input id="celebrant_preference" type="text" /></div>
+        </section>
+
+        <!-- Policies -->
+        <section aria-labelledby="policiesHeading">
+          <h3 id="policiesHeading" class="section-title">Policies & Agreement</h3>
+          <div class="form-group">
+            <label><input type="checkbox" id="policy_agreement" /> I have read and agree to the Memorial Garden policies.</label>
+          </div>
+        </section>
+
+        <!-- Fee -->
+        <section aria-labelledby="feeHeading">
+          <h3 id="feeHeading" class="section-title">Fee</h3>
+          <div id="feeDisplay" class="hidden">
+            <p><strong id="feeAmount"></strong> <span id="feeNote"></span></p>
+          </div>
+          <input type="hidden" id="payment_amount" value="" />
+        </section>
+
+        <div class="form-actions">
+          <button id="submitButton" type="submit">Submit Memorial Garden Application</button>
+        </div>
+      </form>
     </div>
-</div>
-<!-- Bay View Membership - Moved to top for fee calculation -->
-<div class="form-section">
-<h2>What's your Bay View connection?</h2>
-<div class="form-group">
-<label>Are you a Bay View member or relative? <span class="required">*</span></label>
-<div class="radio-group">
-<input id="member_yes" name="is_member" required="" type="radio" value="Yes"/>
-<label for="member_yes">Yes - Bay View member or relative</label>
-</div>
-<div class="radio-group">
-<input id="member_no" name="is_member" required="" type="radio" value="No"/>
-<label for="member_no">No - Not a Bay View member</label>
-</div>
-</div>
-<div id="memberDetails">
-<div class="form-group">
-<label for="member_name">Bay View Member Name</label>
-<input id="member_name" name="member_name" type="text"/>
-</div>
-<div class="form-group">
-<label for="member_relationship">Relationship to member</label>
-<input id="member_relationship" name="member_relationship" type="text"/>
-</div>
-</div>
-</div>
-<!-- Dynamic Fee Display -->
-<div class="fee-display" id="feeDisplay">
-<h3>Your Placement Fee</h3>
-<div class="fee-amount" id="feeAmount"></div>
-<div class="fee-note" id="feeNote"></div>
-<script type="module" src="memorial-garden.js" defer></script>
-<div class="radio-group">
-<input id="celebrant_no" name="celebrant_requested" type="radio" value="No - Will provide own celebrant"/>
-<label for="celebrant_no">No - We will provide our own celebrant</label>
-</div>
-<div class="radio-group">
-<input id="celebrant_undecided" name="celebrant_requested" type="radio" value="Undecided - Will discuss with committee"/>
-<label for="celebrant_undecided">Undecided - Will discuss with Memorial Garden Committee</label>
-</div>
-<div class="celebrant-info">
-<strong>Note:</strong> The Memorial Garden Committee will coordinate all service details with you.
-                        </div>
-</div>
-</div>
-<!-- Payment Information -->
-<div class="form-section">
-<h2>Almost done! Let's handle payment</h2>
-<div class="payment-section">
-<div class="form-group">
-<label for="payment_amount">Amount Due ($) <span class="required">*</span></label>
-<input id="payment_amount" min="0" name="payment_amount" readonly="" required="" step="0.01" type="number"/>
-<small style="color: #666; font-style: italic;">Amount automatically calculated based on membership status</small>
-</div>
-<div class="form-group" id="deceasedNameGroup">
-<label for="deceased_name">Name(s) of deceased <span class="required">*</span></label>
-<input id="deceased_name" name="deceased_name" type="text"/>
-</div>
-</div>
-</div>
 
-<!-- Second Person Information (for Two Placements) -->
-<div class="form-section" id="secondPersonSection" style="display: none;">
-<h2 id="secondPersonTitle">Tell us about the second person</h2>
-<p id="secondPersonDescription" style="color: #666; margin-bottom: 15px;">We'd like to know about them too</p>
-<div class="form-row">
-<div class="form-group">
-<label for="second_first_name">First Name <span class="required">*</span></label>
-<input id="second_first_name" name="second_first_name" type="text"/>
-</div>
-<div class="form-group">
-<label for="second_middle_name">Middle Name</label>
-<input id="second_middle_name" name="second_middle_name" type="text"/>
-</div>
-<div class="form-group">
-<label for="second_last_name">Last Name <span class="required">*</span></label>
-<input id="second_last_name" name="second_last_name" type="text"/>
-</div>
-</div>
-<div class="form-group">
-<label for="second_maiden_name">Maiden Name (if applicable)</label>
-<input id="second_maiden_name" name="second_maiden_name" type="text"/>
-</div>
-<div class="form-row">
-<div class="form-group">
-<label for="second_birth_date">Date of Birth</label>
-<input id="second_birth_date" name="second_birth_date" type="date"/>
-</div>
-<div class="form-group" id="secondDeathDateGroup">
-<label for="second_death_date">Date of Death</label>
-<input id="second_death_date" name="second_death_date" type="date"/>
-</div>
-</div>
-<div class="form-group" id="secondDeceasedNameGroup">
-<label for="second_deceased_name">Name(s) of second deceased</label>
-<input id="second_deceased_name" name="second_deceased_name" type="text"/>
-</div>
-</div>
+    <!-- Thank You Screen -->
+  <div id="thankYouPage" class="hidden" aria-labelledby="thankYouHeading">
+      <div class="header">
+        <h1 id="thankYouHeading">Bay View Association</h1>
+        <p>Memorial Garden Confirmation</p>
+      </div>
+      <div class="confirmation-summary">
+        <p><strong>Confirmation ID:</strong> <span id="confirmationId"></span></p>
+        <p><strong>Date:</strong> <span id="confirmationDate"></span></p>
+        <p><strong>Fee:</strong> <span id="confirmationFee"></span></p>
+      </div>
+      <div id="thankYouDynamic" class="thank-you-dynamic"></div>
+  <div id="inPersonOption" class="hidden in-person-option">
+        <p>As a member, you may also deliver payment in person at the office.</p>
+      </div>
+      <button type="button" onclick="location.reload()">Submit Another Application</button>
+    </div>
+  </main>
 
-<!-- Personal History Information -->
-<div class="form-section" id="personalHistorySection">
-<h2 id="personalHistoryTitle">Tell us about your loved one</h2>
-<p id="personalHistoryDescription" style="margin-bottom: 15px; font-style: italic;">Please provide information for the memorial garden archival file.</p>
-<div class="two-column">
-<div class="form-group">
-<label for="first_name">First Name <span class="required">*</span></label>
-<input id="first_name" name="first_name" required="" type="text"/>
-</div>
-<div class="form-group">
-<label for="last_name">Last Name <span class="required">*</span></label>
-<input id="last_name" name="last_name" required="" type="text"/>
-</div>
-</div>
-<div class="two-column">
-<div class="form-group">
-<label for="middle_name">Middle Name</label>
-<input id="middle_name" name="middle_name" type="text"/>
-</div>
-<div class="form-group">
-<label for="maiden_name">Maiden Name (if appropriate)</label>
-<input id="maiden_name" name="maiden_name" type="text"/>
-</div>
-</div>
-<div class="form-group">
-<label>Permanent Home Address</label>
-<input id="home_street" name="home_street" placeholder="Street Address" style="margin-bottom: 10px;" type="text"/>
-<input id="home_city" name="home_city" placeholder="City" style="margin-bottom: 10px;" type="text"/>
-<div class="two-column" style="gap: 10px;">
-<input id="home_state" name="home_state" placeholder="State" type="text"/>
-<input id="home_zip" name="home_zip" placeholder="Zip Code" type="text"/>
-</div>
-</div>
-<div class="form-group">
-<label>Bay View Address</label>
-<input id="bayview_street" name="bayview_street" placeholder="Street Address" style="margin-bottom: 10px;" type="text"/>
-<input id="bayview_city" name="bayview_city" placeholder="City" style="margin-bottom: 10px;" type="text"/>
-<div class="two-column" style="gap: 10px;">
-<input id="bayview_state" name="bayview_state" placeholder="State" type="text"/>
-<input id="bayview_zip" name="bayview_zip" placeholder="Zip Code" type="text"/>
-</div>
-</div>
-<div class="two-column">
-<div class="form-group">
-<label for="birth_date">Date of Birth</label>
-<input id="birth_date" name="birth_date" type="date"/>
-</div>
-<div class="form-group">
-<label for="birth_place">Place of Birth</label>
-<input id="birth_place" name="birth_place" type="text"/>
-</div>
-</div>
-<div class="form-group" id="deathDateGroup">
-<label for="death_date">Date of Death (if applicable)</label>
-<input id="death_date" name="death_date" type="date"/>
-</div>
-<div class="two-column">
-<div class="form-group">
-<label for="mother_name">Mother's Name</label>
-<input id="mother_name" name="mother_name" type="text"/>
-</div>
-<div class="form-group">
-<label for="father_name">Father's Name</label>
-<input id="father_name" name="father_name" type="text"/>
-</div>
-</div>
-<div class="form-group">
-<label for="bayview_history">Bay View History (family, committees, role in community, etc.)</label>
-<textarea id="bayview_history" name="bayview_history" placeholder="Please describe the deceased's connection to Bay View Association..." rows="4"></textarea>
-</div>
-</div>
-<!-- Contact Information -->
-<div class="form-section">
-<h2 id="contactSectionTitle">How can we reach you?</h2>
-<p id="contactSectionDescription" style="margin-bottom: 15px; font-style: italic;">We'll keep you updated every step of the way</p>
-<div class="form-group">
-<label for="contact_name">Full Name <span class="required">*</span></label>
-<input id="contact_name" name="contact_name" required="" type="text"/>
-</div>
-<div class="form-group">
-<label>Address <span class="required">*</span></label>
-<input id="contact_street" name="contact_street" placeholder="Street Address" required="" style="margin-bottom: 10px;" type="text"/>
-<input id="contact_city" name="contact_city" placeholder="City" required="" style="margin-bottom: 10px;" type="text"/>
-<div class="two-column" style="gap: 10px;">
-<input id="contact_state" name="contact_state" placeholder="State" required="" type="text"/>
-<input id="contact_zip" name="contact_zip" placeholder="Zip Code" required="" type="text"/>
-</div>
-</div>
-<div class="two-column">
-<div class="form-group">
-<label for="contact_phone">Phone <span class="required">*</span></label>
-<input id="contact_phone" name="contact_phone" required="" type="tel"/>
-</div>
-<div class="form-group">
-<label for="contact_email">Email</label>
-<input id="contact_email" name="contact_email" type="email"/>
-</div>
-</div>
-</div>
-<!-- Policies -->
-<div class="form-section">
-<h2>One last thing</h2>
-<div class="policy-note">
-<h3>Important Information</h3>
-<ul style="margin-left: 20px;">
-<li>Only cremated remains are accepted in the Memorial Garden</li>
-<li>All placements subject to approval by Bay View Board of Trustees</li>
-<li>Bay View Association maintains the Memorial Garden in perpetuity</li>
-<li>Individual grave markers or memorials are not permitted</li>
-<li>Full payment is required before placement</li>
-</ul>
-</div>
-<div class="form-group">
-<div class="radio-group">
-<input id="policy_agreement" name="policy_agreement" required="" style="width: auto; margin-right: 10px;" type="checkbox" value="I agree to all Memorial Garden policies"/>
-<label for="policy_agreement" style="display: inline; font-weight: normal;">I have read and agree to comply with all Memorial Garden policies. I understand that all placements are subject to approval by the Bay View Board of Trustees.</label>
-</div>
-</div>
-</div>
-<!-- Historic Note -->
-<div class="historic-note">
-<p><strong>A National Historic Landmark - Founded in 1875</strong></p>
-<p>1715 Encampment Avenue, Petoskey, Michigan 49770</p>
-<p>Phone: 231.347.6225 | BayViewAssociation.org</p>
-</div>
-<!-- Submit Section -->
-<div style="text-align: center; margin-top: 30px;">
-<div class="loading" id="loading">
-<p>Submitting your application...</p>
-</div>
-<button class="btn-primary" id="submitButton" type="submit">Submit Memorial Garden Application</button>
-</div>
-</form>
-</div>
-<!-- Thank You Page -->
-<div class="thank-you-page" id="thankYouPage">
-<div class="header">
-<h1>Bay View Association</h1>
-<h2>Memorial Garden Application</h2>
-<p>Thank You for Your Submission</p>
-</div>
-<div style="text-align: center;">
-<div class="checkmark"></div>
-<h2 style="color: #28a745; margin: 20px 0;">All set!</h2>
-</div>
-<div class="submission-details">
-<h3>Your Submission Details</h3>
-<div class="detail-row">
-<span class="detail-label">Submission ID:</span>
-<span class="detail-value" id="confirmationId"></span>
-</div>
-<div class="detail-row">
-<span class="detail-label">Date Submitted:</span>
-<span class="detail-value" id="confirmationDate"></span>
-</div>
-<div class="detail-row">
-<span class="detail-label">Application Type:</span>
-<span class="detail-value" id="confirmationType"></span>
-</div>
-<div class="detail-row">
-<span class="detail-label">Contact Name:</span>
-<span class="detail-value" id="confirmationContact"></span>
-</div>
-<div class="detail-row">
-<span class="detail-label">Fee Amount:</span>
-<span class="detail-value" id="confirmationFee"></span>
-</div>
-</div>
-<div class="next-steps">
-<h3>What Happens Next?</h3>
-<div class="step">
-<div class="step-number">1</div>
-<div class="step-content">
-<h4>Confirmation Email</h4>
-<p>You will receive a confirmation email within 24 hours with a copy of your application and payment instructions.</p>
-</div>
-</div>
-<div class="step">
-<div class="step-number">2</div>
-<div class="step-content">
-<h4>Application Review</h4>
-<p>The Memorial Garden Committee will review your application. This typically takes 3-5 business days.</p>
-</div>
-</div>
-<div class="step">
-<div class="step-number">3</div>
-<div class="step-content">
-<h4>Board Approval</h4>
-<p>All placements must be approved by the Bay View Board of Trustees at their next scheduled meeting.</p>
-</div>
-</div>
-<div class="step">
-<div class="step-number">4</div>
-<div class="step-content">
-<h4>Payment Processing</h4>
-<p>Please submit your payment according to the instructions provided to complete your application.</p>
-</div>
-</div>
-<div class="step">
-<div class="step-number">5</div>
-<div class="step-content">
-<h4>Final Steps</h4>
-<p>Once your application is approved and payment is received, we will coordinate the next steps according to your preferences.</p>
-</div>
-</div>
-</div>
-<div class="timeline">
-<h3>Expected Timeline</h3>
-<div class="timeline-item">
-<strong>1-2 days:</strong> Confirmation email sent
-                </div>
-<div class="timeline-item">
-<strong>3-5 days:</strong> Application review completed
-                </div>
-<div class="timeline-item">
-<strong>2-4 weeks:</strong> Board approval (depending on meeting schedule)
-                </div>
-<div class="timeline-item">
-<strong>Upon payment:</strong> Service coordination begins
-                </div>
-<div class="timeline-item">
-<strong>30+ days:</strong> Minimum notice required for service scheduling
-                </div>
-</div>
-<div class="payment-info-display">
-<h3 style="color: #2c5aa0; margin-bottom: 15px;">Payment Reminder</h3>
-<p><strong>Please make checks payable to:</strong> Bay View Association</p>
-<p><strong>Memo line:</strong> Memorial Garden - <span id="paymentMemoName"></span></p>
-<div style="margin-top: 15px;">
-<div class="payment-option">
-<strong>Mail to:</strong><br/>
-                        Bay View Association<br/>
-                        P.O. Box 583<br/>
-                        Petoskey, MI 49770
-                    </div>
-<div class="payment-option" id="thankYouInPersonOption" style="display: none;">
-<strong>Or deliver in person to:</strong><br/>
-                        Administration Office, Wade Hall<br/>
-                        1715 Encampment Avenue<br/>
-                        Petoskey, MI 49770<br/>
-<em style="color: #2c5aa0;">Available for Bay View members and relatives</em>
-</div>
-</div>
-</div>
-<div class="contact-info-box">
-<h4>Questions or Need Assistance?</h4>
-<p>The Memorial Garden Committee is here to help you through this process.</p>
-<div class="contact-method">
-<strong>Sara Holmes</strong><br/>
-                    Memorial Garden Committee Chair<br/>
-                    Email: <a href="mailto:sara@bayviewassociation.org">sara@bayviewassociation.org</a>
-</div>
-<div class="contact-method">
-<strong>Bay View Office</strong><br/>
-                    Phone: 231.347.6225<br/>
-                    Email: <a href="mailto:office@bayviewassociation.org">office@bayviewassociation.org</a>
-</div>
-<div class="contact-method">
-<strong>Office Hours</strong><br/>
-                    Monday - Friday: 8:30 AM - 4:30 PM<br/>
-<em>Summer hours may vary</em>
-</div>
-</div>
-<div style="text-align: center; margin-top: 30px;">
-<button class="btn-secondary" onclick="window.print()">Print This Page</button>
-<button class="btn-secondary" onclick="location.href='memorial-garden.html'">Submit Another Application</button>
-</div>
-<div class="historic-note">
-<p><strong>A National Historic Landmark - Founded in 1875</strong></p>
-<p>1715 Encampment Avenue, Petoskey, Michigan 49770</p>
-<p>Phone: 231.347.6225 | BayViewAssociation.org</p>
-</div>
-</div>
-</div>
-<!-- Beta testing link - subtle placement for early testers -->
-<div style="text-align: center; margin-top: 20px; padding: 20px 0;">
-    <p style="color: #999; font-size: 0.9em;">
-        Looking for a simpler experience? 
-        <a href="beta/" style="color: #2c5aa0;">Try our new beta form</a>
-    </p>
-</div>
-<script>
-        // API URL - Update this for production
-        const API_URL = 'https://unified-system.vercel.app/api/memorial/submit-garden';
-        
-        // Fee structure
-        const fees = {
-            member: 400.00,
-            nonMember: 1500.00,
-            memberDouble: 800.00,     // Two placements for members
-            nonMemberDouble: 3000.00  // Two placements for non-members
-        };
-        
-        // Store form data for thank you page
-        let submittedData = {};
-        
-        // Initialize everything when DOM is ready
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('DOMContentLoaded fired');
-            
-            // Initialize fee display with default message
-            const feeNote = document.getElementById('feeNote');
-            if (feeNote) {
-                feeNote.textContent = 'Please select membership status above to see your fee';
-            } else {
-                console.error('feeNote element not found');
-            }
-            
-            // Set minimum dates to today
-            const today = new Date().toISOString().split('T')[0];
-            const serviceDateInput = document.getElementById('requested_service_date');
-            if (serviceDateInput) {
-                serviceDateInput.min = today;
-            }
-            
-            // Initialize all event listeners here...
-            initializeEventListeners();
-        });
-        
-        // Function to update prepayment name fields based on placement type
-        function updatePrepaymentNameFields() {
-            const placementType = document.querySelector('input[name="placementType"]:checked')?.value;
-            const applicationType = document.querySelector('input[name="applicationType"]:checked')?.value;
-            
-            // Hide all prepayment name sections first
-            document.getElementById('prepaymentSelfSection').style.display = 'none';
-            document.getElementById('prepaymentSelfAndOtherSection').style.display = 'none';
-            document.getElementById('prepaymentTwoOthersSection').style.display = 'none';
-            
-            // Clear required attributes
-            document.getElementById('prepayment_your_name').removeAttribute('required');
-            document.getElementById('prepayment_person1_name').removeAttribute('required');
-            document.getElementById('prepayment_person2_name').removeAttribute('required');
-            document.getElementById('prepayment_other1_name').removeAttribute('required');
-            document.getElementById('prepayment_other2_name').removeAttribute('required');
-            
-            if (applicationType === 'future' && placementType) {
-                const prepaymentNamesField = document.getElementById('prepayment_names');
-                
-                if (placementType === 'self') {
-                    document.getElementById('prepaymentSelfSection').style.display = 'block';
-                    document.getElementById('prepayment_your_name').setAttribute('required', 'required');
-                    if (prepaymentNamesField) {
-                        prepaymentNamesField.value = 'Myself';
-                    }
-                } else if (placementType === 'self_and_other') {
-                    document.getElementById('prepaymentSelfAndOtherSection').style.display = 'block';
-                    document.getElementById('prepayment_person1_name').setAttribute('required', 'required');
-                    document.getElementById('prepayment_person2_name').setAttribute('required', 'required');
-                    if (prepaymentNamesField) {
-                        prepaymentNamesField.value = 'Myself and one other person';
-                    }
-                } else if (placementType === 'two_others') {
-                    document.getElementById('prepaymentTwoOthersSection').style.display = 'block';
-                    document.getElementById('prepayment_other1_name').setAttribute('required', 'required');
-                    document.getElementById('prepayment_other2_name').setAttribute('required', 'required');
-                    if (prepaymentNamesField) {
-                        prepaymentNamesField.value = 'Two other people';
-                    }
-                }
-            }
-        }
-        
-        // Initialize all event listeners
-        function initializeEventListeners() {
-            console.log('Initializing event listeners');
-            
-            // Show/hide prepayment section based on application type
-            document.querySelectorAll('input[name="applicationType"]').forEach(radio => {
-            radio.addEventListener('change', function() {
-                const prepaymentSection = document.getElementById('prepaymentSection');
-                const paymentTimingNote = document.getElementById('paymentTimingNote');
-                const placementOptionsGroup = document.getElementById('placementOptionsGroup');
-                const futurePlacementOptions = document.getElementById('futurePlacementOptions');
-                const immediatePlacementOptions = document.getElementById('immediatePlacementOptions');
-                
-                // Show placement options group
-                placementOptionsGroup.style.display = 'block';
-                
-                // Clear any previous selections
-                document.querySelectorAll('input[name="placementType"]').forEach(input => {
-                    input.checked = false;
-                });
-                
-                // Hide second person section until placement type is selected
-                document.getElementById('secondPersonSection').style.display = 'none';
-                
-                if (this.value === 'immediate') {
-                    prepaymentSection.style.display = 'block';
-                    paymentTimingNote.innerHTML = 'For immediate placement, <strong>payment is due upon approval</strong>. Please make checks payable to "Bay View Association," with memo of "Memorial Garden."';
-                    
-                    // Show immediate placement options
-                    futurePlacementOptions.style.display = 'none';
-                    immediatePlacementOptions.style.display = 'block';
-                } else {
-                    prepaymentSection.style.display = 'none';
-                    paymentTimingNote.innerHTML = 'For future placement, you may prepay now or payment will be due when placement is needed. Please make checks payable to "Bay View Association," with memo of "Memorial Garden."';
-                    
-                    // Show future placement options
-                    futurePlacementOptions.style.display = 'block';
-                    immediatePlacementOptions.style.display = 'none';
-                }
-            });
-        });
-        
-        // Handle placement type selection
-        document.querySelectorAll('input[name="placementType"]').forEach(radio => {
-            radio.addEventListener('change', function() {
-                const placementNote = document.getElementById('placementNote');
-                const placementNoteText = document.getElementById('placementNoteText');
-                const secondPersonSection = document.getElementById('secondPersonSection');
-                const applicationType = document.querySelector('input[name="applicationType"]:checked')?.value;
-                const secondDeathDateGroup = document.getElementById('secondDeathDateGroup');
-                const secondDeceasedNameGroup = document.getElementById('secondDeceasedNameGroup');
-                
-                // Update prepayment name fields for future placements
-                if (applicationType === 'future') {
-                    updatePrepaymentNameFields();
-                }
-                
-                // Determine if this is for two people
-                const isForTwo = (this.value === 'self_and_other' || this.value === 'two_others' || this.value === 'two_people');
-                const applicationType = document.querySelector('input[name="applicationType"]:checked')?.value;
-                
-                // Only show second person section for immediate placements with two people
-                if (isForTwo && applicationType !== 'future') {
-                    secondPersonSection.style.display = 'block';
-                    placementNote.style.display = 'block';
-                    
-                    // Make second person fields required
-                    document.getElementById('second_first_name').setAttribute('required', 'required');
-                    document.getElementById('second_last_name').setAttribute('required', 'required');
-                    
-                    // Set appropriate note text and section titles
-                    const secondPersonTitle = document.getElementById('secondPersonTitle');
-                    const secondPersonDescription = document.getElementById('secondPersonDescription');
-                    const personalHistoryTitle = document.getElementById('personalHistoryTitle');
-                    const personalHistoryDescription = document.getElementById('personalHistoryDescription');
-                    const prepaymentField = document.getElementById('prepayment_names');
-                    
-                    const contactSection = document.querySelector('#contactSectionTitle').closest('.form-section');
-                    const contactSectionTitle = document.getElementById('contactSectionTitle');
-                    const contactSectionDescription = document.getElementById('contactSectionDescription');
-                    
-                    if (this.value === 'self') {
-                        personalHistoryTitle.textContent = 'Your Information';
-                        personalHistoryDescription.textContent = 'Please provide your personal information for the memorial garden archival file.';
-                        // Hide contact section - redundant with personal history
-                        contactSection.style.display = 'none';
-                        if (prepaymentField) {
-                            prepaymentField.value = 'Myself';
-                        }
-                    } else if (this.value === 'self_and_other') {
-                        placementNoteText.textContent = 'This prepayment covers both you and one other person. Please provide both sets of information below.';
-                        personalHistoryTitle.textContent = 'Your Information';
-                        personalHistoryDescription.textContent = 'Please provide your personal information for memorial placement.';
-                        secondPersonTitle.textContent = 'Tell us about the other person';
-                        secondPersonDescription.textContent = 'We\'d like to know about them too.';
-                        // Hide contact section - redundant with personal history
-                        contactSection.style.display = 'none';
-                        if (prepaymentField) {
-                            prepaymentField.value = 'Myself and one other person';
-                        }
-                    } else if (this.value === 'two_others') {
-                        placementNoteText.textContent = 'This prepayment covers two people (not including yourself). Please provide information for both individuals below.';
-                        personalHistoryTitle.textContent = 'First Person to be Memorialized';
-                        personalHistoryDescription.textContent = 'Please provide information for the first person this prepayment covers.';
-                        secondPersonTitle.textContent = 'Second Person to be Memorialized';
-                        secondPersonDescription.textContent = 'Please provide information for the second person this prepayment covers.';
-                        // Show contact section for applicant info
-                        contactSection.style.display = 'block';
-                        contactSectionTitle.textContent = 'How can we reach you? (Applicant)';
-                        contactSectionDescription.textContent = 'Since this is for others, we'll need your contact info as the applicant.';
-                        if (prepaymentField) {
-                            prepaymentField.value = 'Two other people (not myself)';
-                        }
-                    } else if (this.value === 'one_person') {
-                        personalHistoryTitle.textContent = 'Deceased Person\'s Information';
-                        personalHistoryDescription.textContent = 'Please provide information about the deceased for the memorial garden archival file.';
-                    } else if (this.value === 'two_people') {
-                        placementNoteText.textContent = 'Please provide information for both deceased individuals. The fee covers both placements.';
-                        personalHistoryTitle.textContent = 'First Deceased Person\'s Information';
-                        personalHistoryDescription.textContent = 'Please provide information for the first deceased person.';
-                        secondPersonTitle.textContent = 'Second Deceased Person\'s Information';
-                        secondPersonDescription.textContent = 'Please provide information for the second deceased person.';
-                    }
-                    
-                    // Show/hide death date for second person based on application type
-                    if (applicationType === 'future') {
-                        secondDeathDateGroup.style.display = 'none';
-                        secondDeceasedNameGroup.style.display = 'none';
-                    } else {
-                        secondDeathDateGroup.style.display = 'block';
-                        secondDeceasedNameGroup.style.display = 'block';
-                    }
-                } else {
-                    secondPersonSection.style.display = 'none';
-                    placementNote.style.display = 'none';
-                    
-                    // Remove required from second person fields
-                    document.getElementById('second_first_name').removeAttribute('required');
-                    document.getElementById('second_last_name').removeAttribute('required');
-                    
-                    // Get contact section elements
-                    const contactSection = document.querySelector('#contactSectionTitle').closest('.form-section');
-                    const contactSectionTitle = document.getElementById('contactSectionTitle');
-                    const contactSectionDescription = document.getElementById('contactSectionDescription');
-                    
-                    // Reset titles for single placement
-                    if (this.value === 'self') {
-                        const personalHistoryTitle = document.getElementById('personalHistoryTitle');
-                        const personalHistoryDescription = document.getElementById('personalHistoryDescription');
-                        const prepaymentField = document.getElementById('prepayment_names');
-                        
-                        personalHistoryTitle.textContent = 'Your Information';
-                        personalHistoryDescription.textContent = 'Please provide your personal information for the memorial garden archival file.';
-                        // Hide contact section - redundant
-                        contactSection.style.display = 'none';
-                        if (prepaymentField) {
-                            prepaymentField.value = 'Myself';
-                        }
-                    } else if (this.value === 'one_person') {
-                        const personalHistoryTitle = document.getElementById('personalHistoryTitle');
-                        const personalHistoryDescription = document.getElementById('personalHistoryDescription');
-                        
-                        personalHistoryTitle.textContent = 'Deceased Person\'s Information';
-                        personalHistoryDescription.textContent = 'Please provide information about the deceased for the memorial garden archival file.';
-                        // Show contact section for immediate placement
-                        contactSection.style.display = 'block';
-                        contactSectionTitle.textContent = 'How can we reach you?';
-                        contactSectionDescription.textContent = 'We'll keep you updated every step of the way';
-                    }
-                }
-                
-                // Update fee if membership is already selected
-                const membershipSelected = document.querySelector('input[name="is_member"]:checked');
-                if (membershipSelected) {
-                    updateFeeDisplay();
-                }
-            });
-        });
-        
-        // Function to update fee display
-        function updateFeeDisplay() {
-            const membershipSelected = document.querySelector('input[name="is_member"]:checked');
-            const placementTypeSelected = document.querySelector('input[name="placementType"]:checked');
-            const feeDisplay = document.getElementById('feeDisplay');
-            const feeAmount = document.getElementById('feeAmount');
-            const feeNote = document.getElementById('feeNote');
-            const paymentAmount = document.getElementById('payment_amount');
-            
-            if (!membershipSelected) return;
-            
-            // Determine if it's for two people
-            let isDouble = false;
-            if (placementTypeSelected) {
-                isDouble = (placementTypeSelected.value === 'self_and_other' || 
-                           placementTypeSelected.value === 'two_others' || 
-                           placementTypeSelected.value === 'two_people');
-            }
-            
-            const isMember = membershipSelected.value === 'Yes';
-            
-            feeDisplay.style.display = 'block';
-            
-            let fee, note;
-            if (isMember) {
-                fee = isDouble ? fees.memberDouble : fees.member;
-                note = isDouble ? 'Bay View Member/Relative Rate (Two Placements)' : 'Bay View Member/Relative Rate';
-            } else {
-                fee = isDouble ? fees.nonMemberDouble : fees.nonMember;
-                note = isDouble ? 'Non-Member Rate (Two Placements)' : 'Non-Member Rate';
-            }
-            
-            feeAmount.textContent = `$${fee.toFixed(2)}`;
-            feeNote.textContent = note;
-            paymentAmount.value = fee.toFixed(2);
-        }
-        
-        // Show/hide member details and update fee display based on membership selection
-        document.querySelectorAll('input[name="is_member"]').forEach(radio => {
-            radio.addEventListener('change', function() {
-                const memberDetails = document.getElementById('memberDetails');
-                const inPersonOption = document.getElementById('inPersonOption');
-                
-                // Show/hide member details
-                memberDetails.style.display = this.value === 'Yes' ? 'block' : 'none';
-                
-                // Show/hide in-person delivery option based on membership
-                if (this.value === 'Yes') {
-                    inPersonOption.style.display = 'block';
-                } else {
-                    inPersonOption.style.display = 'none';
-                }
-                
-                // Update fee display using the new function
-                updateFeeDisplay();
-            });
-        });
-        
-            // Show/hide fields based on application purpose
-            console.log('Attaching applicationType listeners');
-            const applicationTypeRadios = document.querySelectorAll('input[name="applicationType"]');
-            console.log('Found', applicationTypeRadios.length, 'applicationType radios');
-            applicationTypeRadios.forEach(radio => {
-            radio.addEventListener('change', function() {
-                console.log('Application type changed to:', this.value);
-                const deathDateGroup = document.getElementById('deathDateGroup');
-                const deathDateInput = document.getElementById('death_date');
-                const personalHistorySection = document.getElementById('personalHistorySection');
-                const deceasedNameGroup = document.getElementById('deceasedNameGroup');
-                const deceasedNameInput = document.getElementById('deceased_name');
-                const firstNameInput = document.getElementById('first_name');
-                const lastNameInput = document.getElementById('last_name');
-                const prepaymentInfoSection = document.getElementById('prepaymentInfoSection');
-                const prepaymentNamesInput = document.getElementById('prepayment_names');
-                const servicePlanningSection = document.getElementById('servicePlanningSection');
-                const placementType = document.querySelector('input[name="placementType"]:checked')?.value;
-                const secondDeathDateGroup = document.getElementById('secondDeathDateGroup');
-                const secondDeceasedNameGroup = document.getElementById('secondDeceasedNameGroup');
-                const isForTwo = placementType && (placementType === 'self_and_other' || placementType === 'two_others' || placementType === 'two_people');
-                
-                if (this.value === 'future') {
-                    // Hide ALL biographical sections for prepayment
-                    deathDateGroup.style.display = 'none';
-                    personalHistorySection.style.display = 'none'; // HIDE - not needed for prepayment
-                    deceasedNameGroup.style.display = 'none';
-                    servicePlanningSection.style.setProperty('display', 'none', 'important'); // No service planning for prepayments
-                    
-                    // Hide second person section entirely for prepayments
-                    document.getElementById('secondPersonSection').style.display = 'none';
-                    
-                    // Show prepayment-specific fields
-                    prepaymentInfoSection.style.display = 'block';
-                    
-                    // Show the appropriate prepayment name fields based on placement type
-                    const prepaymentSimpleNames = document.getElementById('prepaymentSimpleNames');
-                    if (prepaymentSimpleNames) {
-                        prepaymentSimpleNames.style.display = 'block';
-                        updatePrepaymentNameFields();
-                    }
-                    
-                    // Remove required attributes for immediate placement fields
-                    deathDateInput.removeAttribute('required');
-                    deathDateInput.value = '';
-                    deceasedNameInput.removeAttribute('required');
-                    deceasedNameInput.value = '';
-                    firstNameInput.removeAttribute('required');
-                    lastNameInput.removeAttribute('required');
-                    
-                    // Clear service planning fields
-                    document.getElementById('requested_service_date').value = '';
-                    document.getElementById('requested_service_time').value = '';
-                    document.querySelectorAll('input[name="celebrant_requested"]').forEach(radio => {
-                        radio.checked = false;
-                    });
-                    
-                    // Clear all personal history fields
-                    firstNameInput.value = '';
-                    lastNameInput.value = '';
-                    document.getElementById('middle_name').value = '';
-                    document.getElementById('maiden_name').value = '';
-                    document.getElementById('home_street').value = '';
-                    document.getElementById('home_city').value = '';
-                    document.getElementById('home_state').value = '';
-                    document.getElementById('home_zip').value = '';
-                    document.getElementById('bayview_street').value = '';
-                    document.getElementById('bayview_city').value = '';
-                    document.getElementById('bayview_state').value = '';
-                    document.getElementById('bayview_zip').value = '';
-                    document.getElementById('birth_date').value = '';
-                    document.getElementById('birth_place').value = '';
-                    document.getElementById('mother_name').value = '';
-                    document.getElementById('father_name').value = '';
-                    document.getElementById('bayview_history').value = '';
-                    
-                } else if (this.value === 'immediate') {
-                    // Show fields for immediate placement only
-                    deathDateGroup.style.display = 'block';
-                    personalHistorySection.style.display = 'block';
-                    deceasedNameGroup.style.display = 'block';
-                    // Show service planning section for immediate placement - use !important to override CSS
-                    servicePlanningSection.style.setProperty('display', 'block', 'important');
-                    
-                    // Show second person death fields if two placements selected
-                    if (isForTwo) {
-                        secondDeathDateGroup.style.display = 'block';
-                        secondDeceasedNameGroup.style.display = 'block';
-                    }
-                    
-                    // Hide prepayment-specific fields
-                    prepaymentInfoSection.style.display = 'none';
-                    prepaymentNamesInput.removeAttribute('required');
-                    prepaymentNamesInput.value = '';
-                    
-                    // Add required attributes back for immediate placement
-                    deceasedNameInput.setAttribute('required', 'required');
-                    firstNameInput.setAttribute('required', 'required');
-                    lastNameInput.setAttribute('required', 'required');
-                }
-            });
-        });
-        } // End of initializeEventListeners function
-        
-        // Removed - now handled in DOMContentLoaded
-        
-        // Auto-populate deceased name when first/last name changes
-        function updateDeceasedName() {
-            const deceasedNameGroup = document.getElementById('deceasedNameGroup');
-            const deceasedNameInput = document.getElementById('deceased_name');
-            
-            // Only update if the deceased name field is visible
-            if (deceasedNameGroup.style.display !== 'none') {
-                const firstName = document.getElementById('first_name').value;
-                const lastName = document.getElementById('last_name').value;
-                const middleName = document.getElementById('middle_name').value;
-                
-                if (firstName || lastName) {
-                    const fullName = [firstName, middleName, lastName]
-                        .filter(name => name && name.trim())
-                        .join(' ');
-                    deceasedNameInput.value = fullName;
-                }
-            }
-        }
-        
-        document.getElementById('first_name').addEventListener('input', updateDeceasedName);
-        document.getElementById('last_name').addEventListener('input', updateDeceasedName);
-        document.getElementById('middle_name').addEventListener('input', updateDeceasedName);
-        
-        // Combine address fields
-        function combineAddress(street, city, state, zip) {
-            return [street, city, state, zip]
-                .filter(part => part && part.trim())
-                .join(', ');
-        }
-        
-        // Collect personal history as JSON
-        function collectPersonalHistory() {
-            const personalHistory = {
-                firstName: document.getElementById('first_name').value || '',
-                lastName: document.getElementById('last_name').value || '',
-                middleName: document.getElementById('middle_name').value || '',
-                maidenName: document.getElementById('maiden_name').value || '',
-                homeAddress: combineAddress(
-                    document.getElementById('home_street').value,
-                    document.getElementById('home_city').value,
-                    document.getElementById('home_state').value,
-                    document.getElementById('home_zip').value
-                ),
-                bayviewAddress: combineAddress(
-                    document.getElementById('bayview_street').value,
-                    document.getElementById('bayview_city').value,
-                    document.getElementById('bayview_state').value,
-                    document.getElementById('bayview_zip').value
-                ),
-                birthDate: document.getElementById('birth_date').value || '',
-                birthPlace: document.getElementById('birth_place').value || '',
-                deathDate: document.getElementById('death_date').value || '',
-                motherName: document.getElementById('mother_name').value || '',
-                fatherName: document.getElementById('father_name').value || '',
-                bayviewHistory: document.getElementById('bayview_history').value || ''
-            };
-            
-            return JSON.stringify(personalHistory);
-        }
-        
-        // Display thank you page
-        function showThankYouPage() {
-            // Hide the form
-            document.getElementById('applicationForm').style.display = 'none';
-            
-            // Show the thank you page
-            document.getElementById('thankYouPage').style.display = 'block';
-            
-            const applicationType = submittedData['Application Type'];
-            const placementType = submittedData['Placement Type'];
-            
-            // For prepayments, create a special confirmation display
-            if (applicationType === 'future') {
-                // Build list of names covered
-                const names = [];
-                if (submittedData['Prepayment Person 1']) {
-                    names.push(submittedData['Prepayment Person 1']);
-                }
-                if (submittedData['Prepayment Person 2']) {
-                    names.push(submittedData['Prepayment Person 2']);
-                }
-                if (names.length === 0 && submittedData['Prepayment Names']) {
-                    // Fallback to prepayment names field
-                    names.push(submittedData['Prepayment Names']);
-                }
-                
-                // Update the header for prepayments
-                const headerSection = document.querySelector('#thankYouPage .header');
-                headerSection.innerHTML = `
-                    <h1>Bay View Association</h1>
-                    <h2>Memorial Garden Prepayment</h2>
-                    <p>Confirmation of Future Placement</p>
-                `;
-                
-                // Update the success message
-                const successSection = document.querySelector('#thankYouPage div[style*="text-align: center"]');
-                successSection.innerHTML = `
-                    <div class="checkmark"></div>
-                    <h2 style="color: #28a745; margin: 20px 0;">Prepayment Secured!</h2>
-                    <p style="font-size: 1.1em; color: #666;">Your placement has been reserved at today's rates.</p>
-                `;
-                
-                // Update the submission details with prepayment-specific info
-                const submissionDetails = document.querySelector('#thankYouPage .submission-details');
-                submissionDetails.innerHTML = `
-                    <h3>Prepayment Details</h3>
-                    <div class="detail-row">
-                        <span class="detail-label">Reference Number:</span>
-                        <span class="detail-value" style="font-weight: bold; color: #2c5aa0;">${submittedData['Submission ID']}</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Date Secured:</span>
-                        <span class="detail-value">${new Date().toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric'
-                        })}</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Prepayment Covers:</span>
-                        <span class="detail-value">
-                            ${names.length > 0 ? names.map(name => `<div style="margin: 2px 0;">• ${name}</div>`).join('') : submittedData['Prepayment Names']}
-                        </span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Purchaser:</span>
-                        <span class="detail-value">${submittedData['Contact Name']}</span>
-                    </div>
-                    <div class="detail-row">
-                        <span class="detail-label">Amount Secured:</span>
-                        <span class="detail-value" style="font-weight: bold;">$${parseFloat(submittedData['Fee Amount']).toFixed(2)}</span>
-                    </div>
-                    <div style="margin-top: 20px; padding: 15px; background-color: #f0f8ff; border-left: 4px solid #2c5aa0;">
-                        <p style="margin: 0; color: #555;">
-                            <strong>Important:</strong> Save this reference number. When the time comes, your designee can provide 
-                            the Memorial Garden Committee with reference number <strong style="color: #2c5aa0;">${submittedData['Submission ID']}</strong>. 
-                            We'll collect the biographical information then and coordinate all details.
-                        </p>
-                    </div>
-                    <div style="margin-top: 15px; padding: 10px; background-color: #d4edda; border-radius: 5px;">
-                        <p style="margin: 0; color: #155724; text-align: center;">
-                            <strong>✓ This prepayment secures placement at today's rates</strong>
-                        </p>
-                    </div>
-                `;
-            } else {
-                // Original immediate placement display
-                const successHeading = document.querySelector('#thankYouPage h2[style*="color: #28a745"]');
-                successHeading.textContent = 'Memorial Garden Application Successfully Submitted!';
-                
-                // Populate standard confirmation details
-                document.getElementById('confirmationId').textContent = submittedData['Submission ID'];
-                document.getElementById('confirmationDate').textContent = new Date().toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
-                document.getElementById('confirmationType').textContent = 'Immediate Placement';
-                document.getElementById('confirmationContact').textContent = submittedData['Contact Name'];
-                document.getElementById('confirmationFee').textContent = `$${parseFloat(submittedData['Fee Amount']).toFixed(2)}`;
-            }
-            
-            // Set payment memo name
-            const memoName = submittedData['Deceased Name'] || submittedData['Prepayment Names'] || 'Application';
-            document.getElementById('paymentMemoName').textContent = memoName;
-            
-            // Update timeline and next steps based on application type
-            try {
-                const appType = submittedData['Application Type'];
-                if (appType === 'future') {
-                    // Replace entire next steps section for prepayments
-                    const nextStepsSection = document.querySelector('#thankYouPage .next-steps');
-                    if (nextStepsSection) {
-                        nextStepsSection.innerHTML = `
-                            <h3>What Happens Next?</h3>
-                            <div class="step">
-                                <div class="step-number">1</div>
-                                <div class="step-content">
-                                    <h4>Confirmation Email</h4>
-                                    <p>You'll receive an email within 24 hours confirming your prepayment and including your reference number.</p>
-                                </div>
-                            </div>
-                            <div class="step">
-                                <div class="step-number">2</div>
-                                <div class="step-content">
-                                    <h4>Submit Payment</h4>
-                                    <p>Send your payment to secure your placement at today's rates. Full payment locks in current pricing.</p>
-                                </div>
-                            </div>
-                            <div class="step">
-                                <div class="step-number">3</div>
-                                <div class="step-content">
-                                    <h4>Save Your Reference Number</h4>
-                                    <p>Keep reference number <strong style="color: #2c5aa0;">${submittedData['Submission ID']}</strong> in a safe place and share it with your family or executor.</p>
-                                </div>
-                            </div>
-                            <div class="step">
-                                <div class="step-number">4</div>
-                                <div class="step-content">
-                                    <h4>Peace of Mind</h4>
-                                    <p>Your wishes are recorded and placement secured. No further action needed until the time comes.</p>
-                                </div>
-                            </div>
-                            <div class="step">
-                                <div class="step-number">5</div>
-                                <div class="step-content">
-                                    <h4>When Needed</h4>
-                                    <p>Your designee simply provides the reference number to the Memorial Garden Committee. We'll collect biographical details then and handle all arrangements.</p>
-                                </div>
-                            </div>
-                        `;
-                    }
-                    
-                    // Replace timeline section for prepayments
-                    const timelineSection = document.querySelector('#thankYouPage .timeline');
-                    if (timelineSection) {
-                        timelineSection.innerHTML = `
-                            <h3>Simple Process</h3>
-                            <div class="timeline-item">
-                                <strong>Today:</strong> Prepayment application submitted
-                            </div>
-                            <div class="timeline-item">
-                                <strong>Within 24 hours:</strong> Confirmation email sent
-                            </div>
-                            <div class="timeline-item">
-                                <strong>Upon payment:</strong> Placement secured at today's rates
-                            </div>
-                            <div class="timeline-item">
-                                <strong>Future:</strong> Reference number activates your placement when needed
-                            </div>
-                        `;
-                    }
-                    
-                    // Update payment reminder text for prepayments
-                    const paymentSection = document.querySelector('#thankYouPage .payment-info-display');
-                    if (paymentSection) {
-                        const h3 = paymentSection.querySelector('h3');
-                        if (h3) {
-                            h3.textContent = 'Payment Secures Your Placement';
-                        }
-                        const paymentOptions = paymentSection.querySelector('.payment-option');
-                        if (paymentOptions && paymentOptions.parentElement) {
-                            const existingNote = paymentSection.querySelector('p[style*="color: #2c5aa0"]');
-                            if (!existingNote) {
-                                const newParagraph = document.createElement('p');
-                                newParagraph.style.marginTop = '10px';
-                                newParagraph.style.color = '#2c5aa0';
-                                newParagraph.innerHTML = '<em>Note: Your payment today locks in current rates and ensures your wishes will be honored. This one-time fee covers all future costs.</em>';
-                                paymentSection.insertBefore(newParagraph, paymentOptions.parentElement);
-                            }
-                        }
-                    }
-                } else if (appType === 'immediate' || appType === 'Immediate' || appType === 'Immediate Placement') {
-                    console.log('Debug - Updating for immediate placement');
-                    // Update for immediate placement
-                    const timelineItems = document.querySelectorAll('#thankYouPage .timeline-item');
-                    if (timelineItems.length >= 5) {
-                        timelineItems[3].innerHTML = '<strong>Upon payment:</strong> Service coordination begins';
-                        timelineItems[4].innerHTML = '<strong>4-6 weeks:</strong> Placement ceremony scheduled (weather permitting)';
-                    }
-                    
-                    // Add note about timing for immediate placement
-                    const paymentSection = document.querySelector('#thankYouPage .payment-info-display');
-                    if (paymentSection) {
-                        const paymentOptions = paymentSection.querySelector('.payment-option');
-                        if (paymentOptions && paymentOptions.parentElement) {
-                            const newParagraph = document.createElement('p');
-                            newParagraph.style.marginTop = '10px';
-                            newParagraph.style.color = '#2c5aa0';
-                            newParagraph.innerHTML = '<em>Note: For immediate placements, prompt payment helps ensure timely scheduling of the placement ceremony.</em>';
-                            paymentSection.insertBefore(newParagraph, paymentOptions.parentElement);
-                        }
-                    }
-                } else {
-                    console.warn('Debug - Unexpected Application Type:', appType);
-                }
-            } catch (error) {
-                console.error('Error updating thank you page content:', error);
-            }
-            
-            // Show in-person option for members
-            if (submittedData['Bay View Member'] === 'Yes') {
-                document.getElementById('thankYouInPersonOption').style.display = 'block';
-            }
-            
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-        
-        // Form submission handling
-        document.getElementById('memorialGardenForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const submitButton = document.getElementById('submitButton');
-            const loading = document.getElementById('loading');
-            const successMessage = document.getElementById('successMessage');
-            const errorMessage = document.getElementById('errorMessage');
-            const errorText = document.getElementById('errorText');
-            
-            // Check if membership status is selected
-            const membershipSelected = document.querySelector('input[name="is_member"]:checked');
-            if (!membershipSelected) {
-                alert('Please select your Bay View membership status to calculate the correct fee.');
-                return;
-            }
-            
-            // Show loading state
-            submitButton.disabled = true;
-            submitButton.textContent = 'Submitting...';
-            loading.style.display = 'block';
-            successMessage.style.display = 'none';
-            errorMessage.style.display = 'none';
-            
-            // Collect form data
-            const submissionId = 'MG-' + Date.now();
-            const applicationType = document.querySelector('input[name="applicationType"]:checked')?.value || '';
-            const placementType = document.querySelector('input[name="placementType"]:checked')?.value || '';
-            
-            // Build base form data
-            const formData = {
-                'Submission ID': submissionId,
-                'Submission Date': new Date().toISOString(),
-                'date:Submission Date:start': new Date().toISOString().split('T')[0],
-                'Status': 'Submitted',
-                'Application Type': applicationType,
-                'Placement Type': placementType,
-                'Bay View Member': membershipSelected.value,
-                'Member Name': document.getElementById('member_name').value || '',
-                'Member Relationship': document.getElementById('member_relationship').value || '',
-                'Fee Amount': parseFloat(document.getElementById('payment_amount').value) || 0,
-                'Policy Agreement': document.getElementById('policy_agreement').checked ? '__YES__' : '__NO__',
-                'Prepayment Made': document.querySelector('input[name="prepaymentMade"]:checked')?.value || ''
-            };
-            
-            // For prepayments (future), collect simplified data
-            if (applicationType === 'future') {
-                formData['Simplified'] = true;  // Flag to indicate simplified prepayment
-                formData['Prepayment Names'] = document.getElementById('prepayment_names').value || '';
-                
-                // Collect specific prepayment names based on placement type
-                if (placementType === 'self') {
-                    formData['Prepayment Person 1'] = document.getElementById('prepayment_your_name').value || '';
-                } else if (placementType === 'self_and_other') {
-                    formData['Prepayment Person 1'] = document.getElementById('prepayment_person1_name').value || '';
-                    formData['Prepayment Person 2'] = document.getElementById('prepayment_person2_name').value || '';
-                } else if (placementType === 'two_others') {
-                    formData['Prepayment Person 1'] = document.getElementById('prepayment_other1_name').value || '';
-                    formData['Prepayment Person 2'] = document.getElementById('prepayment_other2_name').value || '';
-                }
-                
-                // Always collect contact info for prepayments
-                formData['Contact Name'] = document.getElementById('contact_name').value;
-                formData['Contact Phone'] = document.getElementById('contact_phone').value;
-                formData['Contact Email'] = document.getElementById('contact_email').value || '';
-                formData['Contact Address'] = combineAddress(
-                    document.getElementById('contact_street').value,
-                    document.getElementById('contact_city').value,
-                    document.getElementById('contact_state').value,
-                    document.getElementById('contact_zip').value
-                );
-                
-                // No biographical data for prepayments
-                formData['Personal History JSON'] = '{}';
-                formData['Bay View History'] = '';
-                formData['Deceased Name'] = '';
-                
-            } else {
-                // For immediate placements, collect full data
-                formData['Contact Name'] = document.getElementById('contact_name').value;
-                formData['Contact Phone'] = document.getElementById('contact_phone').value;
-                formData['Contact Email'] = document.getElementById('contact_email').value || '';
-                formData['Contact Address'] = combineAddress(
-                    document.getElementById('contact_street').value,
-                    document.getElementById('contact_city').value,
-                    document.getElementById('contact_state').value,
-                    document.getElementById('contact_zip').value
-                );
-                formData['Deceased Name'] = document.getElementById('deceased_name').value || '';
-                formData['Bay View History'] = document.getElementById('bayview_history').value || '';
-                formData['Personal History JSON'] = collectPersonalHistory();
-                formData['Prepayment Names'] = '';
-                formData['Second Person First Name'] = document.getElementById('second_first_name').value || '';
-                formData['Second Person Middle Name'] = document.getElementById('second_middle_name').value || '';
-                formData['Second Person Last Name'] = document.getElementById('second_last_name').value || '';
-                formData['Second Person Maiden Name'] = document.getElementById('second_maiden_name').value || '';
-                formData['Second Person Birth Date'] = document.getElementById('second_birth_date').value || '';
-                formData['Second Person Death Date'] = document.getElementById('second_death_date').value || '';
-                formData['Second Person Deceased Name'] = document.getElementById('second_deceased_name').value || '';
-                formData['date:Service Date:start'] = document.getElementById('requested_service_date').value || '';
-                formData['Celebrant Requested'] = document.querySelector('input[name="celebrant_requested"]:checked')?.value || '';
-            }
-            
-            // Store for thank you page
-            submittedData = formData;
-            
-            try {
-                // Submit to API
-                const response = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ properties: formData })
-                });
-                
-                const result = await response.json();
-                
-                if (response.ok && result.success) {
-                    // Success - show thank you page
-                    loading.style.display = 'none';
-                    showThankYouPage();
-                    
-                } else {
-                    // Error
-                    throw new Error(result.error || 'Submission failed');
-                }
-                
-            } catch (error) {
-                console.error('Submission error:', error);
-                loading.style.display = 'none';
-                errorMessage.style.display = 'block';
-                errorText.textContent = error.message || 'An error occurred while submitting your application. Please try again.';
-                submitButton.disabled = false;
-                submitButton.textContent = 'Submit Memorial Garden Application';
-            }
-        });
-        
-        // Improve form validation feedback
-        document.querySelectorAll('input[required], textarea[required]').forEach(field => {
-            field.addEventListener('invalid', function() {
-                this.style.borderColor = '#dc3545';
-            });
-            
-            field.addEventListener('input', function() {
-                if (this.checkValidity()) {
-                    this.style.borderColor = '#28a745';
-                } else {
-                    this.style.borderColor = '#ddd';
-                }
-            });
-        });
-    </script>
+  <script src="memorial-garden.js" type="module" defer></script>
 </body>
 </html>
