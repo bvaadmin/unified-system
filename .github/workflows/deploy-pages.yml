@@ -57,6 +57,15 @@ jobs:
           </html>
           EOF
           
+          # Set up the forms index page (rename typeform-index to index)
+          if [ -f "_site/forms/typeform-index.html" ]; then
+            cp _site/forms/typeform-index.html _site/forms/index.html
+          fi
+          
+          # Ensure all typeform files are present
+          echo "Checking typeform files:"
+          ls -la _site/forms/*typeform*
+          
           # Debug: Show structure
           echo "Deployment structure:"
           ls -la _site/
