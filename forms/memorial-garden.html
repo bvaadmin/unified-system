@@ -1076,12 +1076,6 @@
         document.addEventListener('DOMContentLoaded', function() {
             const feeNote = document.getElementById('feeNote');
             feeNote.textContent = 'Please select membership status above to see your fee';
-            
-            // Ensure service planning section is initially hidden
-            const servicePlanningSection = document.getElementById('servicePlanningSection');
-            if (servicePlanningSection) {
-                servicePlanningSection.style.display = 'none';
-            }
         });
         
         // Function to update prepayment name fields based on placement type
@@ -1438,10 +1432,8 @@
                     deathDateGroup.style.display = 'block';
                     personalHistorySection.style.display = 'block';
                     deceasedNameGroup.style.display = 'block';
-                    if (servicePlanningSection) {
-                        servicePlanningSection.style.display = 'block';
-                        servicePlanningSection.style.visibility = 'visible';
-                    }
+                    // Show service planning section for immediate placement
+                    servicePlanningSection.style.display = 'block';
                     
                     // Show second person death fields if two placements selected
                     if (isForTwo) {
