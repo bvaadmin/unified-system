@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Prepayment - Memorial Garden - Bay View Association</title>
+    <script src="../js/secure-storage.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .header h1 {
+            color: #2c5aa0;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .info-box {
+            background: #f0f8ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid #2c5aa0;
+        }
+        
+        .info-box p {
+            margin: 0;
+            color: #555;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+        }
+        
+        .form-section h2 {
+            color: #2c5aa0;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #2c5aa0;
+        }
+        
+        .year-range {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .year-range input {
+            flex: 1;
+        }
+        
+        .year-range span {
+            color: #666;
+        }
+        
+        .help-text {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-size: 1em;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: #2c5aa0;
+            color: white;
+            width: 100%;
+            font-size: 1.1em;
+            padding: 15px;
+        }
+        
+        .btn-primary:hover {
+            background: #1e3d6f;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #2c5aa0;
+            border: 1px solid #2c5aa0;
+        }
+        
+        .btn-secondary:hover {
+            background: #f0f8ff;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        .cant-find {
+            text-align: center;
+            margin-top: 30px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .cant-find h3 {
+            color: #2c5aa0;
+            margin-bottom: 15px;
+        }
+        
+        .cant-find p {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .year-range {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .year-range span {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Verify Prepayment</h1>
+            <p>Let's find your prepayment record</p>
+        </div>
+        
+        <div class="info-box">
+            <p>Prepayments made to the Bay View Memorial Garden are recorded and kept on file. We'll help you locate your prepayment record.</p>
+        </div>
+        
+        <form id="verifyForm">
+            <div class="form-section">
+                <h2>Information to Help Us Find Your Record</h2>
+                
+                <div class="form-group">
+                    <label for="prepaidName">Name of person who made the prepayment</label>
+                    <input type="text" id="prepaidName" name="prepaidName" required>
+                    <p class="help-text">This may be different from the person the prepayment was for</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="prepaidFor">Name(s) the prepayment was made for</label>
+                    <input type="text" id="prepaidFor" name="prepaidFor" required>
+                    <p class="help-text">If multiple people, please list all names</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="yearRange">Approximate year of prepayment</label>
+                    <div class="year-range">
+                        <input type="number" id="yearFrom" name="yearFrom" placeholder="From year" min="1970" max="2025">
+                        <span>to</span>
+                        <input type="number" id="yearTo" name="yearTo" placeholder="To year" min="1970" max="2025">
+                    </div>
+                    <p class="help-text">Even an approximate range helps us search</p>
+                </div>
+                
+                <div class="form-group">
+                    <label for="additionalInfo">Any additional information that might help</label>
+                    <input type="text" id="additionalInfo" name="additionalInfo" placeholder="Receipt number, amount paid, etc.">
+                </div>
+            </div>
+            
+            <div class="form-section">
+                <h2>Your Contact Information</h2>
+                
+                <div class="form-group">
+                    <label for="contactName">Your name</label>
+                    <input type="text" id="contactName" name="contactName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contactPhone">Phone number</label>
+                    <input type="tel" id="contactPhone" name="contactPhone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="contactEmail">Email address</label>
+                    <input type="email" id="contactEmail" name="contactEmail">
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">
+                Search for Prepayment Record
+            </button>
+        </form>
+        
+        <div class="cant-find">
+            <h3>Can't find your documentation?</h3>
+            <p>Don't worry - we keep careful records of all prepayments. Our staff can help you locate your prepayment even without documentation.</p>
+            <a href="tel:231-347-6225" class="btn btn-secondary">Call us: (231) 347-6225</a>
+        </div>
+        
+        <div class="navigation">
+            <a href="../" class="btn btn-secondary">
+                ← Back
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        document.getElementById('verifyForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect form data
+            const formData = {
+                prepaidName: document.getElementById('prepaidName').value,
+                prepaidFor: document.getElementById('prepaidFor').value,
+                yearFrom: document.getElementById('yearFrom').value,
+                yearTo: document.getElementById('yearTo').value,
+                additionalInfo: document.getElementById('additionalInfo').value,
+                contactName: document.getElementById('contactName').value,
+                contactPhone: document.getElementById('contactPhone').value,
+                contactEmail: document.getElementById('contactEmail').value,
+                timestamp: new Date().toISOString()
+            };
+            
+            // Save to session
+            SecureStorage.setItem('prepaymentSearch', formData, { 
+                expiryMinutes: 60, 
+                sensitive: true 
+            });
+            
+            // In production, this would submit to API
+            console.log('Prepayment search:', formData);
+            
+            // Show searching/results page
+            window.location.href = 'verify-searching.html';
+        });
+        
+        // Set reasonable defaults for year range
+        const currentYear = new Date().getFullYear();
+        document.getElementById('yearTo').value = currentYear;
+        document.getElementById('yearFrom').placeholder = `From year (e.g., ${currentYear - 10})`;
+    </script>
+</body>
+</html>

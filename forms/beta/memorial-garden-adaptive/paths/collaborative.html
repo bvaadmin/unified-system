@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collaborative Application - Memorial Garden - Bay View Association</title>
+    <script src="../js/secure-storage.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            color: #2c5aa0;
+            margin-bottom: 15px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .feature {
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .feature-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+        
+        .feature h3 {
+            color: #2c5aa0;
+            margin-bottom: 10px;
+        }
+        
+        .feature p {
+            color: #666;
+            font-size: 0.95em;
+            margin: 0;
+        }
+        
+        .setup-section {
+            margin-bottom: 40px;
+        }
+        
+        .setup-section h2 {
+            color: #2c5aa0;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #2c5aa0;
+        }
+        
+        .family-members {
+            margin-top: 30px;
+            padding: 25px;
+            background: #f0f8ff;
+            border-radius: 8px;
+        }
+        
+        .family-members h3 {
+            color: #2c5aa0;
+            margin-bottom: 20px;
+        }
+        
+        .member-input {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: end;
+        }
+        
+        .member-input input {
+            width: 100%;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border-radius: 5px;
+            font-size: 1em;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: #2c5aa0;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1e3d6f;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #2c5aa0;
+            border: 1px solid #2c5aa0;
+        }
+        
+        .btn-secondary:hover {
+            background: #f0f8ff;
+        }
+        
+        .btn-add {
+            background: #28a745;
+            color: white;
+            padding: 10px 20px;
+            font-size: 0.9em;
+        }
+        
+        .btn-add:hover {
+            background: #218838;
+        }
+        
+        .how-it-works {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .how-it-works h3 {
+            color: #2c5aa0;
+            margin-bottom: 20px;
+        }
+        
+        .how-it-works ol {
+            margin: 0;
+            padding-left: 25px;
+        }
+        
+        .how-it-works li {
+            margin-bottom: 10px;
+            color: #666;
+        }
+        
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .member-input {
+                grid-template-columns: 1fr;
+            }
+            
+            .navigation {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Work Together on the Application</h1>
+            <p>Multiple family members can contribute information</p>
+        </div>
+        
+        <div class="feature-grid">
+            <div class="feature">
+                <div class="feature-icon">👥</div>
+                <h3>Share the Load</h3>
+                <p>Different family members can fill in the parts they know best</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">💾</div>
+                <h3>Save Progress</h3>
+                <p>Everyone's contributions are saved automatically</p>
+            </div>
+            
+            <div class="feature">
+                <div class="feature-icon">🔐</div>
+                <h3>Secure Sharing</h3>
+                <p>Share a private link with family members only</p>
+            </div>
+        </div>
+        
+        <form id="collaborativeForm">
+            <div class="setup-section">
+                <h2>Set Up Your Collaborative Application</h2>
+                
+                <div class="form-group">
+                    <label for="organizerName">Your name (organizer)</label>
+                    <input type="text" id="organizerName" name="organizerName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="organizerEmail">Your email</label>
+                    <input type="email" id="organizerEmail" name="organizerEmail" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="organizerPhone">Your phone</label>
+                    <input type="tel" id="organizerPhone" name="organizerPhone" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="deceasedName">Name of deceased</label>
+                    <input type="text" id="deceasedName" name="deceasedName" required>
+                </div>
+            </div>
+            
+            <div class="family-members">
+                <h3>Invite Family Members to Help</h3>
+                <p style="margin-bottom: 20px; color: #666;">Add email addresses of family members who can help complete the application</p>
+                
+                <div id="membersList">
+                    <div class="member-input">
+                        <input type="text" placeholder="Name" class="member-name">
+                        <input type="email" placeholder="Email address" class="member-email">
+                        <button type="button" class="btn btn-add" onclick="addMember()">Add</button>
+                    </div>
+                </div>
+                
+                <div id="addedMembers" style="margin-top: 20px;"></div>
+            </div>
+            
+            <div class="how-it-works">
+                <h3>How It Works</h3>
+                <ol>
+                    <li>We'll create a private application that family members can access</li>
+                    <li>Each person receives an email with their unique link</li>
+                    <li>They can fill in the information they know</li>
+                    <li>You'll be notified as sections are completed</li>
+                    <li>Submit when everyone has contributed</li>
+                </ol>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%; font-size: 1.1em; padding: 15px;">
+                Create Collaborative Application
+            </button>
+        </form>
+        
+        <div class="navigation">
+            <a href="../" class="btn btn-secondary">
+                ← Back
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        const invitedMembers = [];
+        
+        function addMember() {
+            const nameInput = document.querySelector('.member-name');
+            const emailInput = document.querySelector('.member-email');
+            
+            if (!nameInput.value || !emailInput.value) {
+                alert('Please enter both name and email');
+                return;
+            }
+            
+            if (!emailInput.value.includes('@')) {
+                alert('Please enter a valid email address');
+                return;
+            }
+            
+            invitedMembers.push({
+                name: nameInput.value,
+                email: emailInput.value
+            });
+            
+            updateMembersList();
+            
+            // Clear inputs
+            nameInput.value = '';
+            emailInput.value = '';
+        }
+        
+        function updateMembersList() {
+            const container = document.getElementById('addedMembers');
+            
+            // Clear existing content safely
+            while (container.firstChild) {
+                container.removeChild(container.firstChild);
+            }
+            
+            if (invitedMembers.length === 0) {
+                return;
+            }
+            
+            // Create header safely
+            const header = document.createElement('h4');
+            header.style.color = '#2c5aa0';
+            header.style.marginBottom = '10px';
+            header.textContent = 'Invited Members:';
+            container.appendChild(header);
+            
+            // Create member elements safely
+            invitedMembers.forEach((member, index) => {
+                const memberDiv = document.createElement('div');
+                memberDiv.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 10px; background: white; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 10px;';
+                
+                const memberInfo = document.createElement('span');
+                memberInfo.textContent = `${member.name} (${member.email})`;
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.type = 'button';
+                removeBtn.style.cssText = 'color: #dc3545; background: none; border: none; cursor: pointer;';
+                removeBtn.textContent = 'Remove';
+                removeBtn.onclick = () => removeMember(index);
+                
+                memberDiv.appendChild(memberInfo);
+                memberDiv.appendChild(removeBtn);
+                container.appendChild(memberDiv);
+            });
+        }
+        
+        function removeMember(index) {
+            invitedMembers.splice(index, 1);
+            updateMembersList();
+        }
+        
+        document.getElementById('collaborativeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                organizer: {
+                    name: document.getElementById('organizerName').value,
+                    email: document.getElementById('organizerEmail').value,
+                    phone: document.getElementById('organizerPhone').value
+                },
+                deceased: document.getElementById('deceasedName').value,
+                invitedMembers: invitedMembers,
+                created: new Date().toISOString(),
+                shareCode: 'MG-' + Date.now().toString(36).toUpperCase()
+            };
+            
+            // Save securely (contains sensitive personal information)
+            SecureStorage.setItem('collaborativeSetup', formData, { 
+                expiryMinutes: 180, 
+                sensitive: true 
+            });
+            
+            // In production, this would create the collaborative session
+            console.log('Collaborative setup:', formData);
+            
+            // Show confirmation
+            window.location.href = 'collaborative-created.html';
+        });
+        
+        // Handle enter key in member inputs
+        document.querySelector('.member-email').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                addMember();
+            }
+        });
+    </script>
+</body>
+</html>

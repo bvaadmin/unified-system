@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>We're Here to Help - Memorial Garden - Bay View Association</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            color: #2c5aa0;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        
+        .comfort-message {
+            background: #f0f8ff;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+            border-left: 4px solid #2c5aa0;
+        }
+        
+        .comfort-message p {
+            margin: 0;
+            color: #555;
+            font-size: 1.05em;
+        }
+        
+        .minimal-form {
+            margin-bottom: 40px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+        
+        input[type="text"],
+        input[type="tel"],
+        input[type="email"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #2c5aa0;
+        }
+        
+        .help-options {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .help-options h2 {
+            color: #2c5aa0;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            text-align: center;
+        }
+        
+        .option {
+            padding: 20px;
+            margin-bottom: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .option:hover {
+            border-color: #2c5aa0;
+            background: #f8fbff;
+        }
+        
+        .option-icon {
+            font-size: 1.5em;
+            width: 40px;
+            text-align: center;
+        }
+        
+        .option-content h3 {
+            margin: 0 0 5px 0;
+            color: #333;
+            font-size: 1.1em;
+        }
+        
+        .option-content p {
+            margin: 0;
+            color: #666;
+            font-size: 0.95em;
+        }
+        
+        .submit-section {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .btn {
+            padding: 15px 40px;
+            border-radius: 5px;
+            font-size: 1.1em;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: #2c5aa0;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1e3d6f;
+        }
+        
+        .privacy-note {
+            text-align: center;
+            margin-top: 20px;
+            color: #999;
+            font-size: 0.85em;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .option {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>We're Here to Help</h1>
+            <p>We understand this is a difficult time. Let us help you through the process.</p>
+        </div>
+        
+        <div class="comfort-message">
+            <p>You don't need to have all the information right now. We can work together to gather what's needed.</p>
+        </div>
+        
+        <form id="assistedForm" class="minimal-form">
+            <h2 style="color: #2c5aa0; margin-bottom: 20px;">Just a few quick questions to get started:</h2>
+            
+            <div class="form-group">
+                <label for="yourName">Your name</label>
+                <input type="text" id="yourName" name="yourName" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Best phone number to reach you</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email address (optional)</label>
+                <input type="email" id="email" name="email">
+            </div>
+            
+            <div class="form-group">
+                <label for="helpWith">Who are you arranging services for?</label>
+                <input type="text" id="helpWith" name="helpWith" placeholder="Name or relationship">
+            </div>
+        </form>
+        
+        <div class="help-options">
+            <h2>How would you like us to help?</h2>
+            
+            <div class="option" onclick="selectHelp('callback')">
+                <div class="option-icon">📞</div>
+                <div class="option-content">
+                    <h3>Call me back</h3>
+                    <p>A member of our team will call you within one business day</p>
+                </div>
+            </div>
+            
+            <div class="option" onclick="selectHelp('meet')">
+                <div class="option-icon">👥</div>
+                <div class="option-content">
+                    <h3>Meet in person</h3>
+                    <p>Schedule a time to meet at the Bay View office</p>
+                </div>
+            </div>
+            
+            <div class="option" onclick="selectHelp('email')">
+                <div class="option-icon">✉️</div>
+                <div class="option-content">
+                    <h3>Email me information</h3>
+                    <p>Receive a guide to help gather the needed information</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="submit-section">
+            <button type="button" onclick="submitRequest()" class="btn btn-primary">
+                Submit Request for Help
+            </button>
+        </div>
+        
+        <p class="privacy-note">
+            Your information is kept strictly confidential and will only be used to assist you with Memorial Garden arrangements.
+        </p>
+    </div>
+    
+    <script>
+        let selectedHelpType = null;
+        
+        function selectHelp(type) {
+            selectedHelpType = type;
+            
+            // Visual feedback
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.style.borderColor = '#e0e0e0';
+                opt.style.background = 'white';
+            });
+            
+            event.currentTarget.style.borderColor = '#2c5aa0';
+            event.currentTarget.style.background = '#e8f4ff';
+        }
+        
+        function submitRequest() {
+            const form = document.getElementById('assistedForm');
+            
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            if (!selectedHelpType) {
+                alert('Please select how you would like us to help you.');
+                return;
+            }
+            
+            // Collect form data
+            const formData = {
+                name: document.getElementById('yourName').value,
+                phone: document.getElementById('phone').value,
+                email: document.getElementById('email').value,
+                arrangingFor: document.getElementById('helpWith').value,
+                helpType: selectedHelpType,
+                timestamp: new Date().toISOString(),
+                journey: 'assisted'
+            };
+            
+            // Save to session
+            sessionStorage.setItem('assistedRequest', JSON.stringify(formData));
+            
+            // In production, this would submit to the API
+            console.log('Assistance request:', formData);
+            
+            // Show confirmation
+            window.location.href = 'assisted-confirmation.html';
+        }
+        
+        // Auto-save form data
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('blur', () => {
+                const data = {
+                    yourName: document.getElementById('yourName').value,
+                    phone: document.getElementById('phone').value,
+                    email: document.getElementById('email').value,
+                    helpWith: document.getElementById('helpWith').value
+                };
+                localStorage.setItem('assistedFormData', JSON.stringify(data));
+            });
+        });
+        
+        // Restore saved data
+        const saved = localStorage.getItem('assistedFormData');
+        if (saved) {
+            const data = JSON.parse(saved);
+            Object.keys(data).forEach(key => {
+                const field = document.getElementById(key);
+                if (field && data[key]) {
+                    field.value = data[key];
+                }
+            });
+        }
+    </script>
+</body>
+</html>

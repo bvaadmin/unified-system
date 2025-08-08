@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request a Callback - Bay View Memorial Garden</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+            padding: 20px;
+            margin: 0;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .header h1 {
+            color: #2c5aa0;
+            margin-bottom: 15px;
+        }
+        
+        .header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .timing-notice {
+            background: #f0f8ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            text-align: center;
+            border-left: 4px solid #2c5aa0;
+        }
+        
+        .timing-notice p {
+            margin: 0;
+            color: #555;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 600;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+            font-family: inherit;
+        }
+        
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #2c5aa0;
+        }
+        
+        .availability-section {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .availability-section h3 {
+            color: #2c5aa0;
+            margin-bottom: 20px;
+        }
+        
+        .time-preferences {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .time-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .time-option input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+        
+        .time-option label {
+            margin: 0;
+            font-weight: normal;
+            cursor: pointer;
+        }
+        
+        .btn {
+            padding: 15px 40px;
+            border-radius: 5px;
+            font-size: 1.1em;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-primary {
+            background: #2c5aa0;
+            color: white;
+            width: 100%;
+        }
+        
+        .btn-primary:hover {
+            background: #1e3d6f;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: #2c5aa0;
+            border: 1px solid #2c5aa0;
+        }
+        
+        .btn-secondary:hover {
+            background: #f0f8ff;
+        }
+        
+        .urgent-option {
+            text-align: center;
+            margin-top: 30px;
+            padding: 25px;
+            background: #fff3cd;
+            border-radius: 8px;
+            border: 1px solid #ffeaa7;
+        }
+        
+        .urgent-option h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+        
+        .urgent-option p {
+            margin-bottom: 20px;
+            color: #856404;
+        }
+        
+        .navigation {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .time-preferences {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Request a Callback</h1>
+            <p>We'll contact you at your convenience</p>
+        </div>
+        
+        <div class="timing-notice">
+            <p><strong>Our office hours:</strong> Monday - Friday, 9:00 AM - 4:00 PM Eastern Time</p>
+            <p>We typically return calls within one business day</p>
+        </div>
+        
+        <form id="callbackForm">
+            <div class="form-group">
+                <label for="name">Your name *</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Best phone number to reach you *</label>
+                <input type="tel" id="phone" name="phone" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="altPhone">Alternative phone number</label>
+                <input type="tel" id="altPhone" name="altPhone">
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email address</label>
+                <input type="email" id="email" name="email">
+            </div>
+            
+            <div class="availability-section">
+                <h3>When is the best time to call?</h3>
+                
+                <div class="time-preferences">
+                    <div class="time-option">
+                        <input type="checkbox" id="morning" name="timePreference" value="morning">
+                        <label for="morning">Morning (9 AM - 12 PM)</label>
+                    </div>
+                    
+                    <div class="time-option">
+                        <input type="checkbox" id="afternoon" name="timePreference" value="afternoon">
+                        <label for="afternoon">Afternoon (12 PM - 4 PM)</label>
+                    </div>
+                    
+                    <div class="time-option">
+                        <input type="checkbox" id="anytime" name="timePreference" value="anytime">
+                        <label for="anytime">Any time during business hours</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="specificTimes">Specific days/times that work best</label>
+                    <input type="text" id="specificTimes" name="specificTimes" placeholder="e.g., Tuesdays after 2 PM">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="topic">What would you like to discuss? *</label>
+                <select id="topic" name="topic" required>
+                    <option value="">Please select...</option>
+                    <option value="general">General information about Memorial Garden</option>
+                    <option value="immediate">Immediate placement needs</option>
+                    <option value="future">Future planning / prepayment</option>
+                    <option value="existing">Questions about existing prepayment</option>
+                    <option value="eligibility">Eligibility and requirements</option>
+                    <option value="costs">Costs and payment options</option>
+                    <option value="process">Process and timeline</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="details">Additional details or questions</label>
+                <textarea id="details" name="details" placeholder="Please share any specific questions or information that would help us prepare for our conversation"></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">
+                Submit Callback Request
+            </button>
+        </form>
+        
+        <div class="urgent-option">
+            <h3>Need immediate assistance?</h3>
+            <p>If this is urgent, please don't wait for a callback.</p>
+            <a href="tel:231-347-6225" class="btn btn-secondary">Call Now: (231) 347-6225</a>
+        </div>
+        
+        <div class="navigation">
+            <a href="../" class="btn btn-secondary">
+                ← Back to Memorial Garden
+            </a>
+        </div>
+    </div>
+    
+    <script>
+        // Handle "anytime" checkbox
+        document.getElementById('anytime').addEventListener('change', function() {
+            if (this.checked) {
+                document.getElementById('morning').checked = false;
+                document.getElementById('afternoon').checked = false;
+            }
+        });
+        
+        ['morning', 'afternoon'].forEach(id => {
+            document.getElementById(id).addEventListener('change', function() {
+                if (this.checked) {
+                    document.getElementById('anytime').checked = false;
+                }
+            });
+        });
+        
+        document.getElementById('callbackForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect time preferences
+            const timePrefs = [];
+            document.querySelectorAll('input[name="timePreference"]:checked').forEach(cb => {
+                timePrefs.push(cb.value);
+            });
+            
+            // Collect form data
+            const formData = {
+                name: document.getElementById('name').value,
+                phone: document.getElementById('phone').value,
+                altPhone: document.getElementById('altPhone').value,
+                email: document.getElementById('email').value,
+                timePreferences: timePrefs,
+                specificTimes: document.getElementById('specificTimes').value,
+                topic: document.getElementById('topic').value,
+                details: document.getElementById('details').value,
+                submitted: new Date().toISOString(),
+                source: 'memorial-garden-beta'
+            };
+            
+            // Save to session
+            sessionStorage.setItem('callbackRequest', JSON.stringify(formData));
+            
+            // In production, this would submit to the API
+            console.log('Callback request:', formData);
+            
+            // Show confirmation
+            alert('Thank you! We have received your callback request and will contact you within one business day.');
+            
+            // Redirect to home or confirmation page
+            window.location.href = '../';
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Secure Storage Test</title>
+    <script src="js/secure-storage.js"></script>
+</head>
+<body>
+    <h1>Secure Storage Test</h1>
+    <div id="output"></div>
+    
+    <script>
+        function log(message) {
+            document.getElementById('output').innerHTML += '<p>' + message + '</p>';
+        }
+        
+        // Test basic storage
+        log('Testing SecureStorage...');
+        
+        // Store sensitive data
+        const sensitiveData = {
+            name: 'John Doe',
+            phone: '555-1234',
+            email: 'john@example.com'
+        };
+        
+        SecureStorage.setItem('testData', sensitiveData, {
+            expiryMinutes: 1,
+            sensitive: true
+        });
+        log('✓ Stored sensitive data with encryption');
+        
+        // Retrieve data
+        const retrieved = SecureStorage.getItem('testData');
+        log('Retrieved: ' + JSON.stringify(retrieved));
+        
+        // Test non-sensitive data
+        SecureStorage.setItem('journey', 'immediate-self', {
+            sensitive: false,
+            expiryMinutes: 5
+        });
+        
+        const journey = SecureStorage.getItem('journey');
+        log('Journey: ' + journey);
+        
+        // Test cleanup
+        setTimeout(() => {
+            log('Testing cleanup after 65 seconds (data should expire)...');
+        }, 65000);
+        
+        log('Test completed. Check browser dev tools to see encrypted storage.');
+    </script>
+</body>
+</html>
