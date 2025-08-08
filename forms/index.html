@@ -3,8 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bay View Association Forms</title>
+    <title>Bay View Association - Modern Forms Portal</title>
     <style>
+        :root {
+            --primary: #2c5aa0;
+            --primary-dark: #1e3a6f;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f5d0fe 0%, #fbbf24 100%);
+            --gradient-3: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
+            --gradient-4: linear-gradient(135deg, #fccb90 0%, #d57eeb 100%);
+        }
+        
         * {
             margin: 0;
             padding: 0;
@@ -13,151 +22,198 @@
         
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f5f5f5;
-        }
-        
-        .header {
-            background-color: #2c3e50;
-            color: white;
-            padding: 2rem 0;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .header p {
-            font-size: 1.1rem;
-            opacity: 0.9;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
         }
         
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 3rem;
+            animation: fadeInDown 0.8s ease;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .header p {
+            font-size: 1.25rem;
+            opacity: 0.95;
         }
         
         .forms-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 2rem;
-            margin-top: 2rem;
+            margin-bottom: 3rem;
         }
         
-        .form-section {
+        .form-card {
             background: white;
-            border-radius: 8px;
+            border-radius: 20px;
             padding: 2rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease backwards;
         }
         
-        .form-section:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        .form-card:nth-child(1) { animation-delay: 0.1s; }
+        .form-card:nth-child(2) { animation-delay: 0.2s; }
+        .form-card:nth-child(3) { animation-delay: 0.3s; }
+        .form-card:nth-child(4) { animation-delay: 0.4s; }
+        
+        .form-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--gradient-1);
         }
         
-        .form-section h2 {
-            color: #2c3e50;
-            margin-bottom: 1rem;
+        .form-card:nth-child(2)::before { background: var(--gradient-2); }
+        .form-card:nth-child(3)::before { background: var(--gradient-3); }
+        .form-card:nth-child(4)::before { background: var(--gradient-4); }
+        
+        .form-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+        }
+        
+        .form-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .form-section .icon {
+            justify-content: center;
+            margin-bottom: 1.5rem;
             font-size: 1.5rem;
         }
         
-        .form-list {
-            list-style: none;
+        .form-card:nth-child(1) .form-icon { background: var(--gradient-1); }
+        .form-card:nth-child(2) .form-icon { background: var(--gradient-2); }
+        .form-card:nth-child(3) .form-icon { background: var(--gradient-3); }
+        .form-card:nth-child(4) .form-icon { background: var(--gradient-4); }
+        
+        .form-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.75rem;
         }
         
-        .form-list li {
-            margin-bottom: 1rem;
+        .form-description {
+            color: #6c757d;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-features {
+            list-style: none;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-features li {
+            padding: 0.5rem 0;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+        }
+        
+        .form-features li::before {
+            content: '✓';
+            color: #28a745;
+            font-weight: bold;
+            margin-right: 0.75rem;
         }
         
         .form-link {
-            display: block;
-            padding: 1rem;
-            background-color: #f8f9fa;
-            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: var(--primary);
+            color: white;
             text-decoration: none;
-            color: #333;
-            transition: background-color 0.2s;
-            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
         }
         
         .form-link:hover {
-            background-color: #e9ecef;
-            border-color: #dee2e6;
-        }
-        
-        .form-link h3 {
-            color: #007bff;
-            margin-bottom: 0.25rem;
-            font-size: 1.1rem;
-        }
-        
-        .form-link p {
-            color: #666;
-            font-size: 0.9rem;
+            background: var(--primary-dark);
+            transform: translateX(4px);
         }
         
         .info-section {
-            background-color: #fff3cd;
-            border: 1px solid #ffeeba;
-            border-radius: 4px;
-            padding: 1.5rem;
-            margin-top: 2rem;
+            background: white;
+            border-radius: 20px;
+            padding: 3rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            animation: fadeInUp 0.8s ease 0.5s backwards;
+        }
+        
+        .info-section h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
         }
         
         .info-section h3 {
-            color: #856404;
-            margin-bottom: 0.5rem;
+            color: #333;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
         }
         
-        .info-section p {
-            color: #856404;
-            margin-bottom: 0.5rem;
-        }
-        
-        .info-section a {
-            color: #0056b3;
-        }
-        
-        .status-badge {
-            display: inline-block;
-            padding: 0.25rem 0.5rem;
-            font-size: 0.75rem;
-            border-radius: 3px;
-            margin-left: 0.5rem;
-            font-weight: 500;
-        }
-        
-        .status-production {
-            background-color: #28a745;
-            color: white;
-        }
-        
-        .status-test {
-            background-color: #ffc107;
-            color: #212529;
-        }
-        
-        .footer {
-            text-align: center;
-            padding: 2rem;
+        .info-section ul {
+            margin-left: 2rem;
+            line-height: 1.8;
             color: #666;
-            border-top: 1px solid #e9ecef;
-            margin-top: 3rem;
         }
-
+        
+        .info-section code {
+            background: #f8f9fa;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2rem;
@@ -165,113 +221,144 @@
             
             .forms-grid {
                 grid-template-columns: 1fr;
-                gap: 1.5rem;
             }
             
-            .container {
+            body {
                 padding: 1rem;
             }
         }
     </style>
 </head>
 <body>
-    <header class="header">
-        <h1>Bay View Association</h1>
-        <p>Online Forms Portal</p>
-    </header>
-
-    <main class="container">
+    <div class="container">
+        <header class="header">
+            <h1>Bay View Association Forms</h1>
+            <p>Modern, accessible, human-centered form experiences</p>
+        </header>
+        
         <div class="forms-grid">
-            <!-- Chapel Services Forms -->
-            <section class="form-section">
-                <h2>
-                    <span class="icon">⛪</span>
-                    Crouse Memorial Chapel Services
-                </h2>
-                <ul class="form-list">
-                    <li>
-                        <a href="chapel-wedding.html" class="form-link">
-                            <h3>Wedding Application <span class="status-badge status-production">Live</span></h3>
-                            <p>Apply to hold your wedding ceremony at Crouse Memorial Chapel</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="chapel-memorial.html" class="form-link">
-                            <h3>Memorial/Funeral Service <span class="status-badge status-production">Live</span></h3>
-                            <p>Request a memorial or funeral service at the chapel</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="chapel-baptism.html" class="form-link">
-                            <h3>Baptism Service <span class="status-badge status-production">Live</span></h3>
-                            <p>Schedule a baptism ceremony for infants or adults</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="chapel-general-use.html" class="form-link">
-                            <h3>General Chapel Use <span class="status-badge status-production">Live</span></h3>
-                            <p>Reserve the chapel for other events and services</p>
-                        </a>
-                    </li>
+            <div class="form-card">
+                <div class="form-icon">🌹</div>
+                <h2 class="form-title">Memorial Garden Application</h2>
+                <p class="form-description">
+                    Apply for memorial placement in our historic garden with a smooth, 
+                    conversational experience that guides you through each step.
+                </p>
+                <ul class="form-features">
+                    <li>Progressive disclosure</li>
+                    <li>Auto-save progress</li>
+                    <li>Conditional questions</li>
+                    <li>Mobile optimized</li>
                 </ul>
-            </section>
-
-            <!-- Memorial Garden Forms -->
-            <section class="form-section">
-                <h2>
-                    <span class="icon">🌹</span>
-                    Memorial Garden
-                </h2>
-                <ul class="form-list">
-                    <li>
-                        <a href="memorial-garden.html" class="form-link">
-                            <h3>Memorial Garden Application <span class="status-badge status-production">Live</span></h3>
-                            <p>Apply for placement of cremains in the Bay View Memorial Garden</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="memorial-garden-test.html" class="form-link">
-                            <h3>Test Form <span class="status-badge status-test">Test Mode</span></h3>
-                            <p>Test version with configurable API endpoint for development</p>
-                        </a>
-                    </li>
+                <a href="memorial-garden-typeform.html" class="form-link">
+                    Start Application
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M7 4L13 10L7 16" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </a>
+            </div>
+            
+            <div class="form-card">
+                <div class="form-icon">💒</div>
+                <h2 class="form-title">Chapel Wedding Application</h2>
+                <p class="form-description">
+                    Plan your perfect wedding ceremony at Crouse Memorial Chapel with 
+                    our intuitive, step-by-step application process.
+                </p>
+                <ul class="form-features">
+                    <li>Smart date selection</li>
+                    <li>Dynamic fee calculation</li>
+                    <li>Guest management</li>
+                    <li>Vendor coordination</li>
                 </ul>
-            </section>
-
-            <!-- Other Forms -->
-            <section class="form-section">
-                <h2>
-                    <span class="icon">📋</span>
-                    Additional Resources
-                </h2>
-                <ul class="form-list">
-                    <li>
-                        <a href="chapel-index.html" class="form-link">
-                            <h3>Chapel Services Overview</h3>
-                            <p>Information about all chapel services and requirements</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="worship-forms/" class="form-link">
-                            <h3>Printable PDF Forms</h3>
-                            <p>Download PDF versions of all forms for offline use</p>
-                        </a>
-                    </li>
+                <a href="chapel-wedding-typeform.html" class="form-link">
+                    Begin Planning
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M7 4L13 10L7 16" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </a>
+            </div>
+            
+            <div class="form-card">
+                <div class="form-icon">✝️</div>
+                <h2 class="form-title">Chapel Services</h2>
+                <p class="form-description">
+                    Schedule baptisms, memorial services, and other chapel events 
+                    with our streamlined application system.
+                </p>
+                <ul class="form-features">
+                    <li>Multiple service types</li>
+                    <li>Availability checking</li>
+                    <li>Policy acceptance</li>
+                    <li>Instant confirmation</li>
                 </ul>
-            </section>
+                <a href="#" class="form-link" style="opacity: 0.6; cursor: not-allowed;">
+                    Coming Soon
+                </a>
+            </div>
+            
+            <div class="form-card">
+                <div class="form-icon">📋</div>
+                <h2 class="form-title">Legacy Forms</h2>
+                <p class="form-description">
+                    Access the existing Bay View forms collection including chapel services, 
+                    memorial garden applications, and other administrative forms.
+                </p>
+                <ul class="form-features">
+                    <li>48+ existing forms</li>
+                    <li>Memorial garden application</li>
+                    <li>Chapel service forms</li>
+                    <li>Status dashboard</li>
+                </ul>
+                <a href="legacy-forms.html" class="form-link">
+                    View Legacy Forms
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M7 4L13 10L7 16" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </a>
+            </div>
         </div>
-
+        
         <div class="info-section">
-            <h3>Important Information</h3>
-            <p><strong>Bay View Membership Required:</strong> All chapel services and memorial garden placements require sponsorship by a current Bay View Association member.</p>
-            <p><strong>Processing Time:</strong> Applications are typically reviewed within 2-3 business days.</p>
-            <p><strong>Questions?</strong> Contact the Bay View Office at (231) 347-6225 or email <a href="mailto:office@bayviewassociation.org">office@bayviewassociation.org</a></p>
+            <h2>About the Typeform-Inspired System</h2>
+            <p>
+                Our new form system brings modern, human-centered design principles to Bay View's 
+                administrative processes. Built with accessibility and user experience at its core, 
+                these forms make it easier than ever to interact with Bay View services.
+            </p>
+            
+            <h3>Key Features</h3>
+            <ul>
+                <li><strong>Progressive Disclosure:</strong> Shows one question at a time to reduce cognitive load</li>
+                <li><strong>Smart Conditional Logic:</strong> Adapts questions based on previous answers</li>
+                <li><strong>Auto-Save Progress:</strong> Never lose your work with automatic saving</li>
+                <li><strong>Keyboard Navigation:</strong> Full keyboard support for accessibility</li>
+                <li><strong>Mobile Responsive:</strong> Works perfectly on all devices</li>
+                <li><strong>Smooth Animations:</strong> Delightful transitions between questions</li>
+                <li><strong>Real-time Validation:</strong> Immediate feedback on form inputs</li>
+                <li><strong>Progress Tracking:</strong> Always know how far you've come</li>
+            </ul>
+            
+            <h3>Technical Implementation</h3>
+            <p>
+                Built using vanilla JavaScript for maximum performance and compatibility, the 
+                <code>TypeformEngine</code> class provides a reusable framework for creating 
+                conversational forms. Each form is configured with JSON-like step definitions, 
+                making it easy to create new forms or modify existing ones.
+            </p>
+            
+            <h3>Accessibility First</h3>
+            <p>
+                Every form follows WCAG 2.1 Level AA guidelines with features including:
+            </p>
+            <ul>
+                <li>Full keyboard navigation with Tab, Arrow keys, and Enter</li>
+                <li>Screen reader compatible with ARIA labels and live regions</li>
+                <li>High contrast mode support</li>
+                <li>Respects prefers-reduced-motion settings</li>
+                <li>Clear focus indicators and error messages</li>
+            </ul>
         </div>
-    </main>
-
-    <footer class="footer">
-        <p>&copy; 2025 Bay View Association. All rights reserved.</p>
-        <p>1 Encampment Ave, Petoskey, MI 49770</p>
-    </footer>
+    </div>
 </body>
 </html>
