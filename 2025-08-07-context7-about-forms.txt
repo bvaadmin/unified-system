@@ -1,0 +1,108 @@
+╭───────────────────────────────────────────────────╮
+│ ✻ Welcome to Claude Code!                         │
+│                                                   │
+│   /help for help, /status for your current setup  │
+│                                                   │
+│   cwd: /home/sam/dev                              │
+╰───────────────────────────────────────────────────╯
+
+ Tips for getting started:
+
+ 1. Run /init to create a CLAUDE.md file with instructions for Claude
+ 2. Use Claude to help with file analysis, editing, bash commands and git
+ 3. Be as specific as you would with another engineer for the best results
+
+> see what you can learn via context7 about forms and typeform-like smoothe flow from question 
+  to question
+
+● I'll search for information about forms and smooth typeform-like question flows using
+  Context7.
+
+● context7 - resolve-library-id (MCP)(libraryName: "typeform")
+  ⎿  Available Libraries (top matches):
+
+     Each result includes:
+     … +381 lines (ctrl+r to expand)
+
+● Now let me get the Typeform documentation to learn about their smooth question flow:
+
+● context7 - get-library-docs (MCP)(context7CompatibleLibraryID:
+                                   "/context7/typeform-developers", topic: "smooth flow question
+                                    transitions user experience", tokens: 15000)
+  ⎿  ========================        
+     CODE SNIPPETS
+     ========================
+     … +2605 lines (ctrl+r to expand)
+
+● Let me also search for information about smooth form transitions and user experience patterns:
+
+● context7 - resolve-library-id (MCP)(libraryName: "react hook form")
+  ⎿  Available Libraries (top matches):
+
+     Each result includes:
+     … +374 lines (ctrl+r to expand)
+
+● context7 - get-library-docs (MCP)(context7CompatibleLibraryID:
+                                   "/react-hook-form/documentation", topic: "multi-step forms
+                                   wizard smooth transitions progressive disclosure", tokens:
+                                   10000)
+  ⎿  ========================        
+     CODE SNIPPETS
+     ========================
+     … +2045 lines (ctrl+r to expand)
+
+● Based on my research with Context7, here's what I learned about forms and smooth Typeform-like
+   question-to-question flows:
+
+  Key Concepts for Smooth Form Flows
+
+  Typeform's Approach:
+
+  - Conversational UI: Questions appear one at a time with typing emulation
+  - Progressive disclosure: Only showing the current question reduces cognitive load
+  - Smooth transitions: Using callbacks like onQuestionChanged to track navigation
+  - Logic jumps: Conditional branching based on answers for personalized flows
+  - Recall information: Using previous answers in subsequent questions (e.g., "Earlier, you
+  rated our service as {{field:rating_reference}}")
+
+  React Hook Form Multi-Step/Wizard Pattern:
+
+  - State management: Using libraries like little-state-machine or Redux to persist data across
+  steps
+  - Progressive enhancement: Supporting both client and server-side rendering
+  - Step navigation: Using React Router or similar for step transitions
+  - Form context: Sharing form methods across components with FormProvider
+
+  Implementation Strategies:
+
+  1. Single Question Focus
+    - Display one question at a time
+    - Animate transitions between questions
+    - Use keyboard navigation (Enter to proceed, Tab for options)
+  2. Progress Indicators
+    - Show progress as percentage or step count
+    - Visual feedback for completed sections
+    - Allow backward navigation while preserving answers
+  3. Conditional Logic
+    - Skip irrelevant questions based on previous answers
+    - Dynamic question text using template variables
+    - Branch to different paths based on user responses
+  4. Smooth Animations
+    - Slide transitions between questions
+    - Fade in/out effects
+    - Auto-focus on new inputs
+    - Libraries like auto-animate for zero-config transitions
+  5. User Experience Enhancements
+    - Auto-save progress
+    - Keyboard shortcuts for navigation
+    - Mobile-optimized touch interactions
+    - Accessibility with ARIA attributes
+
+  The key to Typeform-like flows is combining progressive disclosure with smooth animations,
+  conditional logic, and a conversational feel that makes forms feel less overwhelming and more
+  engaging.
+
+> /export 
+  ⎿ Failed to copy to clipboard. Make sure `xclip` or `wl-copy` is installed on your system and 
+    try again.
+

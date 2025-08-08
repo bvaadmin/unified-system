@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crouse Chapel Wedding Application - Bay View Association</title>
+    <link rel="stylesheet" href="typeform-engine.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f5d0fe 0%, #fbbf24 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #typeform-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        @media (max-width: 768px) {
+            #typeform-container {
+                margin: 0;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="typeform-container"></div>
+    
+    <script src="typeform-engine.js"></script>
+    <script>
+        // Initialize the form engine
+        const form = new TypeformEngine({
+            containerId: 'typeform-container',
+            formId: 'chapel-wedding',
+            apiEndpoint: 'https://unified-system-api.vercel.app/api/chapel/submit-service',
+            theme: 'wedding',
+            animations: true,
+            keyboard: true,
+            progress: true,
+            autosave: true
+        });
+
+        // Welcome screen
+        form.addStep({
+            id: 'welcome',
+            type: 'statement',
+            question: 'Crouse Memorial Chapel Wedding Application',
+            description: 'Congratulations on your upcoming wedding! Crouse Memorial Chapel has been hosting beautiful wedding ceremonies since 1915. Let\'s begin planning your special day.',
+            buttonText: 'Start Planning'
+        });
+
+        // Couple's names
+        form.addStep({
+            id: 'partner1_name',
+            type: 'text',
+            question: 'First, let\'s get your names',
+            description: 'Partner 1 full name',
+            placeholder: 'Enter full name',
+            required: true
+        });
+
+        form.addStep({
+            id: 'partner2_name',
+            type: 'text',
+            question: 'And your partner\'s name?',
+            placeholder: 'Enter full name',
+            required: true
+        });
+
+        // Contact person
+        form.addStep({
+            id: 'primary_contact',
+            type: 'radio',
+            question: 'Who should we contact about wedding details?',
+            options: [
+                { value: 'partner1', label: '{{partner1_name}}' },
+                { value: 'partner2', label: '{{partner2_name}}' },
+                { value: 'other', label: 'Someone else (wedding planner, parent, etc.)' }
+            ],
+            required: true
+        });
+
+        // Other contact info (conditional)
+        form.addStep({
+            id: 'other_contact_name',
+            type: 'text',
+            question: 'Contact person\'s name',
+            placeholder: 'Full name',
+            required: true,
+            condition: { field: 'primary_contact', value: 'other' }
+        });
+
+        // Contact details
+        form.addStep({
+            id: 'contact_email',
+            type: 'email',
+            question: 'Best email for wedding correspondence?',
+            placeholder: 'email@example.com',
+            required: true,
+            validation: {
+                pattern: '^[^@]+@[^@]+\\.[^@]+$'
+            }
+        });
+
+        form.addStep({
+            id: 'contact_phone',
+            type: 'tel',
+            question: 'And a phone number?',
+            placeholder: '(555) 123-4567',
+            required: true
+        });
+
+        // Wedding date selection
+        form.addStep({
+            id: 'preferred_date',
+            type: 'date',
+            question: 'When would you like to get married?',
+            description: 'We\'ll check availability for you',
+            required: true
+        });
+
+        form.addStep({
+            id: 'preferred_time',
+            type: 'radio',
+            question: 'What time of day works best?',
+            options: [
+                { value: '10:00', label: 'Morning (10:00 AM)', description: 'Perfect for brunch receptions' },
+                { value: '14:00', label: 'Afternoon (2:00 PM)', description: 'Classic afternoon ceremony' },
+                { value: '16:00', label: 'Late Afternoon (4:00 PM)', description: 'Golden hour photos' },
+                { value: '18:00', label: 'Evening (6:00 PM)', description: 'Sunset ceremony' }
+            ],
+            required: true
+        });
+
+        form.addStep({
+            id: 'flexibility',
+            type: 'radio',
+            question: 'How flexible is your date?',
+            options: [
+                { value: 'fixed', label: 'This is our only date' },
+                { value: 'week', label: 'Flexible within a week' },
+                { value: 'month', label: 'Flexible within the month' }
+            ],
+            required: true
+        });
+
+        // Guest count
+        form.addStep({
+            id: 'guest_count',
+            type: 'number',
+            question: 'How many guests are you expecting?',
+            description: 'The chapel comfortably seats 150 guests',
+            placeholder: 'Number of guests',
+            required: true,
+            validation: {
+                min: 1,
+                max: 200
+            }
+        });
+
+        // Bay View connection
+        form.addStep({
+            id: 'bay_view_connection',
+            type: 'radio',
+            question: 'What\'s your connection to Bay View?',
+            options: [
+                { value: 'member', label: 'We are Bay View members' },
+                { value: 'family', label: 'Family members are Bay View members' },
+                { value: 'sponsored', label: 'We have a Bay View member sponsor' },
+                { value: 'none', label: 'No current connection' }
+            ],
+            required: true
+        });
+
+        // Sponsor information (conditional)
+        form.addStep({
+            id: 'sponsor_name',
+            type: 'text',
+            question: 'Who is your Bay View sponsor?',
+            description: 'Please provide their full name',
+            placeholder: 'Sponsor\'s name',
+            required: true,
+            condition: (data) => data.bay_view_connection === 'sponsored' || data.bay_view_connection === 'none'
+        });
+
+        // Clergy selection
+        form.addStep({
+            id: 'clergy_preference',
+            type: 'radio',
+            question: 'Do you have a clergy member in mind?',
+            options: [
+                { value: 'bay_view', label: 'Please recommend Bay View clergy' },
+                { value: 'own', label: 'We have our own clergy' },
+                { value: 'undecided', label: 'We\'re still deciding' }
+            ],
+            required: true
+        });
+
+        form.addStep({
+            id: 'clergy_name',
+            type: 'text',
+            question: 'Clergy member\'s name',
+            placeholder: 'Rev. / Pastor / Rabbi / etc.',
+            required: true,
+            condition: { field: 'clergy_preference', value: 'own' }
+        });
+
+        form.addStep({
+            id: 'clergy_denomination',
+            type: 'text',
+            question: 'What denomination/faith tradition?',
+            placeholder: 'e.g., Methodist, Catholic, Jewish, etc.',
+            condition: { field: 'clergy_preference', value: 'own' }
+        });
+
+        // Music preferences
+        form.addStep({
+            id: 'music_type',
+            type: 'checkbox',
+            question: 'What music elements would you like?',
+            description: 'Select all that apply',
+            options: [
+                { value: 'organ', label: 'Chapel Organ', description: 'Historic 1915 organ' },
+                { value: 'piano', label: 'Piano' },
+                { value: 'vocalist', label: 'Vocalist/Soloist' },
+                { value: 'strings', label: 'String Quartet' },
+                { value: 'other_musicians', label: 'Other Musicians' },
+                { value: 'none', label: 'No music needed' }
+            ]
+        });
+
+        form.addStep({
+            id: 'music_details',
+            type: 'textarea',
+            question: 'Any specific music requests?',
+            description: 'Songs, musicians you\'re bringing, etc.',
+            placeholder: 'Tell us about your music plans...',
+            rows: 3,
+            condition: (data) => data.music_type && data.music_type.length > 0 && !data.music_type.includes('none')
+        });
+
+        // Ceremony details
+        form.addStep({
+            id: 'ceremony_elements',
+            type: 'checkbox',
+            question: 'Which ceremony elements are you planning?',
+            options: [
+                { value: 'unity_candle', label: 'Unity Candle' },
+                { value: 'sand_ceremony', label: 'Sand Ceremony' },
+                { value: 'communion', label: 'Communion' },
+                { value: 'readings', label: 'Special Readings' },
+                { value: 'cultural', label: 'Cultural Traditions' }
+            ]
+        });
+
+        // Reception
+        form.addStep({
+            id: 'reception_location',
+            type: 'radio',
+            question: 'Where will your reception be held?',
+            options: [
+                { value: 'bay_view', label: 'Bay View facility', description: 'Campus Hall, Evelyn Hall, etc.' },
+                { value: 'local', label: 'Local venue in Petoskey area' },
+                { value: 'none', label: 'No reception planned' },
+                { value: 'undecided', label: 'Still deciding' }
+            ],
+            required: true
+        });
+
+        form.addStep({
+            id: 'reception_venue',
+            type: 'text',
+            question: 'Which Bay View facility?',
+            placeholder: 'e.g., Campus Hall, Evelyn Hall',
+            condition: { field: 'reception_location', value: 'bay_view' }
+        });
+
+        // Photography
+        form.addStep({
+            id: 'photography',
+            type: 'radio',
+            question: 'Will you have a photographer/videographer?',
+            options: [
+                { value: 'yes', label: 'Yes' },
+                { value: 'no', label: 'No' },
+                { value: 'undecided', label: 'Still deciding' }
+            ],
+            required: true
+        });
+
+        // Special needs
+        form.addStep({
+            id: 'accessibility',
+            type: 'checkbox',
+            question: 'Do you need any accessibility accommodations?',
+            description: 'Check all that apply',
+            options: [
+                { value: 'wheelchair', label: 'Wheelchair access' },
+                { value: 'hearing', label: 'Hearing assistance' },
+                { value: 'visual', label: 'Visual assistance' },
+                { value: 'other', label: 'Other accommodations' }
+            ]
+        });
+
+        form.addStep({
+            id: 'accessibility_details',
+            type: 'textarea',
+            question: 'Please describe the accommodations needed',
+            placeholder: 'Tell us how we can help...',
+            rows: 3,
+            condition: (data) => data.accessibility && data.accessibility.includes('other')
+        });
+
+        // Rehearsal
+        form.addStep({
+            id: 'rehearsal',
+            type: 'radio',
+            question: 'Would you like to schedule a rehearsal?',
+            description: 'Usually held the day before',
+            options: [
+                { value: 'yes', label: 'Yes, day before' },
+                { value: 'other', label: 'Yes, different day' },
+                { value: 'no', label: 'No rehearsal needed' }
+            ],
+            required: true
+        });
+
+        // Additional requests
+        form.addStep({
+            id: 'special_requests',
+            type: 'textarea',
+            question: 'Any special requests or things we should know?',
+            description: 'Optional - We want to make your day perfect!',
+            placeholder: 'Share any other details...',
+            rows: 4,
+            required: false
+        });
+
+        // Fee information
+        form.addStep({
+            id: 'fee_info',
+            type: 'statement',
+            question: 'Chapel Wedding Fees',
+            content: `
+                <div style="background: #fef3c7; padding: 1.5rem; border-radius: 8px; border-left: 4px solid #fbbf24;">
+                    <h3 style="margin-top: 0; color: #92400e;">Fee Structure:</h3>
+                    <ul style="line-height: 2;">
+                        <li><strong>Bay View Members:</strong> $300</li>
+                        <li><strong>Non-Members:</strong> $750</li>
+                    </ul>
+                    <p style="margin-top: 1rem;">This includes:</p>
+                    <ul style="line-height: 1.8;">
+                        <li>2-hour chapel reservation</li>
+                        <li>Wedding coordinator consultation</li>
+                        <li>Basic sound system</li>
+                        <li>Rehearsal time (if requested)</li>
+                    </ul>
+                    <p style="margin-top: 1rem; font-style: italic;">
+                        Additional fees may apply for extended time, special equipment, or musician services.
+                    </p>
+                </div>
+            `,
+            buttonText: 'I understand the fees'
+        });
+
+        // Policy agreement
+        form.addStep({
+            id: 'policies',
+            type: 'checkbox',
+            question: 'Please review and accept our wedding policies',
+            options: [
+                {
+                    value: 'chapel_rules',
+                    label: 'I understand the chapel rules',
+                    description: 'No alcohol, appropriate attire, respect for sacred space'
+                },
+                {
+                    value: 'decoration_policy',
+                    label: 'I understand decoration limitations',
+                    description: 'No tape/tacks on walls, flowers must be removed after'
+                },
+                {
+                    value: 'time_policy',
+                    label: 'I understand timing requirements',
+                    description: 'Ceremony must conclude within 2-hour window'
+                },
+                {
+                    value: 'payment_policy',
+                    label: 'I understand payment is required to confirm',
+                    description: 'Full payment secures your date'
+                }
+            ],
+            required: true,
+            validation: {
+                custom: (value) => value && value.length === 4,
+                message: 'Please accept all policies to continue'
+            }
+        });
+
+        // Final confirmation
+        form.addStep({
+            id: 'confirmation',
+            type: 'statement',
+            question: 'Ready to submit your wedding application?',
+            content: `
+                <div style="text-align: center; padding: 2rem 0;">
+                    <h3 style="color: #92400e;">What happens next:</h3>
+                    <ol style="text-align: left; max-width: 500px; margin: 2rem auto; line-height: 2;">
+                        <li>We\'ll check availability and send confirmation within 48 hours</li>
+                        <li>A wedding coordinator will contact you to discuss details</li>
+                        <li>We\'ll send payment instructions to secure your date</li>
+                        <li>You\'ll receive a wedding planning packet with all the details</li>
+                    </ol>
+                    <p style="color: #6c757d; margin-top: 2rem;">
+                        We\'re honored to be part of your special day!
+                    </p>
+                </div>
+            `,
+            buttonText: 'Submit Wedding Application'
+        });
+
+        // Start the form
+        form.start();
+    </script>
+</body>
+</html>

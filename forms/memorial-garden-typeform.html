@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bay View Memorial Garden Application</title>
+    <link rel="stylesheet" href="typeform-engine.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #typeform-container {
+            width: 100%;
+            max-width: 800px;
+            margin: 2rem;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        @media (max-width: 768px) {
+            #typeform-container {
+                margin: 0;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="typeform-container"></div>
+    
+    <script src="typeform-engine.js"></script>
+    <script>
+        // Initialize the form engine
+        const form = new TypeformEngine({
+            containerId: 'typeform-container',
+            formId: 'memorial-garden',
+            apiEndpoint: 'https://unified-system-api.vercel.app/api/memorial/submit-garden',
+            theme: 'bayview',
+            animations: true,
+            keyboard: true,
+            progress: true,
+            autosave: true,
+            onSuccess: (result) => {
+                console.log('Form submitted successfully:', result);
+            },
+            onError: (error) => {
+                console.error('Form submission error:', error);
+            }
+        });
+
+        // Welcome screen
+        form.addStep({
+            id: 'welcome',
+            type: 'statement',
+            question: 'Bay View Memorial Garden Application',
+            description: 'Welcome to the Bay View Association Memorial Garden application. This sacred space has been a place of remembrance and reflection for our community since 1886. We\'ll guide you through the application process step by step.',
+            buttonText: 'Begin Application'
+        });
+
+        // Application type
+        form.addStep({
+            id: 'application_type',
+            type: 'radio',
+            question: 'What type of memorial are you requesting?',
+            description: 'Please select the option that best describes your memorial needs.',
+            options: [
+                {
+                    value: 'individual',
+                    label: 'Individual Memorial',
+                    description: 'For one person'
+                },
+                {
+                    value: 'companion',
+                    label: 'Companion Memorial',
+                    description: 'For two people (e.g., spouses)'
+                },
+                {
+                    value: 'family',
+                    label: 'Family Memorial',
+                    description: 'For multiple family members'
+                }
+            ],
+            required: true
+        });
+
+        // Applicant information
+        form.addStep({
+            id: 'your_name',
+            type: 'text',
+            question: 'Let\'s start with your name',
+            description: 'As the person submitting this application',
+            placeholder: 'Enter your full name',
+            required: true
+        });
+
+        form.addStep({
+            id: 'your_email',
+            type: 'email',
+            question: 'What\'s your email address?',
+            description: 'We\'ll use this to send you updates about your application',
+            placeholder: 'your.email@example.com',
+            required: true,
+            validation: {
+                pattern: '^[^@]+@[^@]+\\.[^@]+$',
+                message: 'Please enter a valid email address'
+            }
+        });
+
+        form.addStep({
+            id: 'your_phone',
+            type: 'tel',
+            question: 'And your phone number?',
+            description: 'In case we need to reach you quickly',
+            placeholder: '(555) 123-4567',
+            required: true
+        });
+
+        form.addStep({
+            id: 'your_address',
+            type: 'textarea',
+            question: 'What\'s your mailing address?',
+            description: 'For sending official correspondence',
+            placeholder: 'Street Address\nCity, State ZIP',
+            required: true,
+            rows: 3
+        });
+
+        // Bay View membership
+        form.addStep({
+            id: 'bay_view_member',
+            type: 'radio',
+            question: 'Are you a Bay View member?',
+            options: [
+                { value: 'yes', label: 'Yes, I am a current member' },
+                { value: 'no', label: 'No, I am not a member' }
+            ],
+            required: true
+        });
+
+        // Member cottage (conditional)
+        form.addStep({
+            id: 'cottage_info',
+            type: 'text',
+            question: 'What is your Bay View cottage address?',
+            description: 'Please provide your cottage block and lot number if known',
+            placeholder: 'e.g., Block 12 Lot 7',
+            condition: { field: 'bay_view_member', value: 'yes' }
+        });
+
+        // Non-member sponsor (conditional)
+        form.addStep({
+            id: 'sponsor_name',
+            type: 'text',
+            question: 'Who is your Bay View member sponsor?',
+            description: 'Non-members require sponsorship from a current Bay View member',
+            placeholder: 'Sponsor\'s full name',
+            required: true,
+            condition: { field: 'bay_view_member', value: 'no' }
+        });
+
+        // Memorial details - First person
+        form.addStep({
+            id: 'deceased_1_name',
+            type: 'text',
+            question: 'Who would you like to memorialize?',
+            description: 'Please provide their full name',
+            placeholder: 'Full name',
+            required: true
+        });
+
+        form.addStep({
+            id: 'deceased_1_birth',
+            type: 'date',
+            question: 'When was {{deceased_1_name}} born?',
+            required: true
+        });
+
+        form.addStep({
+            id: 'deceased_1_death',
+            type: 'date',
+            question: 'When did {{deceased_1_name}} pass away?',
+            required: true
+        });
+
+        form.addStep({
+            id: 'deceased_1_inscription',
+            type: 'textarea',
+            question: 'What inscription would you like on the memorial?',
+            description: 'For {{deceased_1_name}} (Maximum 3 lines, 20 characters per line)',
+            placeholder: 'Line 1\nLine 2\nLine 3',
+            rows: 3,
+            required: true
+        });
+
+        // Second person (conditional on companion/family)
+        form.addStep({
+            id: 'add_second_person',
+            type: 'radio',
+            question: 'Would you like to add a second person to this memorial?',
+            options: [
+                { value: 'yes', label: 'Yes, add another person' },
+                { value: 'no', label: 'No, continue with one person' }
+            ],
+            condition: (data) => data.application_type === 'companion' || data.application_type === 'family'
+        });
+
+        form.addStep({
+            id: 'deceased_2_name',
+            type: 'text',
+            question: 'Second person\'s full name',
+            placeholder: 'Full name',
+            required: true,
+            condition: { field: 'add_second_person', value: 'yes' }
+        });
+
+        form.addStep({
+            id: 'deceased_2_birth',
+            type: 'date',
+            question: 'When was {{deceased_2_name}} born?',
+            required: true,
+            condition: { field: 'add_second_person', value: 'yes' }
+        });
+
+        form.addStep({
+            id: 'deceased_2_death',
+            type: 'date',
+            question: 'When did {{deceased_2_name}} pass away?',
+            description: 'Leave blank if still living',
+            condition: { field: 'add_second_person', value: 'yes' }
+        });
+
+        // Memorial service
+        form.addStep({
+            id: 'memorial_service',
+            type: 'radio',
+            question: 'Would you like to schedule a memorial service?',
+            description: 'Services are held in Crouse Memorial Chapel',
+            options: [
+                { value: 'yes', label: 'Yes, I would like to schedule a service' },
+                { value: 'no', label: 'No service at this time' },
+                { value: 'undecided', label: 'I\'m not sure yet' }
+            ],
+            required: true
+        });
+
+        form.addStep({
+            id: 'service_date',
+            type: 'date',
+            question: 'What date would you prefer for the service?',
+            description: 'We\'ll check availability and confirm with you',
+            condition: { field: 'memorial_service', value: 'yes' }
+        });
+
+        // Bay View history
+        form.addStep({
+            id: 'bay_view_history',
+            type: 'textarea',
+            question: 'Please share {{deceased_1_name}}\'s connection to Bay View',
+            description: 'Tell us about their involvement, memories, or significance to the community',
+            placeholder: 'Share their Bay View story...',
+            rows: 5
+        });
+
+        // Payment information
+        form.addStep({
+            id: 'payment_amount',
+            type: 'statement',
+            question: 'Memorial Garden Fee',
+            content: `
+                <p>The memorial garden placement fee is:</p>
+                <ul style="list-style: none; padding: 0;">
+                    <li style="padding: 0.5rem 0;"><strong>Individual Memorial:</strong> $500</li>
+                    <li style="padding: 0.5rem 0;"><strong>Companion Memorial:</strong> $750</li>
+                    <li style="padding: 0.5rem 0;"><strong>Family Memorial:</strong> $1,000</li>
+                </ul>
+                <p style="margin-top: 1rem;">Payment instructions will be sent with your application confirmation.</p>
+            `,
+            buttonText: 'I understand'
+        });
+
+        // Policy acknowledgment
+        form.addStep({
+            id: 'policy_agreement',
+            type: 'checkbox',
+            question: 'Please review and accept our policies',
+            options: [
+                {
+                    value: 'placement_policy',
+                    label: 'I understand the memorial placement policy',
+                    description: 'Memorials are placed in the garden at the discretion of the Memorial Garden Committee'
+                },
+                {
+                    value: 'maintenance_policy',
+                    label: 'I understand the maintenance policy',
+                    description: 'Bay View Association maintains the garden; personal decorations are not permitted'
+                },
+                {
+                    value: 'accuracy',
+                    label: 'I confirm all information is accurate',
+                    description: 'I have reviewed all information and confirm it is correct to the best of my knowledge'
+                }
+            ],
+            required: true,
+            validation: {
+                custom: (value) => value && value.length === 3,
+                message: 'Please accept all policies to continue'
+            }
+        });
+
+        // Additional comments
+        form.addStep({
+            id: 'comments',
+            type: 'textarea',
+            question: 'Is there anything else you\'d like us to know?',
+            description: 'Optional - any special requests or additional information',
+            placeholder: 'Your comments here...',
+            required: false,
+            rows: 4
+        });
+
+        // Review screen
+        form.addStep({
+            id: 'review',
+            type: 'statement',
+            question: 'Ready to submit your application?',
+            content: `
+                <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1rem 0;">
+                    <h3 style="margin-top: 0; color: #2c5aa0;">What happens next:</h3>
+                    <ol style="line-height: 1.8;">
+                        <li>You\'ll receive an email confirmation immediately</li>
+                        <li>The Memorial Garden Committee will review your application within 5-7 business days</li>
+                        <li>Once approved, you\'ll receive payment instructions</li>
+                        <li>Memorial placement typically occurs within 30 days of payment</li>
+                    </ol>
+                </div>
+                <p style="text-align: center; color: #6c757d; margin-top: 2rem;">
+                    By clicking submit, you agree to the terms and conditions of the Bay View Memorial Garden.
+                </p>
+            `,
+            buttonText: 'Submit Application'
+        });
+
+        // Start the form
+        form.start();
+    </script>
+</body>
+</html>

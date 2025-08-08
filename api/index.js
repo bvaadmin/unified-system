@@ -19,6 +19,8 @@ import chapelCheckAvailability from '../lib/handlers/chapel/check-availability.j
 import chapelSubmitService from '../lib/handlers/chapel/submit-service.js';
 import fixChapelFunction from '../lib/handlers/admin/fix-chapel-function.js';
 import memorialSubmitGarden from '../lib/api/memorial/submit-garden.js';
+import verifyPrepayment from '../lib/api/memorial/verify-prepayment.js';
+import usePrepayment from '../lib/api/memorial/use-prepayment.js';
 import health from '../lib/api/health.js';
 import checkDbUrl from './diagnostic/check-db-url.js';
 
@@ -32,6 +34,10 @@ const routes = {
   // Memorial garden endpoints
   'POST /api/memorial/submit-garden': memorialSubmitGarden,
   'OPTIONS /api/memorial/submit-garden': memorialSubmitGarden,
+  'GET /api/memorial/verify-prepayment': verifyPrepayment,
+  'OPTIONS /api/memorial/verify-prepayment': verifyPrepayment,
+  'POST /api/memorial/use-prepayment': usePrepayment,
+  'OPTIONS /api/memorial/use-prepayment': usePrepayment,
   
   // Admin endpoints
   'POST /api/admin/fix-chapel-function': fixChapelFunction,
