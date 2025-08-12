@@ -126,11 +126,15 @@ function updateFeeDisplay(){
   }
   
   feeDisplay.classList.remove('hidden');
-  byId('feeAmount').textContent = `$${feeInfo.amount.toFixed(2)}`;
-  byId('feeNote').textContent = feeInfo.note;
+  const feeAmountEl = byId('feeAmount');
+  const feeNoteEl = byId('feeNote');
+  console.log('Setting fee display:', { feeAmountEl, feeNoteEl, amount: feeInfo.amount }); // Debug
+  if (feeAmountEl) feeAmountEl.textContent = `$${feeInfo.amount.toFixed(2)}`;
+  if (feeNoteEl) feeNoteEl.textContent = feeInfo.note;
   const paymentInput = byId('payment_amount');
   if (paymentInput) paymentInput.value = feeInfo.amount.toFixed(2);
   announce(`Fee updated to $${feeInfo.amount.toFixed(2)} (${feeInfo.note}).`);
+  console.log('Fee display classes after update:', feeDisplay.classList.toString()); // Debug
 }
 
 function attachCoreListeners(){
