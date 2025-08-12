@@ -76,13 +76,21 @@ function init(){
 document.addEventListener('DOMContentLoaded', init);
 
 function computeFee(){
-  if(!currentState.isMember) return null;
+  console.log('computeFee called with state:', currentState); // Debug log
+  if(!currentState.isMember) {
+    console.log('No member status selected');
+    return null;
+  }
   const isMember = currentState.isMember === 'Yes';
   const placementMeta = resolvePlacementMeta();
-  if(!placementMeta) return null;
+  console.log('Placement meta:', placementMeta); // Debug log
+  if(!placementMeta) {
+    console.log('No placement meta found');
+    return null;
+  }
   const key = `${placementMeta.double? 'double':'single'}_${isMember? 'member':'nonMember'}`;
   const amount = fees[key];
-  console.log('Computing fee:', { isMember, placementMeta, key, amount }); // Debug log
+  console.log('Computing fee:', { isMember, placementMeta, key, amount, fees }); // Debug log
   return { amount, note: feeNoteText(placementMeta.double, isMember) };
 }
 
@@ -92,9 +100,14 @@ function feeNoteText(isDouble, isMember){
 }
 
 function updateFeeDisplay(){
+  console.log('updateFeeDisplay called'); // Debug log
   const feeInfo = computeFee();
   const feeDisplay = byId('feeDisplay');
-  if(!feeDisplay) return;
+  console.log('Fee info:', feeInfo, 'Fee display element:', feeDisplay); // Debug log
+  if(!feeDisplay) {
+    console.log('No fee display element found');
+    return;
+  }
   
   if(!feeInfo){ 
     // Show a message about what's needed to calculate fee
@@ -142,10 +155,20 @@ function attachCoreListeners(){
 function resolvePlacementMeta(){
   const type = currentState.applicationType;
   const placement = currentState.placementType;
-  if(!type || !placement) return null;
+  console.log('resolvePlacementMeta:', { type, placement }); // Debug log
+  if(!type || !placement) {
+    console.log('Missing type or placement');
+    return null;
+  }
   const scenario = scenarioConfig[type];
-  if(!scenario) return null;
-  return scenario.placement[placement] || null;
+  console.log('Scenario config:', scenario); // Debug log
+  if(!scenario) {
+    console.log('No scenario found for type:', type);
+    return null;
+  }
+  const result = scenario.placement[placement];
+  console.log('Placement result:', result); // Debug log
+  return result || null;
 }
 
 function updateUIFromState(){
