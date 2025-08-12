@@ -43,7 +43,7 @@ const fieldGroups = Object.freeze({
   contact: [ 'contact_name','contact_phone','contact_street','contact_city','contact_state','contact_zip' ],
   deceasedSingle: [ 'deceased_name' ],
   secondPerson: [ 'second_first_name','second_last_name' ],
-  prepaymentNames: [ 'prepayment_names','prepayment_person_1','prepayment_person_2' ],
+  prepaymentNames: [], // Now handled dynamically
   service: [ 'requested_service_date','requested_service_time' ]
 });
 
@@ -70,6 +70,7 @@ function init(){
 
   injectAriaLiveRegions();
   attachCoreListeners();
+  initPrepaymentNamesList();
   updateUIFromState();
 }
 
@@ -253,8 +254,15 @@ function updateRequiredFields(placementMeta, appType){
     }
     fieldGroups.service.forEach(id=> markRequired(id));
   } else if(appType === 'future') {
-    // Mark all prepayment name inputs so native UI highlights whichever user chooses
-    fieldGroups.prepaymentNames.forEach(id=> markRequired(id));
+    // Prepayment names are now handled dynamically
+    // Mark dynamic inputs as required
+    prepaymentNamesList.forEach(item => {
+      const input = byId(item.id);
+      if (input) {
+        input.required = true;
+        input.setAttribute('aria-required', 'true');
+      }
+    });
   }
 }
 
@@ -421,6 +429,12 @@ function validateForm(){
   if(appType==='future'){
     const pre = collectPrepaymentNames();
     if(pre.list.length === 0) issues.push('At least one prepayment name required');
+    // Validate that names are not empty
+    pre.list.forEach((name, index) => {
+      if (!name || name.trim() === '') {
+        issues.push(`Prepayment name ${index + 1} cannot be empty`);
+      }
+    });
   }
   const trap = byId('website');
   if(trap && trap.value.trim()) issues.push('Spam detected');
@@ -442,16 +456,123 @@ function showThankYouPage(){
   renderThankYouVariants();
 }
 
+// ---- Prepayment Names Management ----
+let prepaymentNamesList = [];
+
+function initPrepaymentNamesList() {
+  const addBtn = byId('addNameBtn');
+  if (addBtn) {
+    addBtn.addEventListener('click', addPrepaymentName);
+    // Start with one empty field
+    addPrepaymentName();
+  }
+}
+
+function addPrepaymentName() {
+  // Maximum 2 names (database limitation)
+  if (prepaymentNamesList.length >= 2) {
+    alert('Maximum of 2 names allowed for prepayment.');
+    return;
+  }
+  
+  const container = byId('prepaymentNamesList');
+  if (!container) return;
+  
+  const index = prepaymentNamesList.length;
+  const nameId = `prepayment_name_${index}`;
+  
+  const nameDiv = document.createElement('div');
+  nameDiv.className = 'prepayment-name-item';
+  nameDiv.style.cssText = 'display:flex; align-items:center; gap:10px; margin-bottom:10px;';
+  nameDiv.innerHTML = `
+    <input type="text" 
+           id="${nameId}" 
+           placeholder="Enter full name" 
+           style="flex:1; padding:10px; border:1px solid #ddd; border-radius:4px;"
+           data-index="${index}">
+    <button type="button" 
+            onclick="removePrepaymentName(${index})" 
+            style="background:#dc3545; color:white; border:none; padding:8px 15px; border-radius:4px; cursor:pointer;">
+      Remove
+    </button>
+  `;
+  
+  container.appendChild(nameDiv);
+  prepaymentNamesList.push({ id: nameId, element: nameDiv });
+  
+  // Update add button visibility
+  updateAddNameButton();
+}
+
+function removePrepaymentName(index) {
+  const container = byId('prepaymentNamesList');
+  if (!container) return;
+  
+  // Remove from DOM
+  const item = prepaymentNamesList[index];
+  if (item && item.element) {
+    container.removeChild(item.element);
+  }
+  
+  // Remove from list and reindex
+  prepaymentNamesList.splice(index, 1);
+  
+  // Reindex remaining items
+  prepaymentNamesList.forEach((item, i) => {
+    const input = item.element.querySelector('input');
+    const button = item.element.querySelector('button');
+    if (input) {
+      input.id = `prepayment_name_${i}`;
+      input.dataset.index = i;
+    }
+    if (button) {
+      button.setAttribute('onclick', `removePrepaymentName(${i})`);
+    }
+    item.id = `prepayment_name_${i}`;
+  });
+  
+  // If no names left, add one empty field
+  if (prepaymentNamesList.length === 0) {
+    addPrepaymentName();
+  }
+  
+  updateAddNameButton();
+}
+
+function updateAddNameButton() {
+  const addBtn = byId('addNameBtn');
+  if (addBtn) {
+    addBtn.style.display = prepaymentNamesList.length >= 2 ? 'none' : 'inline-block';
+  }
+}
+
+// Make removePrepaymentName globally accessible
+window.removePrepaymentName = removePrepaymentName;
+
 // ---- Domain helpers ----
 function collectPrepaymentNames(){
   const names = [];
-  const bulk = byId('prepayment_names')?.value.trim();
-  const p1 = byId('prepayment_person_1')?.value.trim();
-  const p2 = byId('prepayment_person_2')?.value.trim();
-  if(p1) names.push(p1);
-  if(p2) names.push(p2);
-  if(names.length===0 && bulk) names.push(bulk);
-  return { list: names, rawBulk: bulk, p1, p2 };
+  
+  // Collect from dynamic list
+  prepaymentNamesList.forEach((item, index) => {
+    const input = byId(item.id);
+    if (input && input.value.trim()) {
+      names.push(input.value.trim());
+    }
+  });
+  
+  // Update hidden fields for API compatibility
+  const p1Input = byId('prepayment_person_1');
+  const p2Input = byId('prepayment_person_2');
+  if (p1Input) p1Input.value = names[0] || '';
+  if (p2Input) p2Input.value = names[1] || '';
+  
+  return { 
+    list: names, 
+    rawBulk: names.join(', '), 
+    p1: names[0] || '', 
+    p2: names[1] || '' 
+  };
 }
 
 function collectServiceInfo(){
