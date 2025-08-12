@@ -93,8 +93,14 @@ function feeNoteText(isDouble, isMember){
 function updateFeeDisplay(){
   const feeInfo = computeFee();
   const feeDisplay = byId('feeDisplay');
-  if(!feeInfo){ feeDisplay.style.display='none'; return; }
-  feeDisplay.style.display='block';
+  if(!feeDisplay) return;
+  
+  if(!feeInfo){ 
+    feeDisplay.classList.add('hidden');
+    return; 
+  }
+  
+  feeDisplay.classList.remove('hidden');
   byId('feeAmount').textContent = `$${feeInfo.amount.toFixed(2)}`;
   byId('feeNote').textContent = feeInfo.note;
   byId('payment_amount').value = feeInfo.amount.toFixed(2);
@@ -128,34 +134,40 @@ function resolvePlacementMeta(){
 }
 
 function updateUIFromState(){
+  // Helper function to toggle visibility using class
+  function setVisible(elementId, shouldShow) {
+    const element = byId(elementId);
+    if (!element) return;
+    if (shouldShow) {
+      element.classList.remove('hidden');
+    } else {
+      element.classList.add('hidden');
+    }
+  }
+
   // Member details visibility
-  if(byId('memberDetails')) byId('memberDetails').style.display = currentState.isMember === 'Yes' ? 'block':'none';
-  if(byId('inPersonOption')) byId('inPersonOption').style.display = currentState.isMember === 'Yes' ? 'block':'none';
+  setVisible('memberDetails', currentState.isMember === 'Yes');
+  setVisible('inPersonOption', currentState.isMember === 'Yes');
 
   // Sections
   const placementMeta = resolvePlacementMeta();
   const appType = currentState.applicationType;
+  
   // Toggle second person section
-  if(byId('secondPersonSection')){
-    byId('secondPersonSection').style.display = (placementMeta && placementMeta.persons === 2 && appType === 'immediate') ? 'block':'none';
-  }
+  setVisible('secondPersonSection', placementMeta && placementMeta.persons === 2 && appType === 'immediate');
+  
   // Personal history section
-  if(byId('personalHistorySection')){
-    const showPH = appType === 'immediate';
-    byId('personalHistorySection').style.display = showPH ? 'block':'none';
-  }
+  setVisible('personalHistorySection', appType === 'immediate');
+  
   // Service planning
-  if(byId('servicePlanningSection')){
-    byId('servicePlanningSection').style.display = appType === 'immediate' ? 'block':'none';
-  }
+  setVisible('servicePlanningSection', appType === 'immediate');
+  
   // Prepayment name block
-  if(byId('prepaymentInfoSection')){
-    byId('prepaymentInfoSection').style.display = appType === 'future' ? 'block':'none';
-  }
+  setVisible('prepaymentInfoSection', appType === 'future');
+  
   // Deceased name group visibility only for immediate
-  if(byId('deceasedNameGroup')){
-    byId('deceasedNameGroup').style.display = appType === 'immediate' ? 'block':'none';
-  }
+  setVisible('deceasedNameGroup', appType === 'immediate');
+  
   updateRequiredFields(placementMeta, appType);
   updateFeeDisplay();
   syncPrepaymentNameFields();
@@ -209,13 +221,13 @@ function handleSubmit(e){
 
   submitButton.disabled = true;
   submitButton.textContent = 'Submitting...';
-  loading.style.display = 'block';
-  errorMessage.style.display = 'none';
+  loading.classList.remove('hidden');
+  errorMessage.classList.add('hidden');
 
   const submissionId = 'MG-' + Date.now();
   const validationIssues = validateForm();
   if(validationIssues.length){
-    errorMessage.style.display='block';
+    errorMessage.classList.remove('hidden');
     errorText.textContent = 'Please fix: ' + validationIssues.join('; ');
     submitButton.disabled=false;
     submitButton.textContent='Submit Memorial Garden Application';
@@ -234,12 +246,12 @@ function handleSubmit(e){
     .then(r=> r.json().then(j=>({ok:r.ok, body:j})))
     .then(({ok, body})=>{
       if(!ok || !body.success) throw new Error(body.error || 'Submission failed');
-      loading.style.display='none';
+      loading.classList.add('hidden');
       showThankYouPage();
     })
     .catch(err=>{
-      loading.style.display='none';
-      errorMessage.style.display='block';
+      loading.classList.add('hidden');
+      errorMessage.classList.remove('hidden');
       errorText.textContent = err.message || 'An error occurred while submitting your application.';
       submitButton.disabled=false;
       submitButton.textContent='Submit Memorial Garden Application';
@@ -348,8 +360,8 @@ function validateForm(){
 function showThankYouPage(){
   const formWrapper = byId('applicationForm');
   const thankYou = byId('thankYouPage');
-  if(formWrapper) formWrapper.style.display='none';
-  if(thankYou) thankYou.style.display='block';
+  if(formWrapper) formWrapper.classList.add('hidden');
+  if(thankYou) thankYou.classList.remove('hidden');
   // Populate minimal confirmation details if elements exist
   const idEl = byId('confirmationId');
   if(idEl) idEl.textContent = submittedData['Submission ID'];
