@@ -48,7 +48,7 @@ const fieldGroups = Object.freeze({
 });
 
 let submittedData = {};
-let currentState = { applicationType:null, placementType:null, isMember:null };
+let currentState = { applicationType:null, isMember:null };
 
 function qs(sel){ return document.querySelector(sel); }
 function qsa(sel){ return Array.from(document.querySelectorAll(sel)); }
