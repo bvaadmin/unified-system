@@ -614,11 +614,98 @@ class TypeformEngine {
         localStorage.removeItem(`typeform-${this.config.formId || 'default'}`);
     }
 
+    mapFormDataToAPI() {
+        // Map typeform field IDs to API expected property names
+        const fieldMapping = {
+            // Applicant info
+            'your_name': 'Contact Name',
+            'your_email': 'Contact Email',
+            'your_phone': 'Contact Phone',
+            'your_address': 'Contact Address',
+            
+            // Bay View membership
+            'bay_view_member': 'Bay View Member',
+            'cottage_info': 'Bayview Address',
+            'sponsor_name': 'Member Name',
+            
+            // Memorial details
+            'application_type': 'Application Type',
+            'deceased_1_name': 'Deceased Name',
+            'deceased_1_birth': 'Birth Date',
+            'deceased_1_death': 'Death Date',
+            'deceased_1_inscription': 'Inscription',
+            
+            // Second person
+            'deceased_2_name': 'Other Person Name',
+            'deceased_2_birth': 'Other Birth Date',
+            'deceased_2_death': 'Other Death Date',
+            
+            // Service and history
+            'memorial_service': 'Memorial Service',
+            'service_date': 'Service Date',
+            'bay_view_history': 'Bay View History',
+            
+            // Policy
+            'policy_agreement': 'Policy Agreement',
+            'comments': 'Additional Comments'
+        };
+        
+        const mappedData = {
+            'Submission ID': `WEB-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            'Submission Date': new Date().toISOString(),
+            'Status': 'Pending'
+        };
+        
+        // Map form data to API expected format
+        for (const [fieldId, apiName] of Object.entries(fieldMapping)) {
+            if (this.formData[fieldId] !== undefined) {
+                // Handle special conversions
+                if (fieldId === 'bay_view_member') {
+                    mappedData[apiName] = this.formData[fieldId] === 'yes' ? 'Yes' : 'No';
+                } else if (fieldId === 'policy_agreement') {
+                    // Convert checkbox array to single value
+                    mappedData[apiName] = Array.isArray(this.formData[fieldId]) && 
+                                         this.formData[fieldId].length === 3 ? '__YES__' : '__NO__';
+                } else if (fieldId === 'service_date' && this.formData[fieldId]) {
+                    // Format date for API
+                    mappedData['date:Service Date:start'] = this.formData[fieldId];
+                } else {
+                    mappedData[apiName] = this.formData[fieldId];
+                }
+            }
+        }
+        
+        // Calculate fee based on application type
+        const feeMap = {
+            'individual': 500,
+            'companion': 750,
+            'family': 1000
+        };
+        mappedData['Fee Amount'] = feeMap[this.formData.application_type] || 500;
+        
+        // Add personal history JSON if needed
+        if (this.formData.deceased_1_name) {
+            const personalHistory = {
+                firstName: this.formData.deceased_1_name?.split(' ')[0] || '',
+                lastName: this.formData.deceased_1_name?.split(' ').slice(-1)[0] || '',
+                birthDate: this.formData.deceased_1_birth || null,
+                deathDate: this.formData.deceased_1_death || null,
+                bayviewHistory: this.formData.bay_view_history || ''
+            };
+            mappedData['Personal History JSON'] = JSON.stringify(personalHistory);
+        }
+        
+        return mappedData;
+    }
+
     async submit() {
         this.saveCurrentStep();
         
         // Show loading state
         this.showLoading();
+        
+        // Map form data to API expected format
+        const mappedData = this.mapFormDataToAPI();
         
         try {
             const response = await fetch(this.config.apiEndpoint, {
@@ -626,7 +713,7 @@ class TypeformEngine {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(this.formData)
+                body: JSON.stringify({ properties: mappedData })
             });
             
             const result = await response.json();
