@@ -70,12 +70,12 @@
           <div class="form-group" id="placementSelector">
             <div class="radio-group">
               <!-- Future options -->
-              <label><input type="radio" name="placementType" value="self"> Myself only</label>
-              <label><input type="radio" name="placementType" value="self_and_other"> Myself and another person</label>
-              <label><input type="radio" name="placementType" value="two_others"> Two other people (not myself)</label>
+              <label class="placement-future hidden"><input type="radio" name="placementType" value="self"> Myself only</label>
+              <label class="placement-future hidden"><input type="radio" name="placementType" value="self_and_other"> Myself and another person</label>
+              <label class="placement-future hidden"><input type="radio" name="placementType" value="two_others"> Two other people (not myself)</label>
               <!-- Immediate options -->
-              <label><input type="radio" name="placementType" value="one_person"> One person (immediate)</label>
-              <label><input type="radio" name="placementType" value="two_people"> Two people (immediate)</label>
+              <label class="placement-immediate hidden"><input type="radio" name="placementType" value="one_person"> One person (immediate)</label>
+              <label class="placement-immediate hidden"><input type="radio" name="placementType" value="two_people"> Two people (immediate)</label>
             </div>
           </div>
         </section>
@@ -193,6 +193,6 @@
     </div>
   </main>
 
-  <script src="memorial-garden.js?v=20250812" type="module" defer></script>
+  <script src="memorial-garden.js?v=20250812-2" type="module" defer></script>
 </body>
 </html>

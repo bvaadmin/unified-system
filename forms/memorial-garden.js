@@ -82,6 +82,7 @@ function computeFee(){
   if(!placementMeta) return null;
   const key = `${placementMeta.double? 'double':'single'}_${isMember? 'member':'nonMember'}`;
   const amount = fees[key];
+  console.log('Computing fee:', { isMember, placementMeta, key, amount }); // Debug log
   return { amount, note: feeNoteText(placementMeta.double, isMember) };
 }
 
@@ -96,14 +97,26 @@ function updateFeeDisplay(){
   if(!feeDisplay) return;
   
   if(!feeInfo){ 
-    feeDisplay.classList.add('hidden');
+    // Show a message about what's needed to calculate fee
+    if (currentState.isMember && currentState.applicationType && !currentState.placementType) {
+      feeDisplay.classList.remove('hidden');
+      byId('feeAmount').textContent = '';
+      byId('feeNote').textContent = 'Please select a placement type to see your fee';
+    } else if (currentState.applicationType && !currentState.isMember) {
+      feeDisplay.classList.remove('hidden');
+      byId('feeAmount').textContent = '';
+      byId('feeNote').textContent = 'Please select membership status to see your fee';
+    } else {
+      feeDisplay.classList.add('hidden');
+    }
     return; 
   }
   
   feeDisplay.classList.remove('hidden');
   byId('feeAmount').textContent = `$${feeInfo.amount.toFixed(2)}`;
   byId('feeNote').textContent = feeInfo.note;
-  byId('payment_amount').value = feeInfo.amount.toFixed(2);
+  const paymentInput = byId('payment_amount');
+  if (paymentInput) paymentInput.value = feeInfo.amount.toFixed(2);
   announce(`Fee updated to $${feeInfo.amount.toFixed(2)} (${feeInfo.note}).`);
 }
 
@@ -118,6 +131,8 @@ function attachCoreListeners(){
   }));
   qsa('input[name="applicationType"]').forEach(r => r.addEventListener('change', e => {
     currentState.applicationType = e.target.value;
+    // Reset placement type when switching application types
+    currentState.placementType = null;
     updateUIFromState();
   }));
   const form = byId('memorialGardenForm');
@@ -144,6 +159,18 @@ function updateUIFromState(){
       element.classList.add('hidden');
     }
   }
+  
+  // Helper to set visibility for multiple elements by class
+  function setClassVisible(className, shouldShow) {
+    const elements = document.querySelectorAll(`.${className}`);
+    elements.forEach(el => {
+      if (shouldShow) {
+        el.classList.remove('hidden');
+      } else {
+        el.classList.add('hidden');
+      }
+    });
+  }
 
   // Member details visibility
   setVisible('memberDetails', currentState.isMember === 'Yes');
@@ -152,6 +179,19 @@ function updateUIFromState(){
   // Sections
   const placementMeta = resolvePlacementMeta();
   const appType = currentState.applicationType;
+  
+  // Show/hide placement options based on application type
+  if (appType === 'future') {
+    setClassVisible('placement-future', true);
+    setClassVisible('placement-immediate', false);
+    // Clear immediate placement selection if switching from immediate to future
+    qsa('input[name="placementType"][value="one_person"], input[name="placementType"][value="two_people"]').forEach(r => r.checked = false);
+  } else if (appType === 'immediate') {
+    setClassVisible('placement-future', false);
+    setClassVisible('placement-immediate', true);
+    // Clear future placement selection if switching from future to immediate
+    qsa('input[name="placementType"][value="self"], input[name="placementType"][value="self_and_other"], input[name="placementType"][value="two_others"]').forEach(r => r.checked = false);
+  }
   
   // Toggle second person section
   setVisible('secondPersonSection', placementMeta && placementMeta.persons === 2 && appType === 'immediate');
