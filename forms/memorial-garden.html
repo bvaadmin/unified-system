@@ -64,18 +64,14 @@
           </div>
         </section>
 
-        <!-- Placement Selection -->
-        <section aria-labelledby="placementHeading">
-          <h3 id="placementHeading" class="section-title">Placement Type</h3>
+        <!-- Placement Selection (Future only) -->
+        <section id="placementTypeSection" aria-labelledby="placementHeading" class="hidden">
+          <h3 id="placementHeading" class="section-title">Who is this prepayment for?</h3>
           <div class="form-group" id="placementSelector">
             <div class="radio-group">
-              <!-- Future options -->
-              <label class="placement-future hidden"><input type="radio" name="placementType" value="self"> Myself only</label>
-              <label class="placement-future hidden"><input type="radio" name="placementType" value="self_and_other"> Myself and another person</label>
-              <label class="placement-future hidden"><input type="radio" name="placementType" value="two_others"> Two other people (not myself)</label>
-              <!-- Immediate options -->
-              <label class="placement-immediate hidden"><input type="radio" name="placementType" value="one_person"> One person (immediate)</label>
-              <label class="placement-immediate hidden"><input type="radio" name="placementType" value="two_people"> Two people (immediate)</label>
+              <label><input type="radio" name="placementType" value="self"> Myself only</label>
+              <label><input type="radio" name="placementType" value="self_and_other"> Myself and another person</label>
+              <label><input type="radio" name="placementType" value="two_others"> Two other people (not myself)</label>
             </div>
           </div>
         </section>

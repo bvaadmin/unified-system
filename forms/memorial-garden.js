@@ -78,21 +78,27 @@ function init(){
 document.addEventListener('DOMContentLoaded', init);
 
 function computeFee(){
-  console.log('computeFee called with state:', currentState); // Debug log
   if(!currentState.isMember) {
-    console.log('No member status selected');
     return null;
   }
   const isMember = currentState.isMember === 'Yes';
+  
+  // For immediate placement, determine fee based on number of people
+  if (currentState.applicationType === 'immediate') {
+    const immediatePeople = collectImmediatePlacementData();
+    const isDouble = immediatePeople.length === 2;
+    const key = `${isDouble? 'double':'single'}_${isMember? 'member':'nonMember'}`;
+    const amount = fees[key];
+    return { amount, note: feeNoteText(isDouble, isMember) };
+  }
+  
+  // For future placement, use the selected placement type
   const placementMeta = resolvePlacementMeta();
-  console.log('Placement meta:', placementMeta); // Debug log
   if(!placementMeta) {
-    console.log('No placement meta found');
     return null;
   }
   const key = `${placementMeta.double? 'double':'single'}_${isMember? 'member':'nonMember'}`;
   const amount = fees[key];
-  console.log('Computing fee:', { isMember, placementMeta, key, amount, fees }); // Debug log
   return { amount, note: feeNoteText(placementMeta.double, isMember) };
 }
 
@@ -102,12 +108,9 @@ function feeNoteText(isDouble, isMember){
 }
 
 function updateFeeDisplay(){
-  console.log('updateFeeDisplay called'); // Debug log
   const feeInfo = computeFee();
   const feeDisplay = byId('feeDisplay');
-  console.log('Fee info:', feeInfo, 'Fee display element:', feeDisplay); // Debug log
   if(!feeDisplay) {
-    console.log('No fee display element found');
     return;
   }
   
@@ -130,13 +133,11 @@ function updateFeeDisplay(){
   feeDisplay.classList.remove('hidden');
   const feeAmountEl = byId('feeAmount');
   const feeNoteEl = byId('feeNote');
-  console.log('Setting fee display:', { feeAmountEl, feeNoteEl, amount: feeInfo.amount }); // Debug
   if (feeAmountEl) feeAmountEl.textContent = `$${feeInfo.amount.toFixed(2)}`;
   if (feeNoteEl) feeNoteEl.textContent = feeInfo.note;
   const paymentInput = byId('payment_amount');
   if (paymentInput) paymentInput.value = feeInfo.amount.toFixed(2);
   announce(`Fee updated to $${feeInfo.amount.toFixed(2)} (${feeInfo.note}).`);
-  console.log('Fee display classes after update:', feeDisplay.classList.toString()); // Debug
 }
 
 function attachCoreListeners(){
@@ -161,19 +162,14 @@ function attachCoreListeners(){
 function resolvePlacementMeta(){
   const type = currentState.applicationType;
   const placement = currentState.placementType;
-  console.log('resolvePlacementMeta:', { type, placement }); // Debug log
   if(!type || !placement) {
-    console.log('Missing type or placement');
     return null;
   }
   const scenario = scenarioConfig[type];
-  console.log('Scenario config:', scenario); // Debug log
   if(!scenario) {
-    console.log('No scenario found for type:', type);
     return null;
   }
   const result = scenario.placement[placement];
-  console.log('Placement result:', result); // Debug log
   return result || null;
 }
 
@@ -209,17 +205,14 @@ function updateUIFromState(){
   const placementMeta = resolvePlacementMeta();
   const appType = currentState.applicationType;
   
-  // Show/hide placement options based on application type
-  if (appType === 'future') {
-    setClassVisible('placement-future', true);
-    setClassVisible('placement-immediate', false);
-    // Clear immediate placement selection if switching from immediate to future
-    qsa('input[name="placementType"][value="one_person"], input[name="placementType"][value="two_people"]').forEach(r => r.checked = false);
-  } else if (appType === 'immediate') {
-    setClassVisible('placement-future', false);
-    setClassVisible('placement-immediate', true);
-    // Clear future placement selection if switching from future to immediate
-    qsa('input[name="placementType"][value="self"], input[name="placementType"][value="self_and_other"], input[name="placementType"][value="two_others"]').forEach(r => r.checked = false);
+  // Show placement type section only for future applications
+  setVisible('placementTypeSection', appType === 'future');
+  
+  // Clear placement type when switching application types
+  if (appType === 'immediate') {
+    // Clear any future placement selections
+    qsa('input[name="placementType"]').forEach(r => r.checked = false);
+    // For immediate, we'll auto-detect based on number of people added
   }
   
   // Show appropriate names section based on application type
@@ -337,16 +330,24 @@ function combineAddress(street, city, state, zip){
 
 function buildStructuredPayload(submissionId, memberValue){
   const appType = qs('input[name="applicationType"]:checked')?.value || '';
-  const placementType = qs('input[name="placementType"]:checked')?.value || '';
-  const placementMeta = resolvePlacementMeta();
-  const feeInfo = computeFee();
+  let placementType = '';
   
   // Collect immediate placement data if applicable
   let primary = {};
   let secondary = null;
+  let immediatePeopleCount = 0;
   
   if (appType === 'immediate') {
     const immediatePeople = collectImmediatePlacementData();
+    immediatePeopleCount = immediatePeople.length;
+    
+    // Auto-determine placement type based on number of people
+    if (immediatePeopleCount === 1) {
+      placementType = 'one_person';
+    } else if (immediatePeopleCount === 2) {
+      placementType = 'two_people';
+    }
+    
     if (immediatePeople.length > 0) {
       primary = {
         firstName: immediatePeople[0].firstName || '',
@@ -362,7 +363,15 @@ function buildStructuredPayload(submissionId, memberValue){
         lastName: immediatePeople[1].lastName || ''
       };
     }
+  } else {
+    // For future/prepayment, get the selected placement type
+    placementType = qs('input[name="placementType"]:checked')?.value || '';
   }
+  
+  // Update current state for fee calculation
+  currentState.placementType = placementType;
+  const placementMeta = resolvePlacementMeta();
+  const feeInfo = computeFee();
   
   return {
     meta:{
@@ -647,6 +656,11 @@ function addImmediatePlacementName() {
   
   // Update add button visibility
   updateAddImmediateButton();
+  
+  // Update fee display when people are added
+  if (currentState.applicationType === 'immediate') {
+    updateFeeDisplay();
+  }
 }
 
 function removeImmediatePlacementName(index) {
@@ -678,6 +692,11 @@ function removeImmediatePlacementName(index) {
   }
   
   updateAddImmediateButton();
+  
+  // Update fee display when people are removed
+  if (currentState.applicationType === 'immediate') {
+    updateFeeDisplay();
+  }
 }
 
 function updateAddImmediateButton() {
