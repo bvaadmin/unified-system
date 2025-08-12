@@ -32,7 +32,7 @@
         <section aria-labelledby="purposeHeading">
           <h3 id="purposeHeading" class="section-title">Purpose of Application</h3>
           <div class="form-group">
-            <label class="required">Select one:</label>
+            <label>Select one: <span class="required">*</span></label>
             <div class="radio-group">
               <label><input type="radio" name="applicationType" value="future" required> Prepayment for future placement of ashes</label>
               <label><input type="radio" name="applicationType" value="immediate" required> Immediate placement (cremains ready)</label>
@@ -44,7 +44,7 @@
         <section aria-labelledby="membershipHeading">
           <h3 id="membershipHeading" class="section-title">Bay View Membership Status</h3>
           <div class="form-group">
-            <label class="required">Are you a Bay View member or relative?</label>
+            <label>Are you a Bay View member or relative? <span class="required">*</span></label>
             <div class="radio-group">
               <label><input type="radio" name="is_member" value="Yes" required> Yes</label>
               <label><input type="radio" name="is_member" value="No" required> No</label>
@@ -103,15 +103,15 @@
   <section id="personalHistorySection" aria-labelledby="personalHistoryHeading" class="hidden">
           <h3 id="personalHistoryHeading" class="section-title">Personal History (Immediate Placement)</h3>
           <div class="two-col">
-            <div class="form-group"><label for="first_name" class="required">First Name</label><input id="first_name" name="first_name" type="text" /></div>
-            <div class="form-group"><label for="last_name" class="required">Last Name</label><input id="last_name" name="last_name" type="text" /></div>
+            <div class="form-group"><label for="first_name">First Name <span class="required">*</span></label><input id="first_name" name="first_name" type="text" /></div>
+            <div class="form-group"><label for="last_name">Last Name <span class="required">*</span></label><input id="last_name" name="last_name" type="text" /></div>
           </div>
           <div class="two-col">
             <div class="form-group"><label for="middle_name">Middle Name</label><input id="middle_name" type="text" /></div>
             <div class="form-group"><label for="maiden_name">Maiden Name</label><input id="maiden_name" type="text" /></div>
           </div>
           <div id="deceasedNameGroup" class="form-group hidden">
-            <label for="deceased_name" class="required">Name for Memorial Record</label>
+            <label for="deceased_name">Name for Memorial Record <span class="required">*</span></label>
             <input id="deceased_name" type="text" />
           </div>
         </section>
@@ -128,16 +128,16 @@
         <!-- Contact Info -->
         <section aria-labelledby="contactHeading">
           <h3 id="contactHeading" class="section-title">Primary Contact</h3>
-          <div class="form-group"><label for="contact_name" class="required">Contact Name</label><input id="contact_name" type="text" /></div>
+          <div class="form-group"><label for="contact_name">Contact Name <span class="required">*</span></label><input id="contact_name" type="text" /></div>
           <div class="two-col">
-            <div class="form-group"><label for="contact_phone" class="required">Phone</label><input id="contact_phone" type="tel" /></div>
+            <div class="form-group"><label for="contact_phone">Phone <span class="required">*</span></label><input id="contact_phone" type="tel" /></div>
             <div class="form-group"><label for="contact_email">Email</label><input id="contact_email" type="email" /></div>
           </div>
           <div class="four-col">
-            <div class="form-group"><label for="contact_street" class="required">Street</label><input id="contact_street" type="text" /></div>
-            <div class="form-group"><label for="contact_city" class="required">City</label><input id="contact_city" type="text" /></div>
-            <div class="form-group"><label for="contact_state" class="required">State</label><input id="contact_state" type="text" /></div>
-            <div class="form-group"><label for="contact_zip" class="required">Zip</label><input id="contact_zip" type="text" /></div>
+            <div class="form-group"><label for="contact_street">Street <span class="required">*</span></label><input id="contact_street" type="text" /></div>
+            <div class="form-group"><label for="contact_city">City <span class="required">*</span></label><input id="contact_city" type="text" /></div>
+            <div class="form-group"><label for="contact_state">State <span class="required">*</span></label><input id="contact_state" type="text" /></div>
+            <div class="form-group"><label for="contact_zip">Zip <span class="required">*</span></label><input id="contact_zip" type="text" /></div>
           </div>
         </section>
 
@@ -145,8 +145,8 @@
   <section id="servicePlanningSection" aria-labelledby="serviceHeading" class="hidden">
           <h3 id="serviceHeading" class="section-title">Service Planning</h3>
           <div class="two-col">
-            <div class="form-group"><label for="requested_service_date" class="required">Requested Service Date</label><input id="requested_service_date" type="date" /></div>
-            <div class="form-group"><label for="requested_service_time" class="required">Requested Time</label><input id="requested_service_time" type="time" /></div>
+            <div class="form-group"><label for="requested_service_date">Requested Service Date <span class="required">*</span></label><input id="requested_service_date" type="date" /></div>
+            <div class="form-group"><label for="requested_service_time">Requested Time <span class="required">*</span></label><input id="requested_service_time" type="time" /></div>
           </div>
           <div class="form-group"><label for="celebrant_preference">Celebrant Preference</label><input id="celebrant_preference" type="text" /></div>
         </section>
