@@ -98,30 +98,27 @@
           <input type="hidden" id="prepayment_person_2" />
         </section>
 
-        <!-- Personal History (immediate) -->
-  <section id="personalHistorySection" aria-labelledby="personalHistoryHeading" class="hidden">
-          <h3 id="personalHistoryHeading" class="section-title">Personal History (Immediate Placement)</h3>
-          <div class="two-col">
-            <div class="form-group"><label for="first_name">First Name <span class="required">*</span></label><input id="first_name" name="first_name" type="text" /></div>
-            <div class="form-group"><label for="last_name">Last Name <span class="required">*</span></label><input id="last_name" name="last_name" type="text" /></div>
+        <!-- Immediate Placement Names -->
+  <section id="immediatePlacementSection" aria-labelledby="immediateHeading" class="hidden">
+          <h3 id="immediateHeading" class="section-title">Individual(s) for Immediate Placement</h3>
+          <p style="margin-bottom: 15px; color: #666;">Add details for individuals whose cremains will be placed (maximum 2)</p>
+          
+          <div id="immediatePlacementList">
+            <!-- Dynamic name fields will be added here -->
           </div>
-          <div class="two-col">
-            <div class="form-group"><label for="middle_name">Middle Name</label><input id="middle_name" type="text" /></div>
-            <div class="form-group"><label for="maiden_name">Maiden Name</label><input id="maiden_name" type="text" /></div>
-          </div>
-          <div id="deceasedNameGroup" class="form-group hidden">
-            <label for="deceased_name">Name for Memorial Record <span class="required">*</span></label>
-            <input id="deceased_name" type="text" />
-          </div>
-        </section>
-
-        <!-- Second Person (immediate, two people) -->
-  <section id="secondPersonSection" aria-labelledby="secondPersonHeading" class="hidden">
-          <h3 id="secondPersonHeading" class="section-title">Second Person Details</h3>
-          <div class="two-col">
-            <div class="form-group"><label for="second_first_name">First Name</label><input id="second_first_name" type="text" /></div>
-            <div class="form-group"><label for="second_last_name">Last Name</label><input id="second_last_name" type="text" /></div>
-          </div>
+          
+          <button type="button" id="addImmediateNameBtn" class="btn-secondary" style="background:#6c757d; color:white; padding:10px 20px; border:none; border-radius:4px; cursor:pointer; margin-top:10px;">
+            + Add Person
+          </button>
+          
+          <!-- Hidden fields for backward compatibility -->
+          <input type="hidden" id="first_name" />
+          <input type="hidden" id="last_name" />
+          <input type="hidden" id="middle_name" />
+          <input type="hidden" id="maiden_name" />
+          <input type="hidden" id="deceased_name" />
+          <input type="hidden" id="second_first_name" />
+          <input type="hidden" id="second_last_name" />
         </section>
 
         <!-- Contact Info -->

@@ -71,6 +71,7 @@ function init(){
   injectAriaLiveRegions();
   attachCoreListeners();
   initPrepaymentNamesList();
+  initImmediatePlacementList();
   updateUIFromState();
 }
 
@@ -221,20 +222,17 @@ function updateUIFromState(){
     qsa('input[name="placementType"][value="self"], input[name="placementType"][value="self_and_other"], input[name="placementType"][value="two_others"]').forEach(r => r.checked = false);
   }
   
-  // Toggle second person section
-  setVisible('secondPersonSection', placementMeta && placementMeta.persons === 2 && appType === 'immediate');
+  // Show appropriate names section based on application type
+  setVisible('prepaymentInfoSection', appType === 'future');
+  setVisible('immediatePlacementSection', appType === 'immediate');
   
-  // Personal history section
-  setVisible('personalHistorySection', appType === 'immediate');
-  
-  // Service planning
+  // Service planning for immediate placement
   setVisible('servicePlanningSection', appType === 'immediate');
   
-  // Prepayment name block
-  setVisible('prepaymentInfoSection', appType === 'future');
-  
-  // Deceased name group visibility only for immediate
-  setVisible('deceasedNameGroup', appType === 'immediate');
+  // Old sections - hide them as we're using dynamic lists now
+  setVisible('personalHistorySection', false);
+  setVisible('secondPersonSection', false);
+  setVisible('deceasedNameGroup', false);
   
   updateRequiredFields(placementMeta, appType);
   updateFeeDisplay();
@@ -342,17 +340,30 @@ function buildStructuredPayload(submissionId, memberValue){
   const placementType = qs('input[name="placementType"]:checked')?.value || '';
   const placementMeta = resolvePlacementMeta();
   const feeInfo = computeFee();
-  const primary = {
-    firstName: byId('first_name')?.value || '',
-    lastName: byId('last_name')?.value || '',
-    middleName: byId('middle_name')?.value || '',
-    maidenName: byId('maiden_name')?.value || '',
-    deceasedName: byId('deceased_name')?.value || ''
-  };
-  const secondary = (placementMeta && placementMeta.persons===2 && appType==='immediate') ? {
-    firstName: byId('second_first_name')?.value || '',
-    lastName: byId('second_last_name')?.value || ''
-  }: null;
+  
+  // Collect immediate placement data if applicable
+  let primary = {};
+  let secondary = null;
+  
+  if (appType === 'immediate') {
+    const immediatePeople = collectImmediatePlacementData();
+    if (immediatePeople.length > 0) {
+      primary = {
+        firstName: immediatePeople[0].firstName || '',
+        lastName: immediatePeople[0].lastName || '',
+        middleName: immediatePeople[0].middleName || '',
+        maidenName: immediatePeople[0].maidenName || '',
+        deceasedName: immediatePeople[0].memorialName || ''
+      };
+    }
+    if (immediatePeople.length > 1) {
+      secondary = {
+        firstName: immediatePeople[1].firstName || '',
+        lastName: immediatePeople[1].lastName || ''
+      };
+    }
+  }
+  
   return {
     meta:{
       submissionId,
@@ -374,10 +385,10 @@ function buildStructuredPayload(submissionId, memberValue){
       email: byId('contact_email')?.value || '',
       address: combineAddress(byId('contact_street')?.value, byId('contact_city')?.value, byId('contact_state')?.value, byId('contact_zip')?.value)
     },
-  persons:{ primary, secondary },
-  prepayment: appType==='future' ? collectPrepaymentNames() : null,
-  service: appType==='immediate' ? collectServiceInfo() : null,
-  agreements:{ policies: !!byId('policy_agreement')?.checked }
+    persons:{ primary, secondary },
+    prepayment: appType==='future' ? collectPrepaymentNames() : null,
+    service: appType==='immediate' ? collectServiceInfo() : null,
+    agreements:{ policies: !!byId('policy_agreement')?.checked }
   };
 }
 
@@ -549,6 +560,136 @@ function updateAddNameButton() {
 // Make removePrepaymentName globally accessible
 window.removePrepaymentName = removePrepaymentName;
 
+// ---- Immediate Placement Names Management ----
+let immediatePlacementList = [];
+
+function initImmediatePlacementList() {
+  const addBtn = byId('addImmediateNameBtn');
+  if (addBtn) {
+    addBtn.addEventListener('click', addImmediatePlacementName);
+    // Start with one empty entry
+    addImmediatePlacementName();
+  }
+}
+
+function addImmediatePlacementName() {
+  // Maximum 2 people (database limitation)
+  if (immediatePlacementList.length >= 2) {
+    alert('Maximum of 2 individuals allowed for placement.');
+    return;
+  }
+  
+  const container = byId('immediatePlacementList');
+  if (!container) return;
+  
+  const index = immediatePlacementList.length;
+  const personNum = index + 1;
+  
+  const personDiv = document.createElement('div');
+  personDiv.className = 'immediate-person-item';
+  personDiv.style.cssText = 'border:1px solid #dee2e6; padding:15px; border-radius:5px; margin-bottom:15px; background:#f8f9fa;';
+  personDiv.innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+      <h4 style="margin:0; color:#2c5aa0;">Person ${personNum}</h4>
+      <button type="button" 
+              onclick="removeImmediatePlacementName(${index})" 
+              style="background:#dc3545; color:white; border:none; padding:6px 12px; border-radius:4px; cursor:pointer; font-size:14px;">
+        Remove
+      </button>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px;">
+      <div>
+        <label style="display:block; margin-bottom:5px; font-weight:500;">First Name <span style="color:red;">*</span></label>
+        <input type="text" 
+               id="immediate_first_${index}" 
+               placeholder="First name" 
+               required
+               style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+      </div>
+      <div>
+        <label style="display:block; margin-bottom:5px; font-weight:500;">Last Name <span style="color:red;">*</span></label>
+        <input type="text" 
+               id="immediate_last_${index}" 
+               placeholder="Last name" 
+               required
+               style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+      </div>
+      <div>
+        <label style="display:block; margin-bottom:5px;">Middle Name</label>
+        <input type="text" 
+               id="immediate_middle_${index}" 
+               placeholder="Middle name (optional)" 
+               style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+      </div>
+      <div>
+        <label style="display:block; margin-bottom:5px;">Maiden Name</label>
+        <input type="text" 
+               id="immediate_maiden_${index}" 
+               placeholder="Maiden name (optional)" 
+               style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+      </div>
+    </div>
+    <div style="margin-top:15px;">
+      <label style="display:block; margin-bottom:5px; font-weight:500;">Name for Memorial Record <span style="color:red;">*</span></label>
+      <input type="text" 
+             id="immediate_memorial_${index}" 
+             placeholder="Full name as it should appear on memorial" 
+             required
+             style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+    </div>
+  `;
+  
+  container.appendChild(personDiv);
+  immediatePlacementList.push({ 
+    index: index,
+    element: personDiv 
+  });
+  
+  // Update add button visibility
+  updateAddImmediateButton();
+}
+
+function removeImmediatePlacementName(index) {
+  const container = byId('immediatePlacementList');
+  if (!container) return;
+  
+  // Find and remove the element
+  const itemIndex = immediatePlacementList.findIndex(item => item.index === index);
+  if (itemIndex > -1) {
+    container.removeChild(immediatePlacementList[itemIndex].element);
+    immediatePlacementList.splice(itemIndex, 1);
+  }
+  
+  // Renumber remaining items
+  immediatePlacementList.forEach((item, i) => {
+    const h4 = item.element.querySelector('h4');
+    if (h4) h4.textContent = `Person ${i + 1}`;
+    
+    // Update button onclick
+    const button = item.element.querySelector('button');
+    if (button) {
+      button.setAttribute('onclick', `removeImmediatePlacementName(${item.index})`);
+    }
+  });
+  
+  // If no people left, add one empty entry
+  if (immediatePlacementList.length === 0) {
+    addImmediatePlacementName();
+  }
+  
+  updateAddImmediateButton();
+}
+
+function updateAddImmediateButton() {
+  const addBtn = byId('addImmediateNameBtn');
+  if (addBtn) {
+    addBtn.style.display = immediatePlacementList.length >= 2 ? 'none' : 'inline-block';
+  }
+}
+
+// Make removeImmediatePlacementName globally accessible
+window.removeImmediatePlacementName = removeImmediatePlacementName;
+
 // ---- Domain helpers ----
 function collectPrepaymentNames(){
   const names = [];
@@ -573,6 +714,46 @@ function collectPrepaymentNames(){
     p1: names[0] || '', 
     p2: names[1] || '' 
   };
+}
+
+function collectImmediatePlacementData() {
+  const people = [];
+  
+  immediatePlacementList.forEach((item, i) => {
+    const firstName = byId(`immediate_first_${item.index}`)?.value || '';
+    const lastName = byId(`immediate_last_${item.index}`)?.value || '';
+    const middleName = byId(`immediate_middle_${item.index}`)?.value || '';
+    const maidenName = byId(`immediate_maiden_${item.index}`)?.value || '';
+    const memorialName = byId(`immediate_memorial_${item.index}`)?.value || '';
+    
+    if (firstName || lastName) {
+      people.push({
+        firstName,
+        lastName,
+        middleName,
+        maidenName,
+        memorialName: memorialName || `${firstName} ${lastName}`.trim()
+      });
+    }
+  });
+  
+  // Update hidden fields for API compatibility
+  if (people.length > 0) {
+    const p1 = people[0];
+    byId('first_name').value = p1.firstName;
+    byId('last_name').value = p1.lastName;
+    byId('middle_name').value = p1.middleName;
+    byId('maiden_name').value = p1.maidenName;
+    byId('deceased_name').value = p1.memorialName;
+  }
+  
+  if (people.length > 1) {
+    const p2 = people[1];
+    byId('second_first_name').value = p2.firstName;
+    byId('second_last_name').value = p2.lastName;
+  }
+  
+  return people;
 }
 
 function collectServiceInfo(){
