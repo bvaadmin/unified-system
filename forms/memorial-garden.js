@@ -391,7 +391,10 @@ function legacyTransform(payload){
     'Contact Phone': payload.contact.phone,
     'Contact Email': payload.contact.email,
     'Contact Address': payload.contact.address,
-  'Deceased Name': payload.persons.primary.deceasedName
+    'Deceased Name': payload.persons.primary.deceasedName,
+    // Add prepayment names for future placements
+    'Prepayment Person 1': payload.prepayment?.p1 || '',
+    'Prepayment Person 2': payload.prepayment?.p2 || ''
   };
 }
 
