@@ -467,22 +467,44 @@ function renderThankYouVariants(){
   if(appType==='future'){
     const pre = collectPrepaymentNames();
     container.innerHTML = `
-      <h2>Memorial Garden Prepayment</h2>
-      <p>Your prepayment has been received. This locks today's rate.</p>
-      <div><strong>Covered Names:</strong><br>${pre.list.map(n=>`• ${escapeHtml(n)}`).join('<br>') || '(no names provided)'}</div>
-      <p>Amount Paid: <strong>$${feeInfo ? feeInfo.amount.toFixed(2):'0.00'}</strong></p>
-      <p>Keep this confirmation for your records. When placement becomes immediate, reference your Submission ID.</p>
+      <h2>Thank You for Your Prepayment</h2>
+      <p>Your Memorial Garden prepayment application has been successfully submitted. This prepayment locks in today's rate for future use.</p>
+      <div style="background:#f8f9fa; padding:15px; border-radius:5px; margin:20px 0;">
+        <p style="margin-bottom:10px;"><strong>Prepayment Details:</strong></p>
+        <p>Names Covered:<br>${pre.list.map(n=>`• ${escapeHtml(n)}`).join('<br>') || '(no names provided)'}</p>
+        <p style="margin-top:10px;">Prepayment Amount: <strong>$${feeInfo ? feeInfo.amount.toFixed(2):'0.00'}</strong></p>
+      </div>
+      <div style="background:#fff3cd; border:1px solid #ffeaa7; padding:15px; border-radius:5px; margin:20px 0;">
+        <p style="margin:0;"><strong>Important:</strong> Please keep this confirmation for your records. You will need to reference your Submission ID when the time comes for placement.</p>
+      </div>
+      <p><strong>Next Steps:</strong></p>
+      <ul style="line-height:1.8;">
+        <li>Mail your check to: Bay View Association, P.O. Box 583, Petoskey, MI 49770</li>
+        <li>Include "Memorial Garden" in the memo line</li>
+        <li>Reference Submission ID in your payment</li>
+      </ul>
     `;
   } else {
     const service = collectServiceInfo();
     container.innerHTML = `
-      <h2>Memorial Garden Placement Submitted</h2>
-      <p>We'll coordinate next steps promptly.</p>
-      <ul>
-        <li>Requested Service Date: ${service.requestedDate || 'TBD'}</li>
-        <li>Requested Time: ${service.requestedTime || 'TBD'}</li>
+      <h2>Thank You for Your Application</h2>
+      <p>Your Memorial Garden placement application has been successfully submitted. The Bay View Association office will contact you within 2-3 business days to coordinate the placement ceremony.</p>
+      <div style="background:#f8f9fa; padding:15px; border-radius:5px; margin:20px 0;">
+        <p style="margin-bottom:10px;"><strong>Service Details:</strong></p>
+        <p>Requested Service Date: ${service.requestedDate || 'To be determined'}</p>
+        <p>Requested Time: ${service.requestedTime || 'To be determined'}</p>
+        <p style="margin-top:10px;">Application Fee: <strong>$${feeInfo ? feeInfo.amount.toFixed(2):'0.00'}</strong></p>
+      </div>
+      <p><strong>Next Steps:</strong></p>
+      <ul style="line-height:1.8;">
+        <li>The office will contact you to confirm your service date and time</li>
+        <li>Mail your check to: Bay View Association, P.O. Box 583, Petoskey, MI 49770</li>
+        <li>Include "Memorial Garden" in the memo line</li>
+        <li>Reference your Submission ID with your payment</li>
       </ul>
-      <p>Fee: <strong>$${feeInfo ? feeInfo.amount.toFixed(2):'0.00'}</strong></p>
+      <div style="background:#e8f0ff; border:1px solid #b8d4f0; padding:15px; border-radius:5px; margin:20px 0;">
+        <p style="margin:0;">If you have any questions, please contact the Bay View Business Office at (231) 347-6225 or email admin@bayviewassociation.org</p>
+      </div>
     `;
   }
 }
