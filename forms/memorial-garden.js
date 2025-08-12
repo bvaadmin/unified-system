@@ -12,38 +12,11 @@ const fees = Object.freeze({
   double_nonMember: 3000.0
 });
 
-// Declarative scenario configuration
-// Each applicationType + placementType defines which logical sections display and which logical field groups are required
-const scenarioConfig = Object.freeze({
-  future: {
-    baseSections: ['purpose','membership','placementSelector','prepaymentNames','contact','policies','fee'],
-    placement: {
-      self: { persons:1, double:false, applicantIsSubject:true },
-      self_and_other: { persons:2, double:true, applicantIsSubject:true },
-      two_others: { persons:2, double:true, applicantIsSubject:false }
-    },
-    showPersonalHistory:false,
-    showService:false
-  },
-  immediate: {
-    baseSections: ['purpose','membership','placementSelector','personalHistory','contact','service','policies','fee'],
-    placement: {
-      one_person: { persons:1, double:false },
-      two_people: { persons:2, double:true }
-    },
-    showPersonalHistory:true,
-    showService:true
-  }
-});
+// Removed scenarioConfig - no longer needed after placement type removal
 
-// Field groups -> concrete element IDs & required fields.
-// This translation layer keeps layout and logic loosely coupled.
+// Field groups for validation
 const fieldGroups = Object.freeze({
-  personalHistory: [ 'first_name','last_name' ],
   contact: [ 'contact_name','contact_phone','contact_street','contact_city','contact_state','contact_zip' ],
-  deceasedSingle: [ 'deceased_name' ],
-  secondPerson: [ 'second_first_name','second_last_name' ],
-  prepaymentNames: [], // Now handled dynamically
   service: [ 'requested_service_date','requested_service_time' ]
 });
 
@@ -92,14 +65,16 @@ function computeFee(){
     return { amount, note: feeNoteText(isDouble, isMember) };
   }
   
-  // For future placement, use the selected placement type
-  const placementMeta = resolvePlacementMeta();
-  if(!placementMeta) {
-    return null;
+  // For future placement, count the prepayment names
+  if (currentState.applicationType === 'future') {
+    const prepaymentNames = collectPrepaymentNames();
+    const isDouble = prepaymentNames.list.length === 2;
+    const key = `${isDouble? 'double':'single'}_${isMember? 'member':'nonMember'}`;
+    const amount = fees[key];
+    return { amount, note: feeNoteText(isDouble, isMember) };
   }
-  const key = `${placementMeta.double? 'double':'single'}_${isMember? 'member':'nonMember'}`;
-  const amount = fees[key];
-  return { amount, note: feeNoteText(placementMeta.double, isMember) };
+  
+  return null;
 }
 
 function feeNoteText(isDouble, isMember){
@@ -116,11 +91,7 @@ function updateFeeDisplay(){
   
   if(!feeInfo){ 
     // Show a message about what's needed to calculate fee
-    if (currentState.isMember && currentState.applicationType && !currentState.placementType) {
-      feeDisplay.classList.remove('hidden');
-      byId('feeAmount').textContent = '';
-      byId('feeNote').textContent = 'Please select a placement type to see your fee';
-    } else if (currentState.applicationType && !currentState.isMember) {
+    if (currentState.applicationType && !currentState.isMember) {
       feeDisplay.classList.remove('hidden');
       byId('feeAmount').textContent = '';
       byId('feeNote').textContent = 'Please select membership status to see your fee';
@@ -145,33 +116,16 @@ function attachCoreListeners(){
     currentState.isMember = e.target.value;
     updateUIFromState();
   }));
-  qsa('input[name="placementType"]').forEach(r => r.addEventListener('change', e => {
-    currentState.placementType = e.target.value;
-    updateUIFromState();
-  }));
+  // Removed placementType listeners - no longer needed
   qsa('input[name="applicationType"]').forEach(r => r.addEventListener('change', e => {
     currentState.applicationType = e.target.value;
-    // Reset placement type when switching application types
-    currentState.placementType = null;
     updateUIFromState();
   }));
   const form = byId('memorialGardenForm');
   form.addEventListener('submit', handleSubmit);
 }
 
-function resolvePlacementMeta(){
-  const type = currentState.applicationType;
-  const placement = currentState.placementType;
-  if(!type || !placement) {
-    return null;
-  }
-  const scenario = scenarioConfig[type];
-  if(!scenario) {
-    return null;
-  }
-  const result = scenario.placement[placement];
-  return result || null;
-}
+// Removed resolvePlacementMeta - no longer needed
 
 function updateUIFromState(){
   // Helper function to toggle visibility using class
@@ -202,18 +156,7 @@ function updateUIFromState(){
   setVisible('inPersonOption', currentState.isMember === 'Yes');
 
   // Sections
-  const placementMeta = resolvePlacementMeta();
   const appType = currentState.applicationType;
-  
-  // Show placement type section only for future applications
-  setVisible('placementTypeSection', appType === 'future');
-  
-  // Clear placement type when switching application types
-  if (appType === 'immediate') {
-    // Clear any future placement selections
-    qsa('input[name="placementType"]').forEach(r => r.checked = false);
-    // For immediate, we'll auto-detect based on number of people added
-  }
   
   // Show appropriate names section based on application type
   setVisible('prepaymentInfoSection', appType === 'future');
@@ -222,27 +165,19 @@ function updateUIFromState(){
   // Service planning for immediate placement
   setVisible('servicePlanningSection', appType === 'immediate');
   
-  // Old sections - hide them as we're using dynamic lists now
-  setVisible('personalHistorySection', false);
-  setVisible('secondPersonSection', false);
-  setVisible('deceasedNameGroup', false);
+  // Hide deprecated placement type section
   
-  updateRequiredFields(placementMeta, appType);
+  updateRequiredFields(appType);
   updateFeeDisplay();
-  syncPrepaymentNameFields();
 }
 
-function updateRequiredFields(placementMeta, appType){
+function updateRequiredFields(appType){
   // Clear all required first (only those we manage)
   Object.values(fieldGroups).flat().forEach(id => { const el = byId(id); if(el){ el.removeAttribute('aria-required'); el.required = false; }});
   // Contact always required
   fieldGroups.contact.forEach(id => markRequired(id));
   if(appType === 'immediate'){
-    fieldGroups.personalHistory.forEach(id=> markRequired(id));
-    fieldGroups.deceasedSingle.forEach(id=> markRequired(id));
-    if(placementMeta && placementMeta.persons === 2){
-      fieldGroups.secondPerson.forEach(id=> markRequired(id));
-    }
+    // Required fields are handled dynamically in the immediate placement list
     fieldGroups.service.forEach(id=> markRequired(id));
   } else if(appType === 'future') {
     // Prepayment names are now handled dynamically
@@ -364,13 +299,16 @@ function buildStructuredPayload(submissionId, memberValue){
       };
     }
   } else {
-    // For future/prepayment, get the selected placement type
-    placementType = qs('input[name="placementType"]:checked')?.value || '';
+    // For future/prepayment, generate placement type based on number of names
+    const prepaymentNames = collectPrepaymentNames();
+    if (prepaymentNames.list.length === 1) {
+      placementType = 'single';
+    } else if (prepaymentNames.list.length === 2) {
+      placementType = 'double';
+    }
   }
   
-  // Update current state for fee calculation
-  currentState.placementType = placementType;
-  const placementMeta = resolvePlacementMeta();
+  // Fee calculation now based on name count
   const feeInfo = computeFee();
   
   return {
@@ -402,14 +340,14 @@ function buildStructuredPayload(submissionId, memberValue){
 }
 
 function legacyTransform(payload){
-  // Flatten to previous key schema to avoid backend disruption
-  return {
+  // Transform to API expected format
+  const result = {
     'Submission ID': payload.meta.submissionId,
     'Submission Date': payload.meta.submittedAt,
     'date:Submission Date:start': payload.meta.submittedAt.split('T')[0],
     'Status': payload.meta.status,
     'Application Type': payload.meta.applicationType,
-    'Placement Type': payload.meta.placementType,
+    'Placement Type': payload.meta.placementType, // Keep for backward compatibility
     'Bay View Member': payload.membership.raw,
     'Member Name': payload.membership.memberName,
     'Member Relationship': payload.membership.relationship,
@@ -418,12 +356,33 @@ function legacyTransform(payload){
     'Contact Name': payload.contact.name,
     'Contact Phone': payload.contact.phone,
     'Contact Email': payload.contact.email,
-    'Contact Address': payload.contact.address,
-    'Deceased Name': payload.persons.primary.deceasedName,
-    // Add prepayment names for future placements
-    'Prepayment Person 1': payload.prepayment?.p1 || '',
-    'Prepayment Person 2': payload.prepayment?.p2 || ''
+    'Contact Address': payload.contact.address
   };
+  
+  // Add person-specific fields based on application type
+  if (payload.meta.applicationType === 'immediate') {
+    result['Deceased Name'] = payload.persons.primary.deceasedName || '';
+    result['First Name'] = payload.persons.primary.firstName || '';
+    result['Last Name'] = payload.persons.primary.lastName || '';
+    result['Middle Name'] = payload.persons.primary.middleName || '';
+    result['Maiden Name'] = payload.persons.primary.maidenName || '';
+    if (payload.persons.secondary) {
+      result['Second First Name'] = payload.persons.secondary.firstName || '';
+      result['Second Last Name'] = payload.persons.secondary.lastName || '';
+    }
+  } else if (payload.meta.applicationType === 'future') {
+    result['Prepayment Person 1'] = payload.prepayment?.p1 || '';
+    result['Prepayment Person 2'] = payload.prepayment?.p2 || '';
+  }
+  
+  // Add service details for immediate placement
+  if (payload.service) {
+    result['Requested Service Date'] = payload.service.requestedDate || '';
+    result['Requested Service Time'] = payload.service.requestedTime || '';
+    result['Celebrant Preference'] = payload.service.celebrantPreference || '';
+  }
+  
+  return result;
 }
 
 function validateForm(){
@@ -721,12 +680,6 @@ function collectPrepaymentNames(){
     }
   });
   
-  // Update hidden fields for API compatibility
-  const p1Input = byId('prepayment_person_1');
-  const p2Input = byId('prepayment_person_2');
-  if (p1Input) p1Input.value = names[0] || '';
-  if (p2Input) p2Input.value = names[1] || '';
-  
   return { 
     list: names, 
     rawBulk: names.join(', '), 
@@ -755,22 +708,6 @@ function collectImmediatePlacementData() {
       });
     }
   });
-  
-  // Update hidden fields for API compatibility
-  if (people.length > 0) {
-    const p1 = people[0];
-    byId('first_name').value = p1.firstName;
-    byId('last_name').value = p1.lastName;
-    byId('middle_name').value = p1.middleName;
-    byId('maiden_name').value = p1.maidenName;
-    byId('deceased_name').value = p1.memorialName;
-  }
-  
-  if (people.length > 1) {
-    const p2 = people[1];
-    byId('second_first_name').value = p2.firstName;
-    byId('second_last_name').value = p2.lastName;
-  }
   
   return people;
 }
@@ -833,11 +770,7 @@ function renderThankYouVariants(){
   }
 }
 
-function syncPrepaymentNameFields(){
-  const appType = qs('input[name="applicationType"]:checked')?.value;
-  if(appType!=='future') return;
-  // Placeholder for potential sync logic.
-}
+// Removed syncPrepaymentNameFields - no longer needed
 
 function escapeHtml(str){
   return (str||'').replace(/[&<>"']/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;' }[c]));
