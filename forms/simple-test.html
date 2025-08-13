@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Form Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .result { margin: 20px 0; padding: 10px; border: 1px solid #ccc; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+        button { padding: 10px 20px; font-size: 16px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Memorial Garden Form - Simple Test</h1>
+    
+    <h2>Step 1: Test Basic JavaScript</h2>
+    <button onclick="testJS()">Test JavaScript</button>
+    <div id="jsResult"></div>
+    
+    <h2>Step 2: Test Fetch API</h2>
+    <button onclick="testFetch()">Test Fetch</button>
+    <div id="fetchResult"></div>
+    
+    <h2>Step 3: Test Form Submission</h2>
+    <button onclick="testFormSubmit()">Test Submit</button>
+    <div id="submitResult"></div>
+    
+    <h2>Console Output:</h2>
+    <div id="console" style="background: #f0f0f0; padding: 10px; font-family: monospace; white-space: pre-wrap;"></div>
+
+    <script>
+    // Override console.log to display in page
+    const consoleDiv = document.getElementById('console');
+    const originalLog = console.log;
+    console.log = function(...args) {
+        originalLog.apply(console, args);
+        consoleDiv.textContent += args.join(' ') + '\n';
+    };
+    
+    function testJS() {
+        console.log('Testing JavaScript...');
+        const result = document.getElementById('jsResult');
+        try {
+            const test = { a: 1, b: 2 };
+            const json = JSON.stringify(test);
+            result.className = 'result success';
+            result.innerHTML = '✅ JavaScript is working. JSON test: ' + json;
+            console.log('JavaScript test passed');
+        } catch (e) {
+            result.className = 'result error';
+            result.innerHTML = '❌ JavaScript error: ' + e.message;
+            console.log('JavaScript test failed:', e.message);
+        }
+    }
+    
+    function testFetch() {
+        console.log('Testing Fetch API...');
+        const result = document.getElementById('fetchResult');
+        result.className = 'result';
+        result.innerHTML = 'Testing... please wait...';
+        
+        fetch('https://unified-system.vercel.app/api/health')
+            .then(response => {
+                console.log('Fetch response status:', response.status);
+                return response.json();
+            })
+            .then(data => {
+                result.className = 'result success';
+                result.innerHTML = '✅ Fetch API works. Health check: ' + data.status;
+                console.log('Fetch test passed. API status:', data.status);
+            })
+            .catch(error => {
+                result.className = 'result error';
+                result.innerHTML = '❌ Fetch error: ' + error.message;
+                console.log('Fetch test failed:', error.message);
+            });
+    }
+    
+    function testFormSubmit() {
+        console.log('Testing form submission...');
+        const result = document.getElementById('submitResult');
+        result.className = 'result';
+        result.innerHTML = 'Submitting... please wait...';
+        
+        const testData = {
+            properties: {
+                'Submission ID': 'TEST-' + Date.now(),
+                'Submission Date': new Date().toISOString(),
+                'Status': 'Pending',
+                'Application Type': 'immediate',
+                'Bay View Member': 'Yes',
+                'Contact Name': 'Test User',
+                'Contact Phone': '555-0000',
+                'Contact Email': 'test@test.com',
+                'Contact Address': '123 Test St',
+                'Policy Agreement': '__YES__',
+                'Fee Amount': '400'
+            }
+        };
+        
+        console.log('Sending data:', JSON.stringify(testData).substring(0, 200) + '...');
+        
+        fetch('https://unified-system.vercel.app/api/memorial/submit-garden', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(testData)
+        })
+        .then(response => {
+            console.log('Submit response status:', response.status);
+            if (!response.ok) {
+                throw new Error('HTTP ' + response.status);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Submit response data:', JSON.stringify(data));
+            if (data.success) {
+                result.className = 'result success';
+                result.innerHTML = `✅ Form submission works!<br>
+                    Submission ID: ${data.submissionId}<br>
+                    Notion saved: ${data.notionId ? 'Yes' : 'No'}<br>
+                    Database saved: ${data.pgId ? 'Yes' : 'No'}`;
+            } else {
+                result.className = 'result error';
+                result.innerHTML = '❌ Submission failed: ' + (data.error || data.message);
+            }
+        })
+        .catch(error => {
+            result.className = 'result error';
+            result.innerHTML = '❌ Submit error: ' + error.message;
+            console.log('Submit test failed:', error);
+        });
+    }
+    
+    // Auto-run basic test
+    window.onload = function() {
+        console.log('Page loaded. Click buttons to test each component.');
+    };
+    </script>
+</body>
+</html>

@@ -28,9 +28,14 @@ function qsa(sel){ return Array.from(document.querySelectorAll(sel)); }
 function byId(id){ return document.getElementById(id); }
 
 function init(){
+  console.log('Memorial Garden JS: Initializing...');
   // Defensive: only run if form present
   const form = byId('memorialGardenForm');
-  if(!form) return;
+  if(!form) {
+    console.error('Memorial Garden JS: Form not found!');
+    return;
+  }
+  console.log('Memorial Garden JS: Form found, attaching listeners...');
 
   // Initial fee note
   const feeNote = byId('feeNote');
@@ -46,6 +51,7 @@ function init(){
   initPrepaymentNamesList();
   initImmediatePlacementList();
   updateUIFromState();
+  console.log('Memorial Garden JS: Initialization complete');
 }
 
 document.addEventListener('DOMContentLoaded', init);
@@ -208,6 +214,7 @@ function injectAriaLiveRegions(){
 function announce(msg){ const region = byId('ariaLive'); if(region){ region.textContent = msg; }}
 
 function handleSubmit(e){
+  console.log('Memorial Garden JS: Submit button clicked');
   e.preventDefault();
   const submitButton = byId('submitButton');
   const loading = byId('loading');
@@ -216,9 +223,11 @@ function handleSubmit(e){
 
   const membershipSelected = qs('input[name="is_member"]:checked');
   if(!membershipSelected){
+    console.log('Memorial Garden JS: No membership status selected');
     alert('Please select your Bay View membership status to calculate the correct fee.');
     return;
   }
+  console.log('Memorial Garden JS: Membership selected:', membershipSelected.value);
 
   submitButton.disabled = true;
   submitButton.textContent = 'Submitting...';
