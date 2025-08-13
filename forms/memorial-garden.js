@@ -451,6 +451,16 @@ function legacyTransform(payload){
     result['Last Name'] = payload.persons.primary.lastName || '';
     result['Middle Name'] = payload.persons.primary.middleName || '';
     result['Maiden Name'] = payload.persons.primary.maidenName || '';
+    
+    // Add Personal History JSON for immediate placements
+    result['Personal History JSON'] = JSON.stringify({
+      firstName: payload.persons.primary.firstName || '',
+      lastName: payload.persons.primary.lastName || '',
+      middleName: payload.persons.primary.middleName || '',
+      maidenName: payload.persons.primary.maidenName || '',
+      // Add other fields as needed for the database
+    });
+    
     if (payload.persons.secondary) {
       result['Second First Name'] = payload.persons.secondary.firstName || '';
       result['Second Last Name'] = payload.persons.secondary.lastName || '';
@@ -458,6 +468,7 @@ function legacyTransform(payload){
   } else if (payload.meta.applicationType === 'future') {
     result['Prepayment Person 1'] = payload.prepayment?.p1 || '';
     result['Prepayment Person 2'] = payload.prepayment?.p2 || '';
+    // No Personal History JSON for prepayments
   }
   
   // Add service details for immediate placement
