@@ -504,6 +504,21 @@ function legacyTransform(payload){
 function validateForm(){
   console.log('Memorial Garden JS: Starting validation...');
   const issues = [];
+  
+  // Check sponsor fields for non-members
+  const isMember = qs('input[name="is_member"]:checked')?.value === 'Yes';
+  if (!isMember) {
+    const sponsorName = qs('#member_name');
+    const sponsorRelationship = qs('#member_relationship');
+    
+    if (!sponsorName?.value?.trim()) {
+      issues.push('Sponsor member name is required for non-members');
+    }
+    if (!sponsorRelationship?.value?.trim()) {
+      issues.push('Relationship to sponsor is required for non-members');
+    }
+  }
+  
   // Required element validation (only check visible elements)
   qsa('input, textarea, select').forEach(el=>{
     // Skip validation for elements in hidden sections
