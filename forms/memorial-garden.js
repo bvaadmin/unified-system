@@ -182,6 +182,14 @@ function updateUIFromState(){
   // Service planning for immediate placement
   setVisible('servicePlanningSection', appType === 'immediate');
   
+  // Initialize lists when sections become visible for the first time
+  if (appType === 'future' && prepaymentNamesList.length === 0) {
+    addPrepaymentName(); // Add first entry when future is selected
+  }
+  if (appType === 'immediate' && immediatePlacementList.length === 0) {
+    addImmediatePlacementName(); // Add first entry when immediate is selected
+  }
+  
   // Hide deprecated placement type section
   
   updateRequiredFields(appType);
@@ -465,8 +473,15 @@ function legacyTransform(payload){
 function validateForm(){
   console.log('Memorial Garden JS: Starting validation...');
   const issues = [];
-  // Required element validation (native validity first)
+  // Required element validation (only check visible elements)
   qsa('input, textarea, select').forEach(el=>{
+    // Skip validation for elements in hidden sections
+    const parent = el.closest('.hidden');
+    if(parent) {
+      console.log('Memorial Garden JS: Skipping hidden element:', el.id);
+      return;
+    }
+    
     if(el.required && !el.value.trim()){
       issues.push(`${el.name || el.id} is required`);
     }
@@ -520,8 +535,8 @@ function initPrepaymentNamesList() {
   const addBtn = byId('addNameBtn');
   if (addBtn) {
     addBtn.addEventListener('click', addPrepaymentName);
-    // Start with one empty field
-    addPrepaymentName();
+    // Don't add an entry by default - wait for user to select future placement
+    // addPrepaymentName();
   }
 }
 
@@ -613,8 +628,8 @@ function initImmediatePlacementList() {
   const addBtn = byId('addImmediateNameBtn');
   if (addBtn) {
     addBtn.addEventListener('click', addImmediatePlacementName);
-    // Start with one empty entry
-    addImmediatePlacementName();
+    // Don't add an entry by default - wait for user to select immediate placement
+    // addImmediatePlacementName();
   }
 }
 
