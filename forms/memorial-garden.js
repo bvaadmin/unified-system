@@ -898,7 +898,7 @@ function renderThankYouVariants(){
         <li>Reference your Submission ID with your payment</li>
       </ul>
       <div style="background:#e8f0ff; border:1px solid #b8d4f0; padding:15px; border-radius:5px; margin:20px 0;">
-        <p style="margin:0;">If you have any questions, please contact the Bay View Business Office at (231) 347-6225 or email admin@bayviewassociation.org</p>
+        <p style="margin:0;">If you have any questions, please contact the Bay View Business Office at (231) 347-6225 or email worshipservices@bayviewassociation.org</p>
       </div>
     `;
   }
