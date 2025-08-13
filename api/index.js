@@ -24,6 +24,7 @@ import usePrepayment from '../lib/api/memorial/use-prepayment.js';
 import health from '../lib/api/health.js';
 import checkDbUrl from './diagnostic/check-db-url.js';
 import envCheck from '../lib/api/diagnostic/env-check.js';
+import testPg from '../lib/api/diagnostic/test-pg.js';
 
 // Route mapping - ALL API endpoints must be defined here
 // Format: 'METHOD /path': handlerFunction
@@ -49,6 +50,7 @@ const routes = {
   'OPTIONS /api/health': health,
   'GET /api/diagnostic/check-db-url': checkDbUrl,
   'GET /api/diagnostic/env-check': envCheck,
+  'GET /api/diagnostic/test-pg': testPg,
   
   // Temporary deployment test
   'GET /api/deployment-test': (req, res) => {
