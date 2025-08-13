@@ -11,7 +11,7 @@ async function testSubmission() {
       'Submission Date': new Date().toISOString(),
       'date:Submission Date:start': new Date().toISOString().split('T')[0],
       'Status': 'Pending',
-      'Application Type': 'future',
+      'Application Type': 'immediate',
       'Placement Type': 'single',
       'Bay View Member': 'Yes',
       'Member Name': 'Test Member',
@@ -22,8 +22,13 @@ async function testSubmission() {
       'Contact Phone': '555-0001',
       'Contact Email': 'apitest@example.com',
       'Contact Address': '123 Test St, Test City, MI 49770',
-      'Prepayment Person 1': 'John Test',
-      'Prepayment Person 2': ''
+      'Deceased Name': 'John Doe',
+      'First Name': 'John',
+      'Last Name': 'Doe',
+      'Personal History JSON': JSON.stringify({
+        firstName: 'John',
+        lastName: 'Doe'
+      })
     }
   };
 
