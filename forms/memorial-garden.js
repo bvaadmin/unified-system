@@ -64,8 +64,9 @@ function computeFee(){
   
   // For immediate placement, determine fee based on number of people
   if (currentState.applicationType === 'immediate') {
-    const immediatePeople = collectImmediatePlacementData();
-    const isDouble = immediatePeople.length === 2;
+    // Count the number of person forms added (not just ones with data)
+    const personCount = immediatePlacementList.length;
+    const isDouble = personCount === 2;
     const key = `${isDouble? 'double':'single'}_${isMember? 'member':'nonMember'}`;
     const amount = fees[key];
     return { amount, note: feeNoteText(isDouble, isMember) };
@@ -73,8 +74,9 @@ function computeFee(){
   
   // For future placement, count the prepayment names
   if (currentState.applicationType === 'future') {
-    const prepaymentNames = collectPrepaymentNames();
-    const isDouble = prepaymentNames.list.length === 2;
+    // Count the number of name fields added (not just ones with data)
+    const nameCount = prepaymentNamesList.length;
+    const isDouble = nameCount === 2;
     const key = `${isDouble? 'double':'single'}_${isMember? 'member':'nonMember'}`;
     const amount = fees[key];
     return { amount, note: feeNoteText(isDouble, isMember) };
