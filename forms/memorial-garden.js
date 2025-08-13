@@ -462,8 +462,23 @@ function legacyTransform(payload){
     });
     
     if (payload.persons.secondary) {
+      // Map to 'Other' fields for first additional person
+      result['Other First Name'] = payload.persons.secondary.firstName || '';
+      result['Other Last Name'] = payload.persons.secondary.lastName || '';
+      result['Other Middle Name'] = payload.persons.secondary.middleName || '';
+      result['Other Maiden Name'] = payload.persons.secondary.maidenName || '';
+      
+      // Also keep Second fields for compatibility
       result['Second First Name'] = payload.persons.secondary.firstName || '';
       result['Second Last Name'] = payload.persons.secondary.lastName || '';
+      
+      // Add Other Person JSON for the API
+      result['Other Person JSON'] = JSON.stringify({
+        firstName: payload.persons.secondary.firstName || '',
+        lastName: payload.persons.secondary.lastName || '',
+        middleName: payload.persons.secondary.middleName || '',
+        maidenName: payload.persons.secondary.maidenName || ''
+      });
     }
   } else if (payload.meta.applicationType === 'future') {
     result['Prepayment Person 1'] = payload.prepayment?.p1 || '';
