@@ -69,6 +69,7 @@ function computeFee(){
     const isDouble = personCount === 2;
     const key = `${isDouble? 'double':'single'}_${isMember? 'member':'nonMember'}`;
     const amount = fees[key];
+    console.log('Memorial Garden JS: computeFee immediate - personCount:', personCount, 'isDouble:', isDouble, 'key:', key, 'amount:', amount);
     return { amount, note: feeNoteText(isDouble, isMember) };
   }
   
@@ -92,8 +93,10 @@ function feeNoteText(isDouble, isMember){
 
 function updateFeeDisplay(){
   const feeInfo = computeFee();
+  console.log('Memorial Garden JS: updateFeeDisplay called, feeInfo:', feeInfo);
   const feeDisplay = byId('feeDisplay');
   if(!feeDisplay) {
+    console.log('Memorial Garden JS: No feeDisplay element found');
     return;
   }
   
@@ -602,6 +605,9 @@ function addPrepaymentName() {
   
   // Update add button visibility
   updateAddNameButton();
+  
+  // Update fee display when names are added
+  updateFeeDisplay();
 }
 
 function removePrepaymentName(index) {
@@ -637,6 +643,9 @@ function removePrepaymentName(index) {
   }
   
   updateAddNameButton();
+  
+  // Update fee display when names are removed
+  updateFeeDisplay();
 }
 
 function updateAddNameButton() {
@@ -662,6 +671,7 @@ function initImmediatePlacementList() {
 }
 
 function addImmediatePlacementName() {
+  console.log('Memorial Garden JS: addImmediatePlacementName called, current list length:', immediatePlacementList.length);
   // Maximum 2 people (database limitation)
   if (immediatePlacementList.length >= 2) {
     alert('Maximum of 2 individuals allowed for placement.');
@@ -738,9 +748,10 @@ function addImmediatePlacementName() {
   updateAddImmediateButton();
   
   // Update fee display when people are added
-  if (currentState.applicationType === 'immediate') {
-    updateFeeDisplay();
-  }
+  console.log('Memorial Garden JS: After adding person, list length:', immediatePlacementList.length);
+  console.log('Memorial Garden JS: Current application type:', currentState.applicationType);
+  // Always update fee display when adding/removing people for immediate placement
+  updateFeeDisplay();
 }
 
 function removeImmediatePlacementName(index) {
@@ -774,9 +785,7 @@ function removeImmediatePlacementName(index) {
   updateAddImmediateButton();
   
   // Update fee display when people are removed
-  if (currentState.applicationType === 'immediate') {
-    updateFeeDisplay();
-  }
+  updateFeeDisplay();
 }
 
 function updateAddImmediateButton() {
@@ -912,4 +921,17 @@ document.addEventListener('DOMContentLoaded', ()=>{
 });
 
 // Expose for future modules (optional)
-window.MemorialGardenForm = { updateFeeDisplay };
+// Debug functions for testing
+window.debugFee = function() {
+  console.log('=== Fee Debug Info ===');
+  console.log('Current state:', currentState);
+  console.log('immediatePlacementList length:', immediatePlacementList.length);
+  console.log('immediatePlacementList contents:', immediatePlacementList);
+  console.log('prepaymentNamesList length:', prepaymentNamesList.length);
+  console.log('prepaymentNamesList contents:', prepaymentNamesList);
+  const feeInfo = computeFee();
+  console.log('Computed fee:', feeInfo);
+  console.log('===================');
+};
+
+window.MemorialGardenForm = { updateFeeDisplay, debugFee: window.debugFee };

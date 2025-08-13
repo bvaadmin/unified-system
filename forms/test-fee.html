@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Fee Calculation Test</title>
+</head>
+<body>
+    <h1>Fee Calculation Test</h1>
+    <button onclick="testFee()">Test Fee Calculation</button>
+    <div id="output"></div>
+    
+    <script>
+        // Simulate the fee calculation logic
+        const fees = {
+            single_member: 400.0,
+            single_nonMember: 1500.0,
+            double_member: 800.0,
+            double_nonMember: 3000.0
+        };
+        
+        let immediatePlacementList = [];
+        
+        function computeFee(isMember, personCount) {
+            const isDouble = personCount === 2;
+            const key = `${isDouble ? 'double' : 'single'}_${isMember ? 'member' : 'nonMember'}`;
+            const amount = fees[key];
+            return { key, amount, isDouble, personCount };
+        }
+        
+        function testFee() {
+            const output = document.getElementById('output');
+            let html = '<h2>Test Results:</h2>';
+            
+            // Test all combinations
+            const tests = [
+                { isMember: true, personCount: 1, expected: 400 },
+                { isMember: true, personCount: 2, expected: 800 },
+                { isMember: false, personCount: 1, expected: 1500 },
+                { isMember: false, personCount: 2, expected: 3000 }
+            ];
+            
+            tests.forEach(test => {
+                const result = computeFee(test.isMember, test.personCount);
+                const pass = result.amount === test.expected;
+                html += `<p style="color: ${pass ? 'green' : 'red'}">
+                    Member: ${test.isMember}, People: ${test.personCount}<br>
+                    Key: ${result.key}, Amount: $${result.amount}, Expected: $${test.expected}<br>
+                    ${pass ? '✓ PASS' : '✗ FAIL'}
+                </p>`;
+            });
+            
+            output.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
