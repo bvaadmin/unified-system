@@ -118,17 +118,28 @@ function updateFeeDisplay(){
 }
 
 function attachCoreListeners(){
-  qsa('input[name="is_member"]').forEach(r => r.addEventListener('change', e => {
+  console.log('Memorial Garden JS: Attaching core listeners...');
+  const memberRadios = qsa('input[name="is_member"]');
+  console.log('Memorial Garden JS: Found', memberRadios.length, 'membership radio buttons');
+  memberRadios.forEach(r => r.addEventListener('change', e => {
     currentState.isMember = e.target.value;
     updateUIFromState();
   }));
-  // Removed placementType listeners - no longer needed
-  qsa('input[name="applicationType"]').forEach(r => r.addEventListener('change', e => {
+  
+  const appTypeRadios = qsa('input[name="applicationType"]');
+  console.log('Memorial Garden JS: Found', appTypeRadios.length, 'application type radio buttons');
+  appTypeRadios.forEach(r => r.addEventListener('change', e => {
     currentState.applicationType = e.target.value;
     updateUIFromState();
   }));
+  
   const form = byId('memorialGardenForm');
-  form.addEventListener('submit', handleSubmit);
+  if (form) {
+    console.log('Memorial Garden JS: Adding submit handler to form');
+    form.addEventListener('submit', handleSubmit);
+  } else {
+    console.error('Memorial Garden JS: Form not found in attachCoreListeners!');
+  }
 }
 
 // Removed resolvePlacementMeta - no longer needed
@@ -216,10 +227,18 @@ function announce(msg){ const region = byId('ariaLive'); if(region){ region.text
 function handleSubmit(e){
   console.log('Memorial Garden JS: Submit button clicked');
   e.preventDefault();
+  console.log('Memorial Garden JS: Getting DOM elements...');
   const submitButton = byId('submitButton');
   const loading = byId('loading');
   const errorMessage = byId('errorMessage');
   const errorText = byId('errorText');
+
+  console.log('Memorial Garden JS: DOM elements found:', {
+    submitButton: !!submitButton,
+    loading: !!loading,
+    errorMessage: !!errorMessage,
+    errorText: !!errorText
+  });
 
   const membershipSelected = qs('input[name="is_member"]:checked');
   if(!membershipSelected){
@@ -229,42 +248,89 @@ function handleSubmit(e){
   }
   console.log('Memorial Garden JS: Membership selected:', membershipSelected.value);
 
-  submitButton.disabled = true;
-  submitButton.textContent = 'Submitting...';
-  loading.classList.remove('hidden');
-  errorMessage.classList.add('hidden');
+  console.log('Memorial Garden JS: Disabling submit button...');
+  if (submitButton) {
+    submitButton.disabled = true;
+    submitButton.textContent = 'Submitting...';
+  }
+  if (loading) loading.classList.remove('hidden');
+  if (errorMessage) errorMessage.classList.add('hidden');
 
   const submissionId = 'MG-' + Date.now();
-  const validationIssues = validateForm();
+  console.log('Memorial Garden JS: Calling validateForm...');
+  let validationIssues = [];
+  try {
+    validationIssues = validateForm();
+    console.log('Memorial Garden JS: Validation issues:', validationIssues);
+  } catch (error) {
+    console.error('Memorial Garden JS: Error in validateForm:', error);
+    if (errorMessage) errorMessage.classList.remove('hidden');
+    if (errorText) errorText.textContent = 'Error during validation: ' + error.message;
+    if (submitButton) {
+      submitButton.disabled=false;
+      submitButton.textContent='Submit Memorial Garden Application';
+    }
+    return;
+  }
+  
   if(validationIssues.length){
-    errorMessage.classList.remove('hidden');
-    errorText.textContent = 'Please fix: ' + validationIssues.join('; ');
-    submitButton.disabled=false;
-    submitButton.textContent='Submit Memorial Garden Application';
+    console.log('Memorial Garden JS: Form validation failed');
+    if (errorMessage) errorMessage.classList.remove('hidden');
+    if (errorText) errorText.textContent = 'Please fix: ' + validationIssues.join('; ');
+    if (submitButton) {
+      submitButton.disabled=false;
+      submitButton.textContent='Submit Memorial Garden Application';
+    }
+    return;
+  }
+  console.log('Memorial Garden JS: Validation passed');
+
+  console.log('Memorial Garden JS: Building payload...');
+  let payload, formData;
+  try {
+    payload = buildStructuredPayload(submissionId, membershipSelected.value);
+    console.log('Memorial Garden JS: Payload built:', payload);
+    formData = legacyTransform(payload); // keep existing downstream expectations
+    console.log('Memorial Garden JS: Legacy transform complete');
+    submittedData = formData;
+  } catch (error) {
+    console.error('Memorial Garden JS: Error building payload:', error);
+    if (errorMessage) errorMessage.classList.remove('hidden');
+    if (errorText) errorText.textContent = 'Error preparing submission: ' + error.message;
+    if (submitButton) {
+      submitButton.disabled=false;
+      submitButton.textContent='Submit Memorial Garden Application';
+    }
+    if (loading) loading.classList.add('hidden');
     return;
   }
 
-  const payload = buildStructuredPayload(submissionId, membershipSelected.value);
-  const formData = legacyTransform(payload); // keep existing downstream expectations
-  submittedData = formData;
-
+  console.log('Memorial Garden JS: Starting fetch to:', API_URL);
   fetch(API_URL, {
     method:'POST',
     headers:{ 'Content-Type':'application/json' },
     body: JSON.stringify({ properties: formData })
   })
-    .then(r=> r.json().then(j=>({ok:r.ok, body:j})))
+    .then(r=> {
+      console.log('Memorial Garden JS: Fetch response received, status:', r.status);
+      return r.json().then(j=>({ok:r.ok, body:j}));
+    })
     .then(({ok, body})=>{
+      console.log('Memorial Garden JS: Response body:', body);
       if(!ok || !body.success) throw new Error(body.error || 'Submission failed');
       loading.classList.add('hidden');
+      console.log('Memorial Garden JS: Success! Showing thank you page');
       showThankYouPage();
     })
     .catch(err=>{
-      loading.classList.add('hidden');
-      errorMessage.classList.remove('hidden');
-      errorText.textContent = err.message || 'An error occurred while submitting your application.';
-      submitButton.disabled=false;
-      submitButton.textContent='Submit Memorial Garden Application';
+      console.error('Memorial Garden JS: Error during submission:', err);
+      if (loading) loading.classList.add('hidden');
+      if (errorMessage) errorMessage.classList.remove('hidden');
+      if (errorText) errorText.textContent = err.message || 'An error occurred while submitting your application.';
+      if (submitButton) {
+        submitButton.disabled=false;
+        submitButton.textContent='Submit Memorial Garden Application';
+      }
     });
 }
 
@@ -274,6 +340,7 @@ function combineAddress(street, city, state, zip){
 
 function buildStructuredPayload(submissionId, memberValue){
   const appType = qs('input[name="applicationType"]:checked')?.value || '';
+  console.log('Memorial Garden JS: Application type:', appType);
   let placementType = '';
   
   // Collect immediate placement data if applicable
@@ -319,6 +386,7 @@ function buildStructuredPayload(submissionId, memberValue){
   
   // Fee calculation now based on name count
   const feeInfo = computeFee();
+  console.log('Memorial Garden JS: Fee info:', feeInfo);
   
   return {
     meta:{
@@ -395,6 +463,7 @@ function legacyTransform(payload){
 }
 
 function validateForm(){
+  console.log('Memorial Garden JS: Starting validation...');
   const issues = [];
   // Required element validation (native validity first)
   qsa('input, textarea, select').forEach(el=>{
