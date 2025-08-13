@@ -862,7 +862,7 @@ function renderThankYouVariants(){
   if(appType==='future'){
     const pre = collectPrepaymentNames();
     container.innerHTML = `
-      <h2>Thank You for Your Prepayment</h2>
+      <h2>Thank You for Your Application</h2>
       <p>Your Memorial Garden prepayment application has been successfully submitted. This prepayment locks in today's rate for future use.</p>
       <div style="background:#f8f9fa; padding:15px; border-radius:5px; margin:20px 0;">
         <p style="margin-bottom:10px;"><strong>Prepayment Details:</strong></p>
