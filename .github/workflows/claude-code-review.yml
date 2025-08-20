@@ -3,12 +3,13 @@ name: Claude Code Review
 on:
   pull_request:
     types: [opened, synchronize]
-    # Optional: Only run on specific file changes
-    # paths:
-    #   - "src/**/*.ts"
-    #   - "src/**/*.tsx"
-    #   - "src/**/*.js"
-    #   - "src/**/*.jsx"
+    # Only run on specific file changes for better performance
+    paths:
+      - "api/**/*.js"
+      - "lib/**/*.js"
+      - "scripts/**/*.js"
+      - "forms/**/*.js"
+      - "forms/**/*.html"
 
 jobs:
   claude-review:
@@ -49,6 +50,14 @@ jobs:
             - Security concerns
             - Test coverage
             
+            Follow Bay View Association coding standards:
+            - Ensure API endpoints include proper CORS handling
+            - Check for database connection security patterns
+            - Verify PostgreSQL SSL connections use proper configuration
+            - Ensure dual-write pattern for legacy/modern system compatibility
+            - Check for proper error handling with detailed logging
+            - Verify authentication requirements for admin endpoints
+            
             Be constructive and helpful in your feedback.
 
           # Optional: Use sticky comments to make Claude reuse the same comment on subsequent pushes to the same PR
@@ -68,8 +77,8 @@ jobs:
           #   'Welcome! Please review this PR from a first-time contributor. Be encouraging and provide detailed explanations for any suggestions.' ||
           #   'Please provide a thorough code review focusing on our coding standards and best practices.' }}
           
-          # Optional: Add specific tools for running tests or linting
-          # allowed_tools: "Bash(npm run test),Bash(npm run lint),Bash(npm run typecheck)"
+          # Add specific tools for running tests and database operations
+          allowed_tools: "Bash(npm run test-connection),Bash(npm run lint),Bash(npm run test-chapel-submission),Bash(npm run test-memorial-submission)"
           
           # Optional: Skip review for certain conditions
           # if: |
