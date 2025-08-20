@@ -1,6 +1,5 @@
 // memorial-garden.js
-// Modular scaffold after extraction from inline script.
-// TODO: Replace imperative DOM toggles with declarative state config.
+// Modular scaffold with declarative state configuration for UI updates.
 
 const API_URL = 'https://unified-system.vercel.app/api/memorial/submit-garden';
 
@@ -12,7 +11,25 @@ const fees = Object.freeze({
   double_nonMember: 3000.0
 });
 
-// Removed scenarioConfig - no longer needed after placement type removal
+// Declarative UI state configuration
+const uiStateConfig = Object.freeze({
+  elements: {
+    memberDetails: { showWhen: (state) => state.isMember === 'Yes' },
+    inPersonOption: { showWhen: (state) => state.isMember === 'Yes' },
+    prepaymentInfoSection: { showWhen: (state) => state.applicationType === 'future' },
+    immediatePlacementSection: { showWhen: (state) => state.applicationType === 'immediate' },
+    servicePlanningSection: { showWhen: (state) => state.applicationType === 'immediate' }
+  },
+  
+  initialization: {
+    future: () => {
+      if (prepaymentNamesList.length === 0) addPrepaymentName();
+    },
+    immediate: () => {
+      if (immediatePlacementList.length === 0) addImmediatePlacementName();
+    }
+  }
+});
 
 // Field groups for validation
 const fieldGroups = Object.freeze({
@@ -150,52 +167,20 @@ function attachCoreListeners(){
 // Removed resolvePlacementMeta - no longer needed
 
 function updateUIFromState(){
-  // Helper function to toggle visibility using class
-  function setVisible(elementId, shouldShow) {
+  // Declarative UI update based on state configuration
+  Object.entries(uiStateConfig.elements).forEach(([elementId, config]) => {
     const element = byId(elementId);
     if (!element) return;
-    if (shouldShow) {
-      element.classList.remove('hidden');
-    } else {
-      element.classList.add('hidden');
-    }
-  }
+    
+    const shouldShow = config.showWhen(currentState);
+    element.classList.toggle('hidden', !shouldShow);
+  });
   
-  // Helper to set visibility for multiple elements by class
-  function setClassVisible(className, shouldShow) {
-    const elements = document.querySelectorAll(`.${className}`);
-    elements.forEach(el => {
-      if (shouldShow) {
-        el.classList.remove('hidden');
-      } else {
-        el.classList.add('hidden');
-      }
-    });
-  }
-
-  // Member details visibility
-  setVisible('memberDetails', currentState.isMember === 'Yes');
-  setVisible('inPersonOption', currentState.isMember === 'Yes');
-
-  // Sections
+  // Handle initialization for application types
   const appType = currentState.applicationType;
-  
-  // Show appropriate names section based on application type
-  setVisible('prepaymentInfoSection', appType === 'future');
-  setVisible('immediatePlacementSection', appType === 'immediate');
-  
-  // Service planning for immediate placement
-  setVisible('servicePlanningSection', appType === 'immediate');
-  
-  // Initialize lists when sections become visible for the first time
-  if (appType === 'future' && prepaymentNamesList.length === 0) {
-    addPrepaymentName(); // Add first entry when future is selected
+  if (appType && uiStateConfig.initialization[appType]) {
+    uiStateConfig.initialization[appType]();
   }
-  if (appType === 'immediate' && immediatePlacementList.length === 0) {
-    addImmediatePlacementName(); // Add first entry when immediate is selected
-  }
-  
-  // Hide deprecated placement type section
   
   updateRequiredFields(appType);
   updateFeeDisplay();
