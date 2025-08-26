@@ -68,3 +68,8 @@ data-processing/*.XLS
 data-processing/*_data.json
 IMPORT_COMPLETE_REPORT.md
 import-log.txt
+
+# WSL/Virtual disk files
+wslarch/
+*.vhdx
+*.vhd

@@ -2,12 +2,21 @@
   "functions": {
     "api/index.js": {
       "maxDuration": 10
+    },
+    "api/**/*.js": {
+      "maxDuration": 10
     }
   },
   "rewrites": [
     {
       "source": "/api/:path*",
       "destination": "/api/index"
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/email/send-batch",
+      "schedule": "*/5 * * * *"
     }
   ]
 }
