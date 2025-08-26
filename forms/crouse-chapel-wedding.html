@@ -1,282 +1,12 @@
 <!DOCTYPE html>
+<!-- Crouse Chapel Wedding Form - Aligned with Memorial Garden Standards -->
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Crouse Chapel Wedding Application - Bay View Association</title>
   <link rel="icon" type="image/png" href="https://www.bayviewassociation.org/wp-content/uploads/2020/12/new-full-logo-300x62.png" />
-  
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-      line-height: 1.6;
-      color: #333;
-      background: #f5f7fa;
-    }
-
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-    }
-
-    #applicationForm {
-      background: white;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      padding: 40px;
-      margin-top: 20px;
-    }
-
-    .header {
-      text-align: center;
-      margin-bottom: 40px;
-      padding-bottom: 20px;
-      border-bottom: 3px solid #8B4513;
-    }
-
-    .header h1 {
-      color: #8B4513;
-      font-size: 2.2em;
-      margin-bottom: 10px;
-      font-family: 'Georgia', 'Times New Roman', serif;
-    }
-
-    .header h2 {
-      color: #666;
-      font-size: 1.3em;
-      font-weight: normal;
-    }
-
-    .section-title {
-      color: #00457c;
-      font-size: 1.3em;
-      margin: 30px 0 15px 0;
-      padding-bottom: 8px;
-      border-bottom: 2px solid #e0e0e0;
-    }
-
-    .form-group {
-      margin-bottom: 20px;
-    }
-
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: 500;
-      color: #555;
-    }
-
-    .required {
-      color: #dc3545;
-      font-weight: bold;
-    }
-
-    input[type="text"],
-    input[type="email"],
-    input[type="tel"],
-    input[type="date"],
-    input[type="time"],
-    input[type="number"],
-    select,
-    textarea {
-      width: 100%;
-      padding: 10px;
-      border: 1px solid #ddd;
-      border-radius: 4px;
-      font-size: 16px;
-      transition: border-color 0.3s;
-    }
-
-    input:focus,
-    select:focus,
-    textarea:focus {
-      outline: none;
-      border-color: #00457c;
-      box-shadow: 0 0 0 3px rgba(0, 69, 124, 0.1);
-    }
-
-    textarea {
-      resize: vertical;
-      min-height: 100px;
-    }
-
-    .radio-group,
-    .checkbox-group {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 5px;
-    }
-
-    .radio-group label,
-    .checkbox-group label {
-      display: flex;
-      align-items: center;
-      font-weight: normal;
-      cursor: pointer;
-    }
-
-    .radio-group input[type="radio"],
-    .checkbox-group input[type="checkbox"] {
-      width: auto;
-      margin-right: 8px;
-    }
-
-    .two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
-
-    @media (max-width: 600px) {
-      .two-col {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .fee-info {
-      background: #fffef0;
-      border-left: 4px solid #8B4513;
-      padding: 20px;
-      margin: 20px 0;
-      border-radius: 4px;
-    }
-
-    .fee-info h4 {
-      color: #8B4513;
-      margin-bottom: 15px;
-    }
-
-    .fee-breakdown {
-      display: flex;
-      justify-content: space-between;
-      margin: 5px 0;
-      padding: 5px 0;
-    }
-
-    .fee-breakdown.total {
-      border-top: 2px solid #8B4513;
-      margin-top: 10px;
-      padding-top: 10px;
-      font-weight: bold;
-    }
-
-    .policy-box {
-      background: #f0f8ff;
-      border: 1px solid #b0d4ff;
-      border-radius: 4px;
-      padding: 20px;
-      margin: 20px 0;
-    }
-
-    .policy-box h4 {
-      color: #00457c;
-      margin-bottom: 10px;
-    }
-
-    .policy-box ul {
-      margin-left: 20px;
-      margin-top: 10px;
-    }
-
-    .policy-box li {
-      margin-bottom: 5px;
-    }
-
-    .btn-primary {
-      background: #00457c;
-      color: white;
-      padding: 12px 40px;
-      border: none;
-      border-radius: 4px;
-      font-size: 18px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-
-    .btn-primary:hover {
-      background: #003557;
-    }
-
-    .btn-primary:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-    }
-
-    .success-message {
-      background: #d4edda;
-      border: 1px solid #c3e6cb;
-      color: #155724;
-      padding: 15px;
-      border-radius: 4px;
-      margin: 20px 0;
-      display: none;
-    }
-
-    .error-message {
-      background: #f8d7da;
-      border: 1px solid #f5c6cb;
-      color: #721c24;
-      padding: 15px;
-      border-radius: 4px;
-      margin: 20px 0;
-      display: none;
-    }
-
-    .loading {
-      display: none;
-      text-align: center;
-      padding: 20px;
-      color: #00457c;
-      font-size: 18px;
-    }
-
-    .info-note {
-      background: #e7f3ff;
-      padding: 10px;
-      border-radius: 4px;
-      margin: 10px 0;
-      font-size: 14px;
-      color: #004085;
-    }
-
-    #musiciansList .musician-entry {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
-
-    #musiciansList .musician-entry input {
-      flex: 1;
-    }
-
-    #musiciansList .musician-entry button {
-      background: #dc3545;
-      color: white;
-      border: none;
-      padding: 5px 15px;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .section-divider {
-      height: 2px;
-      background: #e0e0e0;
-      margin: 30px 0;
-    }
-  </style>
+  <link rel="stylesheet" href="crouse-chapel-wedding.css" />
 </head>
 <body>
   <div style="background-color: #00457c; padding: 20px; text-align: center; width: 100%; box-sizing: border-box; min-height: 100px;">
@@ -293,65 +23,77 @@
         <h2>Application for Wedding Ceremony</h2>
       </div>
 
-      <div id="successMessage" class="success-message">
+      <div id="successMessage" class="success-message hidden">
         <h3>Application Submitted Successfully!</h3>
         <p>Your wedding application has been received. The Director of Worship will review your application and contact you within 2-3 business days.</p>
+        <div style="margin-top: 20px;">
+          <p><strong>Confirmation Number:</strong> <span id="confirmationNumber"></span></p>
+          <p><strong>Submission Date:</strong> <span id="confirmationDate"></span></p>
+        </div>
+        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #d4edda;">
+          <h4>Next Steps:</h4>
+          <ul style="margin-left: 20px; margin-top: 10px;">
+            <li>The Director of Worship will review your application</li>
+            <li>You will be contacted within 2-3 business days</li>
+            <li>Full payment is required to secure your date</li>
+            <li>Clergy must be approved before the service</li>
+          </ul>
+        </div>
       </div>
 
-      <div id="errorMessage" class="error-message">
+      <div id="errorMessage" class="error-message hidden">
         <h3>Submission Error</h3>
         <p id="errorText">An error occurred while submitting your application. Please try again.</p>
       </div>
 
-      <div id="loading" class="loading">Submitting your application...</div>
+      <div id="loading" class="loading hidden">Submitting your application...</div>
 
       <form id="weddingForm" novalidate>
         
         <!-- Ceremony Details -->
         <section aria-labelledby="ceremonyHeading">
           <h3 id="ceremonyHeading" class="section-title">Ceremony Details</h3>
-          
           <div class="two-col">
             <div class="form-group">
-              <label for="weddingDate">Wedding Date <span class="required">*</span></label>
-              <input type="date" id="weddingDate" name="weddingDate" required />
+              <label for="serviceDate">Wedding Date <span class="required">*</span></label>
+              <input type="date" id="serviceDate" name="weddingDate" required autocomplete="off" />
             </div>
             <div class="form-group">
-              <label for="weddingTime">Ceremony Time <span class="required">*</span></label>
-              <input type="time" id="weddingTime" name="weddingTime" required />
+              <label for="serviceTime">Wedding Time <span class="required">*</span></label>
+              <input type="time" id="serviceTime" name="weddingTime" required />
             </div>
           </div>
-
           <div class="two-col">
             <div class="form-group">
               <label for="rehearsalDate">Rehearsal Date</label>
-              <input type="date" id="rehearsalDate" name="rehearsalDate" />
+              <input type="date" id="rehearsalDate" name="rehearsalDate" autocomplete="off" />
             </div>
             <div class="form-group">
               <label for="rehearsalTime">Rehearsal Time</label>
               <input type="time" id="rehearsalTime" name="rehearsalTime" />
             </div>
           </div>
+        </section>
 
+        <!-- Couple Information -->
+        <section aria-labelledby="coupleHeading">
+          <h3 id="coupleHeading" class="section-title">Couple Information</h3>
           <div class="form-group">
-            <label for="coupleNames">Names of Those Being Married <span class="required">*</span></label>
-            <input type="text" id="coupleNames" name="coupleNames" placeholder="Full names of both partners" required />
+            <label for="coupleNames">Names of Couple <span class="required">*</span></label>
+            <input type="text" id="coupleNames" name="coupleNames" placeholder="Full names of both partners" required autocomplete="name" />
           </div>
-
           <div class="two-col">
             <div class="form-group">
-              <label for="guestCount">Number of Guests Expected <span class="required">*</span></label>
+              <label for="guestCount">Expected Number of Guests <span class="required">*</span></label>
               <input type="number" id="guestCount" name="guestCount" min="1" max="80" required />
-              <small style="color: #666;">Chapel capacity: 80 guests</small>
             </div>
             <div class="form-group">
-              <label for="brideArrival">Time Bride Will Arrive</label>
+              <label for="brideArrival">Bride Arrival Time</label>
               <input type="time" id="brideArrival" name="brideArrival" />
             </div>
           </div>
-
           <div class="form-group">
-            <label>Will the bride dress at the Chapel?</label>
+            <label>Will the bride be dressing at the chapel?</label>
             <div class="radio-group">
               <label><input type="radio" name="dressingAtChapel" value="yes"> Yes</label>
               <label><input type="radio" name="dressingAtChapel" value="no"> No</label>
@@ -366,14 +108,14 @@
           <div class="info-note">
             All Chapel services must be sponsored by a Bay View Association member.
           </div>
-
+          
           <div class="form-group">
-            <label for="memberName">Bay View Member Name <span class="required">*</span></label>
-            <input type="text" id="memberName" name="memberName" placeholder="Full name of sponsoring member" required />
+            <label for="memberName">Bay View Member Sponsor <span class="required">*</span></label>
+            <input type="text" id="memberName" name="memberName" placeholder="Full name of sponsoring member" required autocomplete="name" />
           </div>
-
+          
           <div class="form-group">
-            <label for="memberRelationship">Relationship to Those Being Married <span class="required">*</span></label>
+            <label for="memberRelationship">Sponsor's Relationship to Couple <span class="required">*</span></label>
             <input type="text" id="memberRelationship" name="memberRelationship" placeholder="e.g., Parent, Friend, Relative" required />
           </div>
 
@@ -390,48 +132,44 @@
         <section aria-labelledby="clergyHeading">
           <h3 id="clergyHeading" class="section-title">Clergy Information</h3>
           
-          <div class="info-note">
-            All clergy must be approved by the Director of Worship and Religious Life. A list of approved clergy is available from the Wade Administration Office.
-          </div>
-
           <div class="form-group">
-            <label for="clergyName">Name of Officiating Clergy <span class="required">*</span></label>
-            <input type="text" id="clergyName" name="clergyName" required />
+            <label for="clergyName">Clergy Name <span class="required">*</span></label>
+            <input type="text" id="clergyName" name="clergyName" required autocomplete="name" />
           </div>
-
+          
           <div class="two-col">
             <div class="form-group">
               <label for="clergyDenomination">Denomination</label>
               <input type="text" id="clergyDenomination" name="clergyDenomination" />
             </div>
             <div class="form-group">
-              <label for="clergyPhone">Clergy Phone</label>
-              <input type="tel" id="clergyPhone" name="clergyPhone" />
+              <label for="clergyPhone">Phone Number</label>
+              <input type="tel" id="clergyPhone" name="clergyPhone" autocomplete="tel" />
             </div>
           </div>
-
+          
           <div class="form-group">
-            <label for="clergyEmail">Clergy Email</label>
-            <input type="email" id="clergyEmail" name="clergyEmail" />
+            <label for="clergyEmail">Email Address</label>
+            <input type="email" id="clergyEmail" name="clergyEmail" autocomplete="email" />
           </div>
-
+          
           <div class="form-group">
-            <label for="clergyAddress">Clergy Address</label>
+            <label for="clergyAddress">Mailing Address</label>
             <textarea id="clergyAddress" name="clergyAddress" placeholder="Full mailing address"></textarea>
           </div>
         </section>
 
-        <!-- Music Requirements -->
+        <!-- Music -->
         <section aria-labelledby="musicHeading">
-          <h3 id="musicHeading" class="section-title">Music Requirements</h3>
+          <h3 id="musicHeading" class="section-title">Music & Musicians</h3>
           
           <div class="form-group">
             <label>
               <input type="checkbox" id="hasMusic" name="hasMusic"> 
-              There will be music for this ceremony
+              Will you have music during the ceremony?
             </label>
           </div>
-
+          
           <div id="musicDetails" class="hidden">
             <div class="form-group">
               <label>Instruments Needed:</label>
@@ -440,7 +178,7 @@
                 <label><input type="checkbox" name="needsOrgan"> Organ</label>
               </div>
             </div>
-
+            
             <div class="form-group">
               <label>Performance Location:</label>
               <div class="checkbox-group">
@@ -448,14 +186,14 @@
                 <label><input type="checkbox" name="performBalcony"> Balcony</label>
               </div>
             </div>
-
+            
             <div class="form-group">
               <label>
                 <input type="checkbox" id="needsChairs" name="needsChairs"> 
-                Additional chairs needed for musicians
+                Additional chairs needed for musicians?
               </label>
             </div>
-
+            
             <div id="chairDetails" class="hidden">
               <div class="two-col">
                 <div class="form-group">
@@ -468,13 +206,14 @@
                 </div>
               </div>
             </div>
-
+            
             <div class="form-group">
-              <label>Musicians (if known):</label>
-              <div id="musiciansList"></div>
-              <button type="button" id="addMusician" style="background:#6c757d; color:white; padding:8px 16px; border:none; border-radius:4px; cursor:pointer; margin-top:10px;">
-                + Add Musician
-              </button>
+              <h4>Musicians List</h4>
+              <div id="musiciansContainer">
+                <!-- Dynamic musician fields will be added here -->
+              </div>
+              <button type="button" id="addMusician" class="btn-secondary">+ Add Musician</button>
+              <button type="button" id="removeMusician" class="btn-secondary" disabled>- Remove Musician</button>
             </div>
           </div>
         </section>
@@ -482,6 +221,16 @@
         <!-- Equipment & Setup -->
         <section aria-labelledby="equipmentHeading">
           <h3 id="equipmentHeading" class="section-title">Equipment & Setup</h3>
+          
+          <div class="form-group">
+            <label>
+              <input type="checkbox" id="audioSupport" name="audioSupport" checked> 
+              <strong>Professional Audio Support ($25 fee)</strong>
+            </label>
+            <p style="margin-left: 25px; margin-top: 5px; color: #666; font-size: 0.9em;">
+              Includes audio technician for your ceremony (required for all services)
+            </p>
+          </div>
           
           <div class="form-group">
             <label>Audio Equipment:</label>
@@ -496,10 +245,10 @@
             <label>Additional Services:</label>
             <div class="checkbox-group">
               <label><input type="checkbox" name="communion"> Communion (grape juice and bread provided by Altar Guild)</label>
-              <label><input type="checkbox" name="guestBook"> Stand for Guest Book</label>
+              <label><input type="checkbox" name="guestBook"> Guest Book Stand</label>
             </div>
           </div>
-
+          
           <div class="form-group">
             <label>
               <input type="checkbox" id="ropedSeating" name="ropedSeating"> 
@@ -510,36 +259,14 @@
           <div id="ropedSeatingDetails" class="hidden">
             <div class="two-col">
               <div class="form-group">
-                <label for="rowsLeft">Rows to rope off (left side)</label>
-                <input type="number" id="rowsLeft" name="rowsLeft" min="0" max="10" />
+                <label for="rowsLeft">Rows on Left</label>
+                <input type="number" id="rowsLeft" name="rowsLeft" min="1" max="10" />
               </div>
               <div class="form-group">
-                <label for="rowsRight">Rows to rope off (right side)</label>
-                <input type="number" id="rowsRight" name="rowsRight" min="0" max="10" />
+                <label for="rowsRight">Rows on Right</label>
+                <input type="number" id="rowsRight" name="rowsRight" min="1" max="10" />
               </div>
             </div>
-          </div>
-        </section>
-
-        <!-- Fee Information -->
-        <section aria-labelledby="feeHeading">
-          <h3 id="feeHeading" class="section-title">Fee Information</h3>
-          
-          <div class="fee-info">
-            <h4>Wedding Ceremony Fees</h4>
-            <div id="feeBreakdown">
-              <!-- Fees will be calculated based on membership status -->
-            </div>
-            <p style="margin-top: 15px; font-style: italic; color: #666;">
-              The audio support fee covers professional audio technician services for your ceremony.
-            </p>
-            <p style="margin-top: 10px; font-weight: bold; color: #8B4513;">
-              Full payment is required to secure your date.
-            </p>
-          </div>
-
-          <div class="info-note">
-            <strong>Note:</strong> Clergy honorarium ($250 suggested) is paid directly to the officiant.
           </div>
         </section>
 
@@ -548,8 +275,8 @@
           <h3 id="additionalHeading" class="section-title">Additional Information</h3>
           
           <div class="form-group">
-            <label for="whyBayView">Why is it important to have your wedding in Bay View? <span class="required">*</span></label>
-            <textarea id="whyBayView" name="whyBayView" required placeholder="Please share your connection to Bay View and why you've chosen our Chapel for your special day"></textarea>
+            <label for="whyBayView">Why did you choose Bay View for your wedding?</label>
+            <textarea id="whyBayView" name="whyBayView" placeholder="Share your connection to Bay View..."></textarea>
           </div>
 
           <div class="form-group">
@@ -565,18 +292,18 @@
           <div class="two-col">
             <div class="form-group">
               <label for="contactName">Contact Name <span class="required">*</span></label>
-              <input type="text" id="contactName" name="contactName" required />
+              <input type="text" id="contactName" name="contactName" required autocomplete="name" />
             </div>
             <div class="form-group">
               <label for="contactEmail">Email Address <span class="required">*</span></label>
-              <input type="email" id="contactEmail" name="contactEmail" required />
+              <input type="email" id="contactEmail" name="contactEmail" required autocomplete="email" />
             </div>
           </div>
 
           <div class="two-col">
             <div class="form-group">
               <label for="contactPhone">Phone Number <span class="required">*</span></label>
-              <input type="tel" id="contactPhone" name="contactPhone" required />
+              <input type="tel" id="contactPhone" name="contactPhone" required autocomplete="tel" />
             </div>
             <div class="form-group">
               <label for="contactRelationship">Relationship to Couple</label>
@@ -586,7 +313,27 @@
 
           <div class="form-group">
             <label for="contactAddress">Mailing Address <span class="required">*</span></label>
-            <textarea id="contactAddress" name="contactAddress" required placeholder="Street Address&#10;City, State ZIP"></textarea>
+            <textarea id="contactAddress" name="contactAddress" required placeholder="Street Address&#10;City, State ZIP" autocomplete="street-address"></textarea>
+          </div>
+        </section>
+
+        <!-- Fee Information -->
+        <section aria-labelledby="feeHeading">
+          <h3 id="feeHeading" class="section-title">Fee Information</h3>
+          
+          <div class="fee-info">
+            <h4>Wedding Ceremony Fees</h4>
+            <p id="feeNote" style="margin-bottom: 10px; color: #666;"></p>
+            <div id="feeAmount" style="margin-bottom: 15px;"></div>
+            <div id="feeBreakdown">
+              <!-- Fees will be calculated based on membership status -->
+            </div>
+            <p style="margin-top: 15px; font-style: italic; color: #666;">
+              The audio support fee covers professional audio technician services for your ceremony.
+            </p>
+            <p style="margin-top: 10px; font-weight: bold; color: #8B4513;">
+              Full payment is required to secure your date.
+            </p>
           </div>
         </section>
 
@@ -597,21 +344,16 @@
           <div class="policy-box">
             <h4>Crouse Memorial Chapel Wedding Policies</h4>
             <ul>
-              <li>The Chapel is available from May through September</li>
-              <li>All clergy must be approved by the Director of Worship</li>
-              <li>The Chapel seats 80 guests comfortably</li>
-              <li>Setup begins 1 hour before ceremony time</li>
-              <li>Chapel must be vacated within 1 hour after ceremony</li>
-              <li>No rice, birdseed, confetti, bubbles or balloons permitted</li>
-              <li>Flowers allowed only on credence table behind altar</li>
-              <li>Only oil-burning candles provided by Altar Guild permitted</li>
-              <li>Flash photography allowed 40 minutes before/after only</li>
-              <li>Video cameras (without flash) permitted from balcony only</li>
-              <li>Couple must provide certified marriage license at rehearsal</li>
-              <li>An Altar Guild member will be present for the ceremony</li>
+              <li>The chapel seats approximately 80 guests</li>
+              <li>No alcohol is permitted on chapel premises</li>
+              <li>Photography is allowed during the ceremony with restrictions</li>
+              <li>Rice, birdseed, and confetti are not permitted</li>
+              <li>Decorations must be approved by the Director of Worship</li>
+              <li>The chapel is available from May through October</li>
+              <li>Cancellations must be made at least 30 days in advance for refund</li>
             </ul>
           </div>
-
+          
           <div class="form-group" style="margin-top: 20px;">
             <label style="font-weight: bold;">
               <input type="checkbox" id="policyAgreement" name="policyAgreement" required>
@@ -621,206 +363,15 @@
               </span>
             </label>
           </div>
-
-          <div class="form-group">
-            <label style="font-weight: bold;">
-              <input type="checkbox" id="feeAgreement" name="feeAgreement" required>
-              <span style="margin-left: 5px;">
-                I understand that full payment is required to secure our date 
-                <span class="required">*</span>
-              </span>
-            </label>
-          </div>
         </section>
 
-        <div class="section-divider"></div>
-
-        <div style="text-align: center; margin-top: 30px;">
-          <button type="submit" class="btn-primary">Submit Application</button>
+        <div class="form-actions">
+          <button type="submit">Submit Wedding Application</button>
         </div>
       </form>
     </div>
   </main>
 
-  <script>
-    // Form functionality
-    document.addEventListener('DOMContentLoaded', function() {
-      const form = document.getElementById('weddingForm');
-      const loadingDiv = document.getElementById('loading');
-      const successMessage = document.getElementById('successMessage');
-      const errorMessage = document.getElementById('errorMessage');
-      const errorText = document.getElementById('errorText');
-
-      // Music section toggle
-      const hasMusic = document.getElementById('hasMusic');
-      const musicDetails = document.getElementById('musicDetails');
-      
-      hasMusic.addEventListener('change', function() {
-        if (this.checked) {
-          musicDetails.classList.remove('hidden');
-        } else {
-          musicDetails.classList.add('hidden');
-        }
-      });
-
-      // Additional chairs toggle
-      const needsChairs = document.getElementById('needsChairs');
-      const chairDetails = document.getElementById('chairDetails');
-      
-      needsChairs.addEventListener('change', function() {
-        if (this.checked) {
-          chairDetails.classList.remove('hidden');
-        } else {
-          chairDetails.classList.add('hidden');
-        }
-      });
-
-      // Roped seating toggle
-      const ropedSeating = document.getElementById('ropedSeating');
-      const ropedSeatingDetails = document.getElementById('ropedSeatingDetails');
-      
-      ropedSeating.addEventListener('change', function() {
-        if (this.checked) {
-          ropedSeatingDetails.classList.remove('hidden');
-        } else {
-          ropedSeatingDetails.classList.add('hidden');
-        }
-      });
-
-      // Musicians list management
-      const musiciansList = document.getElementById('musiciansList');
-      const addMusicianBtn = document.getElementById('addMusician');
-      let musicianCount = 0;
-
-      addMusicianBtn.addEventListener('click', function() {
-        musicianCount++;
-        const musicianEntry = document.createElement('div');
-        musicianEntry.className = 'musician-entry';
-        musicianEntry.innerHTML = `
-          <input type="text" name="musician_${musicianCount}" placeholder="Musician name and instrument">
-          <button type="button" onclick="this.parentElement.remove()">Remove</button>
-        `;
-        musiciansList.appendChild(musicianEntry);
-      });
-
-      // Fee calculation based on membership
-      const isMemberRadios = document.querySelectorAll('input[name="isMember"]');
-      const feeBreakdown = document.getElementById('feeBreakdown');
-
-      function updateFees() {
-        const isMember = document.querySelector('input[name="isMember"]:checked')?.value === 'yes';
-        
-        const baseFee = isMember ? 300 : 750;
-        const audioFee = 25;
-        const total = baseFee + audioFee;
-
-        feeBreakdown.innerHTML = `
-          <div class="fee-breakdown">
-            <span>Ceremony Fee (${isMember ? 'Member' : 'Non-Member'}):</span>
-            <span>$${baseFee.toFixed(2)}</span>
-          </div>
-          <div class="fee-breakdown">
-            <span>Audio Support Fee:</span>
-            <span>$${audioFee.toFixed(2)}</span>
-          </div>
-          <div class="fee-breakdown total">
-            <span>Total:</span>
-            <span>$${total.toFixed(2)}</span>
-          </div>
-        `;
-      }
-
-      isMemberRadios.forEach(radio => {
-        radio.addEventListener('change', updateFees);
-      });
-
-      // Initialize fees
-      updateFees();
-
-      // Form submission
-      form.addEventListener('submit', async function(e) {
-        e.preventDefault();
-
-        // Hide any previous messages
-        successMessage.style.display = 'none';
-        errorMessage.style.display = 'none';
-        
-        // Show loading
-        loadingDiv.style.display = 'block';
-        form.style.opacity = '0.6';
-
-        // Collect form data
-        const formData = new FormData(form);
-        const data = {};
-        
-        // Convert FormData to object
-        for (let [key, value] of formData.entries()) {
-          if (data[key]) {
-            // Handle multiple values (checkboxes)
-            if (Array.isArray(data[key])) {
-              data[key].push(value);
-            } else {
-              data[key] = [data[key], value];
-            }
-          } else {
-            data[key] = value;
-          }
-        }
-
-        // Collect musicians
-        const musicians = [];
-        musiciansList.querySelectorAll('input').forEach(input => {
-          if (input.value) {
-            musicians.push(input.value);
-          }
-        });
-        if (musicians.length > 0) {
-          data.musicians = musicians;
-        }
-
-        // Calculate fees
-        const isMember = document.querySelector('input[name="isMember"]:checked')?.value === 'yes';
-        data.ceremonyFee = isMember ? 300 : 750;
-        data.audioFee = 25;
-        data.totalFee = data.ceremonyFee + data.audioFee;
-        
-        // Add metadata
-        data.formType = 'wedding';
-        data.submissionDate = new Date().toISOString();
-
-        try {
-          // Submit to API
-          const response = await fetch('/api/chapel/submit-service', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-          });
-
-          const result = await response.json();
-
-          if (response.ok && result.success) {
-            // Success
-            form.style.display = 'none';
-            successMessage.style.display = 'block';
-            window.scrollTo(0, 0);
-          } else {
-            // Error
-            throw new Error(result.error || 'Failed to submit application');
-          }
-        } catch (error) {
-          // Show error
-          errorText.textContent = error.message || 'An error occurred while submitting your application. Please try again.';
-          errorMessage.style.display = 'block';
-          console.error('Submission error:', error);
-        } finally {
-          // Hide loading
-          loadingDiv.style.display = 'none';
-          form.style.opacity = '1';
-        }
-      });
-    });
-  </script>
+  <script src="crouse-chapel-wedding.js" type="module" defer></script>
 </body>
 </html>

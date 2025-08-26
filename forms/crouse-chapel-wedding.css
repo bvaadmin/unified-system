@@ -1,0 +1,331 @@
+/* crouse-chapel-wedding.css */
+/* Styles for Crouse Chapel Wedding Application Form */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background: #f5f7fa;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+#applicationForm {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  margin-top: 20px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+  padding-bottom: 20px;
+  border-bottom: 3px solid #8B4513;
+}
+
+.header h1 {
+  color: #8B4513;
+  font-size: 2.2em;
+  margin-bottom: 10px;
+  font-family: 'Georgia', 'Times New Roman', serif;
+}
+
+.header h2 {
+  color: #666;
+  font-size: 1.3em;
+  font-weight: normal;
+}
+
+.section-title {
+  color: #00457c;
+  font-size: 1.3em;
+  margin: 30px 0 15px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+  color: #555;
+}
+
+.required {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="date"],
+input[type="time"],
+input[type="number"],
+select,
+textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #00457c;
+  box-shadow: 0 0 0 2px rgba(0, 69, 124, 0.1);
+}
+
+textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.radio-group,
+.checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.radio-group label,
+.checkbox-group label {
+  display: flex;
+  align-items: center;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+.radio-group input,
+.checkbox-group input {
+  margin-right: 8px;
+}
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.three-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+.four-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .two-col,
+  .three-col,
+  .four-col {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-actions {
+  text-align: center;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 2px solid #e0e0e0;
+}
+
+button[type="submit"] {
+  background-color: #00457c;
+  color: white;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button[type="submit"]:hover {
+  background-color: #003356;
+}
+
+.info-note {
+  background: #f0f8ff;
+  border-left: 4px solid #00457c;
+  padding: 12px;
+  margin: 15px 0;
+  color: #333;
+}
+
+.policy-box {
+  background: #f0f8ff;
+  border: 1px solid #b0d4ff;
+  border-radius: 4px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.policy-box h4 {
+  color: #00457c;
+  margin-bottom: 10px;
+}
+
+.policy-box ul {
+  margin-left: 20px;
+  margin-top: 10px;
+}
+
+.policy-box li {
+  margin-bottom: 5px;
+}
+
+.success-message {
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  color: #155724;
+  padding: 20px;
+  border-radius: 4px;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.success-message h3 {
+  margin-bottom: 15px;
+  color: #155724;
+}
+
+.error-message {
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  color: #721c24;
+  padding: 20px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.error-message h3 {
+  margin-bottom: 10px;
+  color: #721c24;
+}
+
+.loading {
+  text-align: center;
+  padding: 20px;
+  background-color: #e3f2fd;
+  border: 1px solid #90caf9;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  color: #1565c0;
+  font-weight: bold;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.fee-info {
+  background: #fafafa;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 20px;
+  margin: 20px 0;
+}
+
+.fee-info h4 {
+  color: #333;
+  margin-bottom: 15px;
+}
+
+.fee-breakdown {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.fee-breakdown.total {
+  font-weight: bold;
+  font-size: 1.1em;
+  border-bottom: 2px solid #00457c;
+  border-top: 2px solid #00457c;
+  margin-top: 10px;
+  padding-top: 10px;
+}
+
+.musician-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  margin: 5px;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+.btn-secondary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Accessibility improvements */
+input:invalid:not(:focus):not(:placeholder-shown),
+select:invalid:not(:focus):not(:placeholder-shown),
+textarea:invalid:not(:focus):not(:placeholder-shown) {
+  border-color: #dc3545;
+}
+
+/* Print styles */
+@media print {
+  body {
+    background: white;
+  }
+  
+  .container {
+    max-width: 100%;
+    padding: 0;
+  }
+  
+  #applicationForm {
+    box-shadow: none;
+    padding: 20px;
+  }
+  
+  button,
+  .btn-secondary {
+    display: none;
+  }
+}
