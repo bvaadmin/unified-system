@@ -1,700 +1,442 @@
 <!DOCTYPE html>
+<!-- Chapel Memorial Service Form Refactor Version: 2025-08-26T00:00Z marker -->
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crouse Memorial Chapel - Memorial/Funeral Service Application</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Georgia', 'Times New Roman', serif;
-            line-height: 1.6;
-            color: #333;
-            background: #f8f9fa;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: white;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            border-bottom: 3px solid #8B4513;
-            padding-bottom: 20px;
-        }
-        
-        .header h1 {
-            color: #8B4513;
-            font-size: 2.2em;
-            margin-bottom: 10px;
-        }
-        
-        .header p {
-            color: #666;
-            font-style: italic;
-        }
-        
-        .section {
-            margin-bottom: 30px;
-        }
-        
-        .section h2 {
-            color: #8B4513;
-            font-size: 1.4em;
-            margin-bottom: 15px;
-            border-left: 4px solid #8B4513;
-            padding-left: 15px;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-row {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .form-row .form-group {
-            flex: 1;
-            margin-bottom: 0;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
-        }
-        
-        input[type="text"],
-        input[type="email"],
-        input[type="tel"],
-        input[type="date"],
-        input[type="time"],
-        select,
-        textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 4px;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-        
-        input:focus,
-        select:focus,
-        textarea:focus {
-            outline: none;
-            border-color: #8B4513;
-        }
-        
-        textarea {
-            height: 100px;
-            resize: vertical;
-        }
-        
-        .checkbox-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-top: 10px;
-        }
-        
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .checkbox-item input[type="checkbox"] {
-            width: auto;
-            margin: 0;
-        }
-        
-        .radio-group {
-            display: flex;
-            gap: 20px;
-            margin-top: 10px;
-        }
-        
-        .radio-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .radio-item input[type="radio"] {
-            width: auto;
-            margin: 0;
-        }
-        
-        .required {
-            color: #d32f2f;
-        }
-        
-        .submit-section {
-            margin-top: 40px;
-            padding-top: 30px;
-            border-top: 2px solid #eee;
-            text-align: center;
-        }
-        
-        button {
-            background: #8B4513;
-            color: white;
-            padding: 15px 40px;
-            font-size: 18px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        
-        button:hover {
-            background: #654321;
-        }
-        
-        button:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-        }
-        
-        .note {
-            background: #f0f8ff;
-            border-left: 4px solid #4CAF50;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 4px;
-        }
-        
-        .error {
-            background: #ffebee;
-            border-left: 4px solid #f44336;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 4px;
-            color: #c62828;
-        }
-        
-        .success {
-            background: #e8f5e8;
-            border-left: 4px solid #4CAF50;
-            padding: 15px;
-            margin: 20px 0;
-            border-radius: 4px;
-            color: #2e7d32;
-        }
-        
-        .hidden {
-            display: none;
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Memorial & Funeral Service Application - Crouse Chapel</title>
+  <link rel="icon" type="image/png" href="https://www.bayviewassociation.org/wp-content/uploads/2020/12/new-full-logo-300x62.png" />
+  <link rel="stylesheet" href="chapel-memorial-service.css" />
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Crouse Memorial Chapel</h1>
-            <p>Memorial & Funeral Service Application</p>
-            <p>Bay View Association • Petoskey, Michigan</p>
+  <div style="background-color: #00457c; padding: 20px; text-align: center; width: 100%; box-sizing: border-box; min-height: 100px;">
+    <img alt="Bay View Association - A Chautauqua Community on Little Traverse Bay" src="https://www.bayviewassociation.org/wp-content/uploads/2020/12/new-full-logo-300x62.png" style="max-width: 300px; height: auto; display: inline-block;" onerror="this.style.display='none'; this.parentElement.innerHTML += '<span style=\'color: white; font-size: 24px; font-weight: bold;\'>Bay View Association</span>'"/>
+  </div>
+
+  <main class="container">
+    <div id="applicationForm">
+      <div class="header">
+        <h1>Crouse Memorial Chapel</h1>
+        <p>Memorial & Funeral Service Application</p>
+        <p>Bay View Association • Petoskey, Michigan</p>
+      </div>
+
+      <div id="errorMessage" class="error hidden">
+        <h3>Submission Error</h3>
+        <p id="errorText">An error occurred while submitting your application. Please try again.</p>
+      </div>
+
+      <div id="loading" class="loading hidden">Submitting…</div>
+
+      <form id="chapelMemorialForm" novalidate>
+        <input type="hidden" name="formType" value="memorial-funeral-service">
+
+        <!-- Service Information -->
+        <section aria-labelledby="serviceHeading">
+          <h2 id="serviceHeading" class="section-title">Service Information</h2>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label for="serviceDate">Service Date <span class="required">*</span></label>
+              <input type="date" id="serviceDate" name="serviceDate" required>
+            </div>
+            <div class="form-group">
+              <label for="serviceTime">Service Time <span class="required">*</span></label>
+              <input type="time" id="serviceTime" name="serviceTime" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="deceasedName">Name of Deceased <span class="required">*</span></label>
+            <input type="text" id="deceasedName" name="deceasedName" required>
+          </div>
+        </section>
+
+        <!-- Memorial Garden -->
+        <section aria-labelledby="memorialHeading">
+          <h2 id="memorialHeading" class="section-title">Memorial Garden Placement</h2>
+          
+          <div class="form-group">
+            <label>Will there be a placement in the Memorial Garden?</label>
+            <div class="radio-group">
+              <div class="radio-item">
+                <input type="radio" id="memorialYes" name="memorialGardenPlacement" value="yes">
+                <label for="memorialYes">Yes</label>
+              </div>
+              <div class="radio-item">
+                <input type="radio" id="memorialNo" name="memorialGardenPlacement" value="no">
+                <label for="memorialNo">No</label>
+              </div>
+            </div>
+          </div>
+
+          <div id="placementDetails" class="hidden">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="placementDate">Placement Date</label>
+                <input type="date" id="placementDate" name="placementDate">
+              </div>
+              <div class="form-group">
+                <label for="placementTime">Placement Time</label>
+                <input type="time" id="placementTime" name="placementTime">
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Contact Information -->
+        <section aria-labelledby="contactHeading">
+          <h2 id="contactHeading" class="section-title">Contact Information</h2>
+          
+          <div class="form-group">
+            <label for="contactName">Contact Person <span class="required">*</span></label>
+            <input type="text" id="contactName" name="contactName" required>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="contactEmail">Email <span class="required">*</span></label>
+              <input type="email" id="contactEmail" name="contactEmail" required>
+            </div>
+            <div class="form-group">
+              <label for="contactPhone">Phone <span class="required">*</span></label>
+              <input type="tel" id="contactPhone" name="contactPhone" required>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="contactAddress">Address <span class="required">*</span></label>
+            <textarea id="contactAddress" name="contactAddress" required></textarea>
+          </div>
+        </section>
+
+        <!-- Bay View Membership -->
+        <section aria-labelledby="membershipHeading">
+          <h2 id="membershipHeading" class="section-title">Bay View Membership</h2>
+          
+          <div class="form-group">
+            <label for="memberName">Bay View Member Name <span class="required">*</span></label>
+            <input type="text" id="memberName" name="memberName" required>
+            <small>All chapel services require Bay View member sponsorship</small>
+          </div>
+
+          <div class="form-group">
+            <label for="memberRelationship">Relationship to Member <span class="required">*</span></label>
+            <select id="memberRelationship" name="memberRelationship" required>
+              <option value="">Select relationship...</option>
+              <option value="self">Self (I am the member)</option>
+              <option value="spouse">Spouse</option>
+              <option value="child">Child</option>
+              <option value="parent">Parent</option>
+              <option value="sibling">Sibling</option>
+              <option value="grandchild">Grandchild</option>
+              <option value="grandparent">Grandparent</option>
+              <option value="friend">Family Friend</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </section>
+
+        <!-- Clergy Information -->
+        <section aria-labelledby="clergyHeading">
+          <h2 id="clergyHeading" class="section-title">Clergy Information</h2>
+          
+          <div class="form-group">
+            <label for="clergyName">Officiating Clergy Name</label>
+            <input type="text" id="clergyName" name="clergyName">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="clergyDenomination">Denomination</label>
+              <input type="text" id="clergyDenomination" name="clergyDenomination">
+            </div>
+            <div class="form-group">
+              <label for="clergyPhone">Clergy Phone</label>
+              <input type="tel" id="clergyPhone" name="clergyPhone">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="clergyEmail">Clergy Email</label>
+            <input type="email" id="clergyEmail" name="clergyEmail">
+          </div>
+
+          <div class="form-group">
+            <label for="clergyAddress">Clergy Address</label>
+            <textarea id="clergyAddress" name="clergyAddress"></textarea>
+          </div>
+
+          <div class="note">
+            <strong>Note:</strong> All clergy must be approved by the Director of Worship before the service. New clergy will automatically be submitted for approval.
+          </div>
+        </section>
+
+        <!-- Music Requirements -->
+        <section aria-labelledby="musicHeading">
+          <h2 id="musicHeading" class="section-title">Music Requirements</h2>
+          
+          <div class="form-group">
+            <label>Will there be music for this service?</label>
+            <div class="checkbox-group">
+              <div class="checkbox-item">
+                <input type="checkbox" id="hasMusic" name="hasMusic">
+                <label for="hasMusic">Yes, music will be performed</label>
+              </div>
+            </div>
+          </div>
+
+          <div id="musicDetails" class="hidden">
+            <div class="form-group">
+              <label>Instruments Needed:</label>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <input type="checkbox" id="needsPiano" name="needsPiano">
+                  <label for="needsPiano">Piano</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="needsOrgan" name="needsOrgan">
+                  <label for="needsOrgan">Organ</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Performance Location:</label>
+              <div class="checkbox-group">
+                <div class="checkbox-item">
+                  <input type="checkbox" id="performSanctuary" name="performSanctuary">
+                  <label for="performSanctuary">Sanctuary</label>
+                </div>
+                <div class="checkbox-item">
+                  <input type="checkbox" id="performBalcony" name="performBalcony">
+                  <label for="performBalcony">Balcony</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Additional Chairs for Musicians:</label>
+              <div class="checkbox-item">
+                <input type="checkbox" id="needsChairs" name="needsChairs">
+                <label for="needsChairs">Additional chairs needed</label>
+              </div>
+            </div>
+
+            <div id="chairDetails" class="hidden">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="chairCount">Number of Additional Chairs</label>
+                  <input type="number" id="chairCount" name="chairCount" min="1" max="20">
+                </div>
+                <div class="form-group">
+                  <label for="chairPlacement">Chair Placement</label>
+                  <input type="text" id="chairPlacement" name="chairPlacement" placeholder="e.g., Front left, Behind piano">
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="organistName">Organist Name</label>
+              <input type="text" id="organistName" name="organistName">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="organistPhone">Organist Phone</label>
+                <input type="tel" id="organistPhone" name="organistPhone">
+              </div>
+              <div class="form-group">
+                <label for="organistEmail">Organist Email</label>
+                <input type="email" id="organistEmail" name="organistEmail">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="soloistName">Soloist Name</label>
+              <input type="text" id="soloistName" name="soloistName">
+            </div>
+
+            <div class="form-group">
+              <label for="otherMusicians">Other Musicians (one per line)</label>
+              <textarea id="otherMusicians" name="otherMusicians" placeholder="Enter musician names, one per line"></textarea>
+            </div>
+          </div>
+        </section>
+
+        <!-- Equipment Needs -->
+        <section aria-labelledby="equipmentHeading">
+          <h2 id="equipmentHeading" class="section-title">Equipment & Setup</h2>
+          
+          <div class="form-group">
+            <label>Audio Equipment:</label>
+            <div class="checkbox-group">
+              <div class="checkbox-item">
+                <input type="checkbox" id="standMic" name="standMic">
+                <label for="standMic">Stand Microphone</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="wirelessMic" name="wirelessMic">
+                <label for="wirelessMic">Wireless Microphone</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="cdPlayer" name="cdPlayer">
+                <label for="cdPlayer">CD Player</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Service Items:</label>
+            <div class="checkbox-group">
+              <div class="checkbox-item">
+                <input type="checkbox" id="communion" name="communion">
+                <label for="communion">Communion Service</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="guestBook" name="guestBook">
+                <label for="guestBook">Guest Book Stand</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Seating Arrangements:</label>
+            <div class="checkbox-item">
+              <input type="checkbox" id="ropedSeating" name="ropedSeating">
+              <label for="ropedSeating">Roped seating for family section</label>
+            </div>
+          </div>
+
+          <div id="ropedDetails" class="hidden">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="rowsLeft">Rows to rope on left side</label>
+                <input type="number" id="rowsLeft" name="rowsLeft" min="0" max="10">
+              </div>
+              <div class="form-group">
+                <label for="rowsRight">Rows to rope on right side</label>
+                <input type="number" id="rowsRight" name="rowsRight" min="0" max="10">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="otherEquipment">Other Equipment Needs</label>
+            <textarea id="otherEquipment" name="otherEquipment" placeholder="Please describe any other equipment needs"></textarea>
+          </div>
+        </section>
+
+        <!-- Special Requests -->
+        <section aria-labelledby="requestsHeading">
+          <h2 id="requestsHeading" class="section-title">Special Requests</h2>
+          <div class="form-group">
+            <label for="specialRequests">Special Requests or Notes</label>
+            <textarea id="specialRequests" name="specialRequests" placeholder="Any special requests or important information"></textarea>
+          </div>
+        </section>
+
+        <!-- Fee Information -->
+        <section aria-labelledby="feeHeading">
+          <h2 id="feeHeading" class="section-title">Fee Information</h2>
+          
+          <div class="fee-note">
+            <p><strong>Memorial/Funeral Service Fees:</strong></p>
+            <br>
+            <p><strong>Bay View Members:</strong></p>
+            <p style="margin-left: 20px;">• Service: No charge (traditional member benefit)</p>
+            <p style="margin-left: 20px;">• Audio Support: $25</p>
+            <p style="margin-left: 20px;"><strong>Total: $25</strong></p>
+            <br>
+            <p><strong>Non-Members:</strong></p>
+            <p style="margin-left: 20px;">• Service: $300</p>
+            <p style="margin-left: 20px;">• Audio Support: $25</p>
+            <p style="margin-left: 20px;"><strong>Total: $325</strong></p>
+            <br>
+            <p><em>The audio support fee covers professional audio technician services for your service.</em></p>
+            <p>Payment is required to secure your date.</p>
+          </div>
+          
+          <div class="info-note" style="margin-top: 20px;">
+            <h4 style="color: #00457c; margin-bottom: 10px;">Important Note About Celebrants and Musicians</h4>
+            <p style="margin-bottom: 10px;">
+              <strong>The fees above cover facility use only.</strong> You are responsible for arranging and compensating any clergy, celebrants, or musicians for your service.
+            </p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+              <li>Honorariums should be negotiated directly with each service provider</li>
+              <li>Bay View can assist in providing contact information for local celebrants and musicians</li>
+              <li>All financial arrangements with clergy and musicians are the responsibility of the applicant</li>
+            </ul>
+            <p style="margin-top: 15px;"><em>Please discuss fees and payment arrangements when booking your celebrant and musicians.</em></p>
+          </div>
+        </section>
+
+        <!-- Policy Agreement -->
+        <section aria-labelledby="policiesHeading">
+          <h2 id="policiesHeading" class="section-title">Policies & Agreement</h2>
+          
+          <div class="note">
+            <p><strong>Bay View Association Chapel Policies:</strong></p>
+            <ul style="margin-left: 20px; margin-top: 10px;">
+              <li>All services must be sponsored by a Bay View Association member</li>
+              <li>Clergy must be approved by the Director of Worship</li>
+              <li>Full payment is required to secure your date</li>
+              <li>Setup begins 1 hour before service time</li>
+              <li>Chapel must be vacated within 1 hour after service</li>
+              <li>No rice, birdseed, or confetti permitted on grounds</li>
+              <li>Decorations must be approved in advance</li>
+              <li>Photography guidelines must be followed</li>
+            </ul>
+          </div>
+
+          <div class="form-group">
+            <div class="checkbox-item">
+              <input type="checkbox" id="policyAgreement" name="policyAgreement" required>
+              <label for="policyAgreement">
+                <span class="required">*</span> I acknowledge that I have read and agree to all Bay View Association Chapel policies
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="checkbox-item">
+              <input type="checkbox" id="feeAgreement" name="feeAgreement" required>
+              <label for="feeAgreement">
+                <span class="required">*</span> I understand the fee structure and payment requirements
+              </label>
+            </div>
+          </div>
+        </section>
+
+        <!-- Submit Section -->
+        <div class="form-actions">
+          <button type="submit" id="submitBtn">Submit Memorial Service Application</button>
+          <p style="margin-top: 15px; color: #666;">
+            You will be contacted within 2-3 business days regarding your application.
+          </p>
         </div>
+      </form>
 
-        <form id="chapelMemorialForm">
-            <input type="hidden" name="formType" value="memorial-funeral-service">
-
-            <!-- Service Information -->
-            <div class="section">
-                <h2>Service Information</h2>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="serviceDate">Service Date <span class="required">*</span></label>
-                        <input type="date" id="serviceDate" name="serviceDate" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="serviceTime">Service Time <span class="required">*</span></label>
-                        <input type="time" id="serviceTime" name="serviceTime" required>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="deceasedName">Name of Deceased <span class="required">*</span></label>
-                    <input type="text" id="deceasedName" name="deceasedName" required>
-                </div>
-            </div>
-
-            <!-- Memorial Garden -->
-            <div class="section">
-                <h2>Memorial Garden Placement</h2>
-                
-                <div class="form-group">
-                    <label>Will there be a placement in the Memorial Garden?</label>
-                    <div class="radio-group">
-                        <div class="radio-item">
-                            <input type="radio" id="memorialYes" name="memorialGarden" value="yes">
-                            <label for="memorialYes">Yes</label>
-                        </div>
-                        <div class="radio-item">
-                            <input type="radio" id="memorialNo" name="memorialGarden" value="no">
-                            <label for="memorialNo">No</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="placementDetails" class="hidden">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="placementDate">Placement Date</label>
-                            <input type="date" id="placementDate" name="placementDate">
-                        </div>
-                        <div class="form-group">
-                            <label for="placementTime">Placement Time</label>
-                            <input type="time" id="placementTime" name="placementTime">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Contact Information -->
-            <div class="section">
-                <h2>Contact Information</h2>
-                
-                <div class="form-group">
-                    <label for="contactName">Contact Person <span class="required">*</span></label>
-                    <input type="text" id="contactName" name="contactName" required>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="contactEmail">Email</label>
-                        <input type="email" id="contactEmail" name="contactEmail">
-                    </div>
-                    <div class="form-group">
-                        <label for="contactPhone">Phone <span class="required">*</span></label>
-                        <input type="tel" id="contactPhone" name="contactPhone" required>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="contactAddress">Address</label>
-                    <textarea id="contactAddress" name="contactAddress"></textarea>
-                </div>
-            </div>
-
-            <!-- Bay View Membership -->
-            <div class="section">
-                <h2>Bay View Membership</h2>
-                
-                <div class="form-group">
-                    <label for="bayViewMember">Bay View Member Name <span class="required">*</span></label>
-                    <input type="text" id="bayViewMember" name="bayViewMember" required>
-                    <small>All chapel services require Bay View member sponsorship</small>
-                </div>
-
-                <div class="form-group">
-                    <label for="relationship">Relationship to Member <span class="required">*</span></label>
-                    <select id="relationship" name="relationship" required>
-                        <option value="">Select relationship...</option>
-                        <option value="self">Self (I am the member)</option>
-                        <option value="spouse">Spouse</option>
-                        <option value="child">Child</option>
-                        <option value="parent">Parent</option>
-                        <option value="sibling">Sibling</option>
-                        <option value="grandchild">Grandchild</option>
-                        <option value="grandparent">Grandparent</option>
-                        <option value="friend">Family Friend</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Clergy Information -->
-            <div class="section">
-                <h2>Clergy Information</h2>
-                
-                <div class="form-group">
-                    <label for="clergyName">Officiating Clergy Name</label>
-                    <input type="text" id="clergyName" name="clergyName">
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="denomination">Denomination</label>
-                        <input type="text" id="denomination" name="denomination">
-                    </div>
-                    <div class="form-group">
-                        <label for="clergyPhone">Clergy Phone</label>
-                        <input type="tel" id="clergyPhone" name="clergyPhone">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="clergyEmail">Clergy Email</label>
-                    <input type="email" id="clergyEmail" name="clergyEmail">
-                </div>
-
-                <div class="form-group">
-                    <label for="clergyAddress">Clergy Address</label>
-                    <textarea id="clergyAddress" name="clergyAddress"></textarea>
-                </div>
-
-                <div class="note">
-                    <strong>Note:</strong> All clergy must be approved by the Director of Worship before the service. New clergy will automatically be submitted for approval.
-                </div>
-            </div>
-
-            <!-- Music Requirements -->
-            <div class="section">
-                <h2>Music Requirements</h2>
-                
-                <div class="form-group">
-                    <label>Will there be music for this service?</label>
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="hasMusic" name="hasMusic">
-                            <label for="hasMusic">Yes, music will be performed</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="musicDetails" class="hidden">
-                    <div class="form-group">
-                        <label>Instruments Needed:</label>
-                        <div class="checkbox-group">
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="needsPiano" name="needsPiano">
-                                <label for="needsPiano">Piano</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="needsOrgan" name="needsOrgan">
-                                <label for="needsOrgan">Organ</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Performance Location:</label>
-                        <div class="checkbox-group">
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="performSanctuary" name="performSanctuary">
-                                <label for="performSanctuary">Sanctuary</label>
-                            </div>
-                            <div class="checkbox-item">
-                                <input type="checkbox" id="performBalcony" name="performBalcony">
-                                <label for="performBalcony">Balcony</label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Additional Chairs for Musicians:</label>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="additionalChairs" name="additionalChairs">
-                            <label for="additionalChairs">Additional chairs needed</label>
-                        </div>
-                    </div>
-
-                    <div id="chairDetails" class="hidden">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="chairNumber">Number of Additional Chairs</label>
-                                <input type="number" id="chairNumber" name="chairNumber" min="1" max="20">
-                            </div>
-                            <div class="form-group">
-                                <label for="chairPlacement">Chair Placement</label>
-                                <input type="text" id="chairPlacement" name="chairPlacement" placeholder="e.g., Front left, Behind piano">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="musicianNames">List of Musicians (one per line)</label>
-                        <textarea id="musicianNames" name="musicianNames" placeholder="Enter musician names, one per line"></textarea>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Equipment Needs -->
-            <div class="section">
-                <h2>Equipment & Setup</h2>
-                
-                <div class="form-group">
-                    <label>Audio Equipment:</label>
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="standMic" name="standMic">
-                            <label for="standMic">Stand Microphone</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="wirelessMic" name="wirelessMic">
-                            <label for="wirelessMic">Wireless Microphone</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="cdPlayer" name="cdPlayer">
-                            <label for="cdPlayer">CD Player</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Service Items:</label>
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="communion" name="communion">
-                            <label for="communion">Communion Service</label>
-                        </div>
-                        <div class="checkbox-item">
-                            <input type="checkbox" id="guestBookStand" name="guestBookStand">
-                            <label for="guestBookStand">Guest Book Stand</label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label>Seating Arrangements:</label>
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="ropedSeating" name="ropedSeating">
-                        <label for="ropedSeating">Roped seating for family section</label>
-                    </div>
-                </div>
-
-                <div id="ropedDetails" class="hidden">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="rowsLeft">Rows to rope on left side</label>
-                            <input type="number" id="rowsLeft" name="rowsLeft" min="0" max="10">
-                        </div>
-                        <div class="form-group">
-                            <label for="rowsRight">Rows to rope on right side</label>
-                            <input type="number" id="rowsRight" name="rowsRight" min="0" max="10">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Fee Information -->
-            <div class="section">
-                <h2>Fee Information</h2>
-                
-                <div class="note" style="background: #fffef0; border-left-color: #8B4513;">
-                    <p><strong>Memorial/Funeral Service Fees:</strong></p>
-                    <br>
-                    <p><strong>Bay View Members:</strong></p>
-                    <p style="margin-left: 20px;">• Service: No charge (traditional member benefit)</p>
-                    <p style="margin-left: 20px;">• Audio Support: $25</p>
-                    <p style="margin-left: 20px;"><strong>Total: $25</strong></p>
-                    <br>
-                    <p><strong>Non-Members:</strong></p>
-                    <p style="margin-left: 20px;">• Service: $300</p>
-                    <p style="margin-left: 20px;">• Audio Support: $25</p>
-                    <p style="margin-left: 20px;"><strong>Total: $325</strong></p>
-                    <br>
-                    <p><em>The audio support fee covers professional audio technician services for your service.</em></p>
-                    <p>Payment is required to secure your date.</p>
-                </div>
-                
-                <div class="note" style="background: #f0f8ff; border-left-color: #00457c; margin-top: 20px;">
-                    <p><strong>Important Note About Celebrants and Musicians:</strong></p>
-                    <br>
-                    <p><strong>The fees above cover facility use only.</strong> You are responsible for arranging and compensating any clergy, celebrants, or musicians for your service.</p>
-                    <ul style="margin-left: 30px; margin-top: 10px;">
-                        <li>Honorariums should be negotiated directly with each service provider</li>
-                        <li>Bay View can assist in providing contact information for local celebrants and musicians</li>
-                        <li>All financial arrangements with clergy and musicians are the responsibility of the applicant</li>
-                    </ul>
-                    <br>
-                    <p><em>Please discuss fees and payment arrangements when booking your celebrant and musicians.</em></p>
-                </div>
-            </div>
-
-            <!-- Policy Agreement -->
-            <div class="section">
-                <h2>Policies & Agreement</h2>
-                
-                <div class="note">
-                    <p><strong>Bay View Association Chapel Policies:</strong></p>
-                    <ul style="margin-left: 20px; margin-top: 10px;">
-                        <li>All services must be sponsored by a Bay View Association member</li>
-                        <li>Clergy must be approved by the Director of Worship</li>
-                        <li>Full payment is required to secure your date</li>
-                        <li>Setup begins 1 hour before service time</li>
-                        <li>Chapel must be vacated within 1 hour after service</li>
-                        <li>No rice, birdseed, or confetti permitted on grounds</li>
-                        <li>Decorations must be approved in advance</li>
-                        <li>Photography guidelines must be followed</li>
-                    </ul>
-                </div>
-
-                <div class="form-group">
-                    <div class="checkbox-item">
-                        <input type="checkbox" id="policyAgreement" name="policyAgreement" required>
-                        <label for="policyAgreement">
-                            <span class="required">*</span> I acknowledge that I have read and agree to all Bay View Association Chapel policies
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Submit Section -->
-            <div class="submit-section">
-                <button type="submit" id="submitBtn">Submit Memorial Service Application</button>
-                <p style="margin-top: 15px; color: #666;">
-                    You will be contacted within 2-3 business days regarding your application.
-                </p>
-            </div>
-        </form>
-
-        <!-- Status Messages -->
-        <div id="statusMessage" class="hidden"></div>
+      <!-- Status Messages -->
+      <div id="statusMessage" class="hidden"></div>
     </div>
 
-    <script>
-        // Form behavior and submission
-        document.addEventListener('DOMContentLoaded', function() {
-            const form = document.getElementById('chapelMemorialForm');
-            const submitBtn = document.getElementById('submitBtn');
-            const statusMessage = document.getElementById('statusMessage');
+    <!-- Thank You Screen -->
+    <div id="thankYouPage" class="hidden" aria-labelledby="thankYouHeading">
+      <div class="header">
+        <h1 id="thankYouHeading">Bay View Association</h1>
+        <p>Memorial Service Application Confirmation</p>
+      </div>
+      <div class="confirmation-summary">
+        <p><strong>Confirmation ID:</strong> <span id="confirmationId"></span></p>
+        <p><strong>Date:</strong> <span id="confirmationDate"></span></p>
+        <p><strong>Fee:</strong> <span id="confirmationFee"></span></p>
+      </div>
+      <div id="thankYouDynamic" class="thank-you-dynamic"></div>
+      <button type="button" onclick="location.reload()">Submit Another Application</button>
+    </div>
+  </main>
 
-            // Show/hide memorial garden placement details
-            const memorialRadios = document.querySelectorAll('input[name="memorialGarden"]');
-            const placementDetails = document.getElementById('placementDetails');
-            
-            memorialRadios.forEach(radio => {
-                radio.addEventListener('change', function() {
-                    if (this.value === 'yes') {
-                        placementDetails.classList.remove('hidden');
-                    } else {
-                        placementDetails.classList.add('hidden');
-                    }
-                });
-            });
-
-            // Show/hide music details
-            const hasMusicCheckbox = document.getElementById('hasMusic');
-            const musicDetails = document.getElementById('musicDetails');
-            
-            hasMusicCheckbox.addEventListener('change', function() {
-                if (this.checked) {
-                    musicDetails.classList.remove('hidden');
-                } else {
-                    musicDetails.classList.add('hidden');
-                }
-            });
-
-            // Show/hide chair details
-            const additionalChairsCheckbox = document.getElementById('additionalChairs');
-            const chairDetails = document.getElementById('chairDetails');
-            
-            additionalChairsCheckbox.addEventListener('change', function() {
-                if (this.checked) {
-                    chairDetails.classList.remove('hidden');
-                } else {
-                    chairDetails.classList.add('hidden');
-                }
-            });
-
-            // Show/hide roped seating details
-            const ropedSeatingCheckbox = document.getElementById('ropedSeating');
-            const ropedDetails = document.getElementById('ropedDetails');
-            
-            ropedSeatingCheckbox.addEventListener('change', function() {
-                if (this.checked) {
-                    ropedDetails.classList.remove('hidden');
-                } else {
-                    ropedDetails.classList.add('hidden');
-                }
-            });
-
-            // Form submission
-            form.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'Submitting...';
-                statusMessage.className = 'hidden';
-
-                try {
-                    const formData = new FormData(form);
-                    const data = Object.fromEntries(formData.entries());
-                    
-                    // Handle checkboxes that weren't checked
-                    const checkboxes = ['hasMusic', 'needsPiano', 'needsOrgan', 'performSanctuary', 'performBalcony', 
-                                      'additionalChairs', 'standMic', 'wirelessMic', 'cdPlayer', 'communion', 
-                                      'guestBookStand', 'ropedSeating', 'policyAgreement'];
-                    
-                    checkboxes.forEach(name => {
-                        if (!data[name]) {
-                            data[name] = false;
-                        } else {
-                            data[name] = true;
-                        }
-                    });
-
-                    // Convert numbers
-                    if (data.chairNumber) data.chairNumber = parseInt(data.chairNumber);
-                    if (data.rowsLeft) data.rowsLeft = parseInt(data.rowsLeft);
-                    if (data.rowsRight) data.rowsRight = parseInt(data.rowsRight);
-
-                    console.log('Submitting data:', data);
-
-                    const response = await fetch('/api/chapel/submit-service', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(data)
-                    });
-
-                    const result = await response.json();
-
-                    if (response.ok) {
-                        statusMessage.className = 'success';
-                        statusMessage.innerHTML = `
-                            <h3>✅ Application Submitted Successfully!</h3>
-                            <p><strong>Application ID:</strong> ${result.applicationId}</p>
-                            <p><strong>Submission Date:</strong> ${new Date(result.submissionDate).toLocaleDateString()}</p>
-                            <div style="margin-top: 15px;">
-                                <h4>Next Steps:</h4>
-                                <ul style="margin-left: 20px;">
-                                    ${result.nextSteps.map(step => `<li>${step}</li>`).join('')}
-                                </ul>
-                            </div>
-                        `;
-                        form.reset();
-                        form.style.display = 'none';
-                    } else {
-                        throw new Error(result.message || result.error || 'Submission failed');
-                    }
-
-                } catch (error) {
-                    console.error('Submission error:', error);
-                    statusMessage.className = 'error';
-                    statusMessage.innerHTML = `
-                        <h3>❌ Submission Failed</h3>
-                        <p>${error.message}</p>
-                        <p>Please check your information and try again. If the problem persists, please contact the Chapel office.</p>
-                    `;
-                } finally {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Submit Memorial Service Application';
-                    statusMessage.classList.remove('hidden');
-                    statusMessage.scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-        });
-    </script>
+  <script src="chapel-memorial-service.js" type="module" defer></script>
 </body>
 </html>

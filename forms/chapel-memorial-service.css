@@ -1,0 +1,298 @@
+/* Chapel Memorial Service Form Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    line-height: 1.6;
+    color: #333;
+    background: #f8f9fa;
+    padding: 20px;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 40px;
+    border-bottom: 3px solid #8B4513;
+    padding-bottom: 20px;
+}
+
+.header h1 {
+    color: #8B4513;
+    font-size: 2.2em;
+    margin-bottom: 10px;
+}
+
+.header p {
+    color: #666;
+    font-style: italic;
+}
+
+.section {
+    margin-bottom: 30px;
+}
+
+.section h2 {
+    color: #8B4513;
+    font-size: 1.4em;
+    margin-bottom: 15px;
+    border-left: 4px solid #8B4513;
+    padding-left: 15px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.form-row .form-group {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+/* Four column layout for address fields */
+.four-col {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.four-col .form-group {
+    margin-bottom: 0;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="date"],
+input[type="time"],
+input[type="number"],
+select,
+textarea {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #8B4513;
+}
+
+textarea {
+    height: 100px;
+    resize: vertical;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.checkbox-item input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
+
+.radio-group {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+}
+
+.radio-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.radio-item input[type="radio"] {
+    width: auto;
+    margin: 0;
+}
+
+.required {
+    color: #d32f2f;
+}
+
+.submit-section {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 2px solid #eee;
+    text-align: center;
+}
+
+.form-actions {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 2px solid #eee;
+    text-align: center;
+}
+
+button {
+    background: #8B4513;
+    color: white;
+    padding: 15px 40px;
+    font-size: 18px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background: #654321;
+}
+
+button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.note {
+    background: #f0f8ff;
+    border-left: 4px solid #4CAF50;
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 4px;
+}
+
+.info-note {
+    background: #f0f8ff;
+    border-left: 4px solid #00457c;
+    padding: 12px;
+    margin: 15px 0;
+}
+
+.fee-note {
+    background: #fffef0;
+    border-left: 4px solid #8B4513;
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 4px;
+}
+
+.error {
+    background: #ffebee;
+    border-left: 4px solid #f44336;
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 4px;
+    color: #c62828;
+}
+
+.success {
+    background: #e8f5e8;
+    border-left: 4px solid #4CAF50;
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 4px;
+    color: #2e7d32;
+}
+
+.hidden {
+    display: none;
+}
+
+small {
+    display: block;
+    margin-top: 5px;
+    color: #666;
+    font-size: 0.9em;
+}
+
+/* Loading state */
+.loading {
+    text-align: center;
+    padding: 20px;
+    color: #666;
+    font-size: 1.2em;
+}
+
+.loading:after {
+    content: '...';
+    animation: dots 1.5s infinite;
+}
+
+@keyframes dots {
+    0%, 20% {
+        content: '.';
+    }
+    40% {
+        content: '..';
+    }
+    60%, 100% {
+        content: '...';
+    }
+}
+
+/* Success page styles */
+.confirmation-summary {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 4px;
+    margin: 20px 0;
+}
+
+.confirmation-summary p {
+    margin: 10px 0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+    
+    .form-row,
+    .four-col {
+        grid-template-columns: 1fr;
+        display: block;
+    }
+    
+    .form-row .form-group {
+        margin-bottom: 20px;
+    }
+    
+    .radio-group {
+        flex-direction: column;
+    }
+}
