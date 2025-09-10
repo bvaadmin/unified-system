@@ -1,0 +1,33 @@
+name: Smoke
+
+on:
+  workflow_dispatch:
+  # Uncomment to run on pushes to main
+  # push:
+  #   branches: [ main, master ]
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run smoke check
+        env:
+          API_BASE_URL: ${{ secrets.SMOKE_API_BASE_URL }}
+          ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+          SMOKE_TIMEOUT_MS: '20000'
+          # Set to 'false' to skip insert/delete self-test
+          SMOKE_RUN_SELFTEST: ${{ vars.SMOKE_RUN_SELFTEST || 'true' }}
+        run: npm run smoke
+

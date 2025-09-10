@@ -8,6 +8,7 @@
     "dev": "vercel dev",
     "deploy": "vercel",
     "test-connection": "node scripts/chapel/test-pg-direct.js",
+    "test-oracle-connection": "ORACLE_ONE_WAY_TLS=true ORACLE_TNS_ADMIN=./oracle_wallet node scripts/test-db-connection.js",
     "init-chapel-db": "node scripts/chapel/init-database.js",
     "init-forms-db": "node scripts/forms/init-database.js",
     "init-memorial-db": "node scripts/memorial/init-database.js",
@@ -41,6 +42,7 @@
     "implement-personas": "node scripts/implement-agent-persona-system.js",
     "generate-prompt": "node scripts/dynamic-system-prompt-generator.js",
     "agent-workqueue-persona": "node scripts/agent-work-queue.js plan",
+    "smoke": "node scripts/diagnostic/smoke-check.js",
     "lint": "echo '✅ Linting passed (add ESLint for production)'",
     "typecheck": "echo '✅ Type checking passed (add TypeScript for production)'",
     "pre-commit": "npm run validate-constraints && npm run lint && npm run typecheck",
@@ -65,6 +67,7 @@
     "@sendgrid/mail": "^8.1.5",
     "dotenv": "^17.2.0",
     "exceljs": "^4.4.0",
+    "oracledb": "^6.9.0",
     "pg": "^8.16.3"
   },
   "devDependencies": {

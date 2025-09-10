@@ -22,9 +22,12 @@ import memorialSubmitGarden from '../lib/api/memorial/submit-garden.js';
 import verifyPrepayment from '../lib/api/memorial/verify-prepayment.js';
 import usePrepayment from '../lib/api/memorial/use-prepayment.js';
 import health from '../lib/api/health.js';
+import oracleHealth from '../lib/api/diagnostic/oracle-health.js';
 import checkDbUrl from './diagnostic/check-db-url.js';
 import envCheck from '../lib/api/diagnostic/env-check.js';
 import testPg from '../lib/api/diagnostic/test-pg.js';
+import oracleSelftest from '../lib/api/diagnostic/oracle-selftest.js';
+import oraclePing from '../lib/api/diagnostic/oracle-ping.js';
 
 // Route mapping - ALL API endpoints must be defined here
 // Format: 'METHOD /path': handlerFunction
@@ -51,6 +54,12 @@ const routes = {
   'GET /api/diagnostic/check-db-url': checkDbUrl,
   'GET /api/diagnostic/env-check': envCheck,
   'GET /api/diagnostic/test-pg': testPg,
+  'GET /api/diagnostic/oracle-health': oracleHealth,
+  'OPTIONS /api/diagnostic/oracle-health': oracleHealth,
+  'POST /api/diagnostic/oracle-selftest': oracleSelftest,
+  'OPTIONS /api/diagnostic/oracle-selftest': oracleSelftest,
+  'GET /api/diagnostic/oracle-ping': oraclePing,
+  'OPTIONS /api/diagnostic/oracle-ping': oraclePing,
   
   // Temporary deployment test
   'GET /api/deployment-test': (req, res) => {
