@@ -34,8 +34,10 @@ import oraclePing from '../lib/api/diagnostic/oracle-ping.js';
 const routes = {
   // Chapel endpoints
   'GET /api/chapel/check-availability': chapelCheckAvailability,
+  'OPTIONS /api/chapel/check-availability': chapelCheckAvailability,
   'POST /api/chapel/submit-service': chapelSubmitService,
-  
+  'OPTIONS /api/chapel/submit-service': chapelSubmitService,
+
   // Memorial garden endpoints
   'POST /api/memorial/submit-garden': memorialSubmitGarden,
   'OPTIONS /api/memorial/submit-garden': memorialSubmitGarden,

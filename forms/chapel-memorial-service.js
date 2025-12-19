@@ -29,9 +29,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Memorial Garden placement toggle
 function initializeMemorialGardenToggle() {
-    const memorialRadios = document.querySelectorAll('input[name="memorialGardenPlacement"]');
+    const memorialRadios = document.querySelectorAll('input[name="memorialGarden"]');
     const placementDetails = document.getElementById('placementDetails');
-    
+
     memorialRadios.forEach(radio => {
         radio.addEventListener('change', function() {
             state.hasMemorialGarden = this.value === 'yes';
@@ -169,42 +169,45 @@ async function handleFormSubmission(e) {
         // Collect form data
         const formData = new FormData(form);
         const data = Object.fromEntries(formData.entries());
-        
-        // Ensure formType is set
-        data.formType = 'memorial-funeral-service';
-        
+
         // Handle checkboxes properly
         const checkboxes = [
             'hasMusic', 'needsPiano', 'needsOrgan', 'performSanctuary', 'performBalcony',
             'needsChairs', 'standMic', 'wirelessMic', 'cdPlayer', 'communion',
             'guestBook', 'ropedSeating', 'policyAgreement', 'feeAgreement'
         ];
-        
+
         checkboxes.forEach(name => {
             const element = document.getElementById(name) || document.querySelector(`[name="${name}"]`);
             data[name] = element ? (element.checked ? 'on' : '') : '';
         });
-        
+
         // Handle member relationship field mapping
         const memberRelationship = document.getElementById('memberRelationship');
         if (memberRelationship) {
             data.memberRelationship = memberRelationship.value;
         }
-        
+
         // Convert numbers
         if (data.chairCount) data.chairCount = parseInt(data.chairCount) || 0;
         if (data.rowsLeft) data.rowsLeft = parseInt(data.rowsLeft) || 0;
         if (data.rowsRight) data.rowsRight = parseInt(data.rowsRight) || 0;
-        
-        console.log('Submitting data:', data);
-        
+
+        // Prepare payload in the format expected by the API
+        const payload = {
+            formType: 'memorial-funeral-service',
+            data: data
+        };
+
+        console.log('Submitting payload:', payload);
+
         // Submit to API
         const response = await fetch(API_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(data)
+            body: JSON.stringify(payload)
         });
         
         const result = await response.json();
