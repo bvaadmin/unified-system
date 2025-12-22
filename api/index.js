@@ -23,7 +23,7 @@ import verifyPrepayment from '../lib/api/memorial/verify-prepayment.js';
 import usePrepayment from '../lib/api/memorial/use-prepayment.js';
 import health from '../lib/api/health.js';
 import oracleHealth from '../lib/api/diagnostic/oracle-health.js';
-import checkDbUrl from './diagnostic/check-db-url.js';
+// checkDbUrl removed - use env-check instead
 import envCheck from '../lib/api/diagnostic/env-check.js';
 import testPg from '../lib/api/diagnostic/test-pg.js';
 import oracleSelftest from '../lib/api/diagnostic/oracle-selftest.js';
@@ -53,7 +53,7 @@ const routes = {
   'GET /api/test-db': testDb,
   'GET /api/health': health,
   'OPTIONS /api/health': health,
-  'GET /api/diagnostic/check-db-url': checkDbUrl,
+  // check-db-url removed - use env-check instead
   'GET /api/diagnostic/env-check': envCheck,
   'GET /api/diagnostic/test-pg': testPg,
   'GET /api/diagnostic/oracle-health': oracleHealth,
