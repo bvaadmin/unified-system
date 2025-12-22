@@ -1,0 +1,12 @@
+mainbase_high = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.us-chicago-1.oraclecloud.com))(connect_data=(service_name=gfca71b2aacce62_mainbase_high.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+mainbase_low = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.us-chicago-1.oraclecloud.com))(connect_data=(service_name=gfca71b2aacce62_mainbase_low.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+mainbase_medium = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.us-chicago-1.oraclecloud.com))(connect_data=(service_name=gfca71b2aacce62_mainbase_medium.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+mainbase_tp = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.us-chicago-1.oraclecloud.com))(connect_data=(service_name=gfca71b2aacce62_mainbase_tp.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+mainbase_tpurgent = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.us-chicago-1.oraclecloud.com))(connect_data=(service_name=gfca71b2aacce62_mainbase_tpurgent.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+
+
