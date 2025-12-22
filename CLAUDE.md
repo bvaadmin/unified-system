@@ -215,10 +215,41 @@ Key functions:
 - `events.get_program_budget(area_code)` - Get program budget from config
 - `finance.calculate_payment_fee(amount, provider)` - Calculate fees from config
 
+## Database Architecture
+
+The system supports both PostgreSQL and Oracle databases:
+
+### PostgreSQL (Primary/Legacy)
+- DigitalOcean hosted database
+- Main data storage for all operations
+- Full featured: JSONB, full-text search, constraints, CTEs
+- Used for queries and analytics
+
+### Oracle (Secondary/Migration)
+- Optional Oracle database support
+- Requires TNS wallet configuration
+- One-way TLS supported via TNS admin
+- Used for data verification and audit trails
+- Accessed via `oracledb` package
+
+### Connection Priority
+1. PostgreSQL is the default primary system
+2. Oracle connections are optional and use TNS aliases
+3. All dual-write patterns handle both systems gracefully
+4. Failover logic: PostgreSQL operations are required, Oracle is best-effort
+
 ## Environment Variables
 ```bash
+# PostgreSQL Configuration
 DATABASE_URL          # PostgreSQL connection with ?sslmode=require
 DATABASE_URL_CLEAN    # PostgreSQL connection without SSL params
+
+# Oracle Configuration (Optional)
+ORACLE_CONNECTION_STRING  # Oracle connection identifier
+ORACLE_ONE_WAY_TLS       # Set to 'true' for TLS mode
+ORACLE_TNS_ADMIN        # Path to Oracle wallet directory
+
+# External Services
 NOTION_API_KEY        # Notion integration key
 CHAPEL_NOTION_DB_ID   # Chapel services Notion database ID
 MEMORIAL_NOTION_DB_ID # Memorial garden Notion database ID (hardcoded: e438c3bd041a4977baacde59ea4cc1e7)
@@ -333,10 +364,28 @@ await pgClient.query('COMMIT');
 
 ## Common Development Commands
 
+### Development & Local Testing
+```bash
+# Start Vercel development server (hot reload)
+npm run dev
+
+# Code quality checks
+npm run lint          # ESLint (placeholder, add for production)
+npm run typecheck     # TypeScript checks (placeholder, add for production)
+npm run validate      # Validate configuration system
+npm run security-check # Run npm audit and validation
+
+# Pre-commit checks
+npm run pre-commit
+```
+
 ### Database Operations
 ```bash
 # Test database connection
 npm run test-connection
+
+# Test Oracle connection (requires Oracle wallet setup)
+npm run test-oracle-connection
 
 # Initialize database schemas
 npm run init-chapel-db    # Chapel service tables
@@ -346,15 +395,9 @@ npm run init-memorial-db  # Memorial garden tables
 # Test submissions
 npm run test-chapel-submission
 npm run test-memorial-submission
-```
 
-### API Development
-```bash
-# Start Vercel development server
-npm run dev
-
-# Deploy to Vercel
-npm run deploy
+# Check recent submissions
+npm run check-submissions
 ```
 
 ### Forms Database Management
@@ -372,13 +415,65 @@ npm run check-duplicates
 npm run forms-summary
 ```
 
+### Deployment
+```bash
+# Deploy to Vercel (manual)
+npm run deploy
+
+# Health check on production
+npm run health-check
+
+# Smoke tests
+npm run smoke
+```
+
+### Diagnostic & Utilities
+```bash
+# Verify only 1 API function exists
+ls api/*.js | wc -l  # Should output: 1
+
+# Update form URLs
+npm run update-form-urls
+npm run revert-form-urls
+```
+
 ## Architecture Patterns
+
+### 🚨 CRITICAL: Unified API Pattern
+
+**THIS IS THE MOST IMPORTANT PATTERN IN THE CODEBASE**
+
+Due to Vercel's 12-function limit on the hobby plan:
+- **Only ONE file should exist in `/api/`**: `index.js`
+- **ALL endpoint handlers go in `/lib/api/`** with subdirectories by feature
+- **ALL routes are registered in `/api/index.js`**
+
+**Common Mistake that will break deployment:**
+```bash
+# ❌ WRONG: Creates separate function files
+touch api/my-endpoint.js
+
+# ✅ CORRECT: Handler goes in lib/api/
+touch lib/api/my-feature/my-endpoint.js
+
+# Then register in /api/index.js:
+import myHandler from '../lib/api/my-feature/my-endpoint.js';
+const routes = { 'POST /api/my-endpoint': myHandler };
+```
+
+**Before making ANY API changes**: Read `API-ARCHITECTURE.md` and `CONTRIBUTING.md`
+
+**Verification command**:
+```bash
+ls api/*.js | wc -l  # Should always output: 1
+```
 
 ### Shared Utilities
 The `lib/` directory contains reusable modules:
 - **db.js** - `createPgClient()`, `withDatabase()`, `withTransaction()` for database operations
 - **cors.js** - `applyCors()`, `withCors()` for consistent CORS handling
 - **notion.js** - `createNotionPage()`, `toNotionProperty()` for Notion API integration
+- **api/** - Feature-specific handlers (chapel, memorial, admin, config, etc.)
 
 ### Dual Storage Pattern
 All submissions are stored in both PostgreSQL (for queries/constraints) and Notion (for workflow management). When implementing new features, ensure data is saved to both systems.
@@ -388,7 +483,8 @@ All submissions are stored in both PostgreSQL (for queries/constraints) and Noti
 - **crouse_chapel** schema - Chapel service applications
 
 ### API Structure
-- Vercel serverless functions in `/api` directories
+- Single unified handler at `/api/index.js` routing all endpoints
+- Feature handlers in `/lib/api/` with clean organization
 - CORS enabled for all endpoints
 - Admin endpoints protected by token authentication
 - Consistent error handling with detailed error messages
@@ -471,22 +567,129 @@ Ready for Phase 3+:
 ## Working Patterns & Common Issues
 
 ### Database Connection Issues
-- Quote escaping in SQL: Use `'Women''s Council'` not `"Women's Council"`
-- Node.js eval strings need careful escaping
-- GIST indexes need btree_gist extension
-- Complex exclusion constraints may need simplification
+- **Quote escaping in SQL**: Use `'Women''s Council'` not `"Women's Council"`
+- **Node.js eval strings**: Careful with backtick interpolation in SQL
+- **GIST indexes**: Require `btree_gist` extension - verify with `CREATE EXTENSION IF NOT EXISTS btree_gist`
+- **Complex constraints**: Exclusion constraints with overlapping ranges may need simplification
+- **SSL/TLS**: Always use `ssl: { rejectUnauthorized: false }` for DigitalOcean PostgreSQL
+- **Connection cleanup**: Always call `client.end()` in finally blocks or use connection pooling
+
+### API Development Issues
+- **"Function limit exceeded" error**: You created a file in `/api/`. Move it to `/lib/api/` and register in `/api/index.js`
+- **404 errors on new endpoints**: Forgot to register route in `/api/index.js` routes object
+- **CORS preflight failures**: Ensure `applyCors()` is called in handler or router
+- **Vercel timeout**: Default 10s timeout - check `vercel.json` maxDuration settings
+- **Environment variables not loading**: Use `DATABASE_URL.replace('?sslmode=require', '')` pattern in handlers
 
 ### File Locations Reference
 - **Migrations**: `/scripts/migrations/00X_*.sql`
-- **API endpoints**: `/api/[category]/[endpoint].js`
+- **API endpoint handlers**: `/lib/api/[category]/[endpoint].js`
+- **API router**: `/api/index.js` (THE ONLY .js file that should be here)
 - **Test scripts**: `/scripts/test-*.js`
-- **Sample data**: `/scripts/create-*.js`
+- **Sample data scripts**: `/scripts/create-*.js` or `/scripts/*-data.js`
 - **Documentation**: `/docs/*.md`
+- **Forms**: `/forms/*.html`
 
 ### Testing Without Framework
-- Create custom test scripts for each feature
+- Create custom test scripts for each feature using `scripts/`
 - Always create sample data scripts
 - Test dual-write with both legacy and modern queries
+- Use `npm run test-connection` to verify database connectivity before testing features
+- Test locally with `npm run dev` before deploying
+
+### Common Command Patterns
+```bash
+# Connect to database interactively (psql)
+psql "$DATABASE_URL"
+
+# Run a specific test script
+node scripts/test-chapel-submission.js
+
+# Create a new test script
+cp scripts/test-template.js scripts/test-my-feature.js
+```
+
+### Oracle Database Notes
+- Oracle wallet configuration required for TLS
+- TNS alias mode supported for simplified connections
+- Test with `npm run test-oracle-connection`
+- Wallet files should be in `./oracle_wallet/` directory
+- Set `ORACLE_ONE_WAY_TLS=true` and `ORACLE_TNS_ADMIN=./oracle_wallet` when testing
+
+## Development Workflow & Best Practices
+
+### When Adding a New Feature
+
+1. **Create Test Script First**
+   ```bash
+   # Copy template for structure
+   cp scripts/test-template.js scripts/test-my-feature.js
+   # Edit to test your specific logic
+   ```
+
+2. **Add Database Changes (if needed)**
+   ```bash
+   # Create migration in scripts/migrations/
+   # Name: 010_add_my_feature.sql
+   # Run: psql "$DATABASE_URL" < scripts/migrations/010_add_my_feature.sql
+   ```
+
+3. **Create Sample Data Script (if needed)**
+   ```bash
+   # Create: scripts/create-my-feature-data.js
+   # Run: node scripts/create-my-feature-data.js
+   ```
+
+4. **Add API Endpoint (if needed)**
+   ```bash
+   # Create handler: lib/api/my-feature/my-endpoint.js
+   # Register in: /api/index.js with route mapping
+   ```
+
+5. **Test Locally**
+   ```bash
+   npm run dev
+   # In another terminal:
+   node scripts/test-my-feature.js
+   ```
+
+6. **Verify Pre-Commit Checks**
+   ```bash
+   npm run pre-commit
+   # Should pass: validate, lint, typecheck
+   ```
+
+### Debugging Strategies
+
+**Database Queries**:
+```bash
+# Interactive psql
+psql "$DATABASE_URL"
+
+# Run query from script
+psql "$DATABASE_URL" -c "SELECT * FROM crouse_chapel.service_applications LIMIT 5;"
+```
+
+**API Issues**:
+```bash
+# Test endpoint locally
+npm run dev
+
+# In another terminal, test endpoint
+curl -X GET http://localhost:3000/api/test-db
+
+# Check logs in Vercel dashboard or:
+npm run health-check
+```
+
+**Script Issues**:
+```bash
+# Add debug logging
+NODE_DEBUG=* node scripts/my-script.js
+
+# Check environment variables loaded
+node -e "console.log(process.env.DATABASE_URL ? 'OK' : 'MISSING')"
+```
 
 ## Important Context
 
