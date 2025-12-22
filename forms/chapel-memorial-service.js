@@ -6,7 +6,8 @@ const state = {
     hasMemorialGarden: false,
     hasMusic: false,
     hasAdditionalChairs: false,
-    hasRopedSeating: false
+    hasRopedSeating: false,
+    isBayViewMember: null // Will be true/false/null
 };
 
 // Initialize form when DOM is ready
@@ -20,12 +21,71 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeMusicToggle();
     initializeChairToggle();
     initializeRopedSeatingToggle();
+    initializeBayViewMemberToggle(); // New toggle for Bay View Member
+    
+    // Update visibility and fees on load
+    updateBayViewMemberSectionVisibility();
+    updateFeeDisplay();
     
     // Handle form submission
     if (form) {
         form.addEventListener('submit', handleFormSubmission);
     }
 });
+
+// Bay View Member toggle
+function initializeBayViewMemberToggle() {
+    const memberRadios = document.querySelectorAll('input[name="isBayViewMember"]');
+    memberRadios.forEach(radio => {
+        radio.addEventListener('change', function() {
+            state.isBayViewMember = this.value === 'yes';
+            updateBayViewMemberSectionVisibility();
+            updateFeeDisplay();
+        });
+    });
+}
+
+// Update visibility of Bay View Member details section
+function updateBayViewMemberSectionVisibility() {
+    const bayViewMemberDetails = document.getElementById('bayViewMemberDetails');
+    const memberNameInput = document.getElementById('memberName');
+    const memberRelationshipSelect = document.getElementById('memberRelationship');
+
+    if (bayViewMemberDetails) {
+        if (state.isBayViewMember) {
+            bayViewMemberDetails.classList.remove('hidden');
+            if (memberNameInput) memberNameInput.required = true;
+            if (memberRelationshipSelect) memberRelationshipSelect.required = true;
+        } else {
+            bayViewMemberDetails.classList.add('hidden');
+            if (memberNameInput) memberNameInput.required = false;
+            if (memberRelationshipSelect) memberRelationshipSelect.required = false;
+            // Clear fields if hidden
+            if (memberNameInput) memberNameInput.value = '';
+            if (memberRelationshipSelect) memberRelationshipSelect.value = '';
+        }
+    }
+}
+
+// Update fee display based on membership
+function updateFeeDisplay() {
+    const memberFeeInfo = document.getElementById('memberFeeInfo');
+    const nonMemberFeeInfo = document.getElementById('nonMemberFeeInfo');
+
+    if (memberFeeInfo && nonMemberFeeInfo) {
+        if (state.isBayViewMember === true) {
+            memberFeeInfo.classList.remove('hidden');
+            nonMemberFeeInfo.classList.add('hidden');
+        } else if (state.isBayViewMember === false) {
+            memberFeeInfo.classList.add('hidden');
+            nonMemberFeeInfo.classList.remove('hidden');
+        } else {
+            // Hide both if no selection made yet
+            memberFeeInfo.classList.add('hidden');
+            nonMemberFeeInfo.classList.add('hidden');
+        }
+    }
+}
 
 // Memorial Garden placement toggle
 function initializeMemorialGardenToggle() {
@@ -174,13 +234,16 @@ async function handleFormSubmission(e) {
         const checkboxes = [
             'hasMusic', 'needsPiano', 'needsOrgan', 'performSanctuary', 'performBalcony',
             'needsChairs', 'standMic', 'wirelessMic', 'cdPlayer', 'communion',
-            'guestBook', 'ropedSeating', 'policyAgreement', 'feeAgreement'
+            'guestBook', 'ropedSeating', 'policyAgreement'
         ];
 
         checkboxes.forEach(name => {
             const element = document.getElementById(name) || document.querySelector(`[name="${name}"]`);
             data[name] = element ? (element.checked ? 'on' : '') : '';
         });
+
+        // Add isBayViewMember to data
+        data.isBayViewMember = state.isBayViewMember ? 'yes' : 'no';
 
         // Handle member relationship field mapping
         const memberRelationship = document.getElementById('memberRelationship');
@@ -279,8 +342,12 @@ function showSuccessPage(result) {
             confirmationDate.textContent = new Date(result.submissionDate).toLocaleDateString();
         }
         if (confirmationFee) {
-            // Memorial services are free for members, $325 for non-members
-            confirmationFee.textContent = '$25 (Audio Support Fee)';
+            confirmationFee.textContent = `$${result.fee} `;
+            if (result.fee === 150) {
+                confirmationFee.textContent += '(Bay View Member Service Fee)';
+            } else if (result.fee === 325) {
+                confirmationFee.textContent += '(Non-Member Service Fee)';
+            }
         }
         
         // Add next steps

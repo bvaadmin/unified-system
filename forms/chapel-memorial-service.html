@@ -115,25 +115,40 @@
           <h2 id="membershipHeading" class="section-title">Bay View Membership</h2>
           
           <div class="form-group">
-            <label for="memberName">Bay View Member Name <span class="required">*</span></label>
-            <input type="text" id="memberName" name="memberName" required>
-            <small>All chapel services require Bay View member sponsorship</small>
+            <label>Are you a Bay View Member?</label>
+            <div class="radio-group">
+              <div class="radio-item">
+                <input type="radio" id="isMemberYes" name="isBayViewMember" value="yes" required>
+                <label for="isMemberYes">Yes</label>
+              </div>
+              <div class="radio-item">
+                <input type="radio" id="isMemberNo" name="isBayViewMember" value="no" required>
+                <label for="isMemberNo">No</label>
+              </div>
+            </div>
           </div>
 
-          <div class="form-group">
-            <label for="memberRelationship">Relationship to Member <span class="required">*</span></label>
-            <select id="memberRelationship" name="memberRelationship" required>
-              <option value="">Select relationship...</option>
-              <option value="self">Self (I am the member)</option>
-              <option value="spouse">Spouse</option>
-              <option value="child">Child</option>
-              <option value="parent">Parent</option>
-              <option value="sibling">Sibling</option>
-              <option value="grandchild">Grandchild</option>
-              <option value="grandparent">Grandparent</option>
-              <option value="friend">Family Friend</option>
-              <option value="other">Other</option>
-            </select>
+          <div id="bayViewMemberDetails" class="hidden">
+            <div class="form-group">
+              <label for="memberName">Bay View Member Name <span class="required">*</span></label>
+              <input type="text" id="memberName" name="memberName">
+            </div>
+
+            <div class="form-group">
+              <label for="memberRelationship">Relationship to Member <span class="required">*</span></label>
+              <select id="memberRelationship" name="memberRelationship">
+                <option value="">Select relationship...</option>
+                <option value="self">Self (I am the member)</option>
+                <option value="spouse">Spouse</option>
+                <option value="child">Child</option>
+                <option value="parent">Parent</option>
+                <option value="sibling">Sibling</option>
+                <option value="grandchild">Grandchild</option>
+                <option value="grandparent">Grandparent</option>
+                <option value="friend">Family Friend</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
           </div>
         </section>
 
@@ -340,20 +355,17 @@
         <section aria-labelledby="feeHeading">
           <h2 id="feeHeading" class="section-title">Fee Information</h2>
           
-          <div class="fee-note">
-            <p><strong>Memorial/Funeral Service Fees:</strong></p>
-            <br>
-            <p><strong>Bay View Members:</strong></p>
-            <p style="margin-left: 20px;">• Service: No charge (traditional member benefit)</p>
-            <p style="margin-left: 20px;">• Audio Support: $25</p>
-            <p style="margin-left: 20px;"><strong>Total: $25</strong></p>
-            <br>
-            <p><strong>Non-Members:</strong></p>
-            <p style="margin-left: 20px;">• Service: $300</p>
-            <p style="margin-left: 20px;">• Audio Support: $25</p>
-            <p style="margin-left: 20px;"><strong>Total: $325</strong></p>
-            <br>
-            <p><em>The audio support fee covers professional audio technician services for your service.</em></p>
+          <div id="memberFeeInfo" class="fee-note hidden">
+            <p><strong>Memorial/Funeral Service Fees (Bay View Members):</strong></p>
+            <p style="margin-left: 20px;">• Service: $150</p>
+            <p style="margin-left: 20px;"><em>The service fee covers facility use.</em></p>
+            <p>Payment is required to secure your date.</p>
+          </div>
+
+          <div id="nonMemberFeeInfo" class="fee-note hidden">
+            <p><strong>Memorial/Funeral Service Fees (Non-Members):</strong></p>
+            <p style="margin-left: 20px;">• Service: $325</p>
+            <p style="margin-left: 20px;"><em>The service fee covers facility use.</em></p>
             <p>Payment is required to secure your date.</p>
           </div>
           
