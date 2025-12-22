@@ -1,5 +1,5 @@
 // Chapel Memorial Service Form JavaScript
-const API_URL = 'https://unified-system-api.vercel.app/api/chapel/submit-service';
+const API_URL = 'https://unified-system.vercel.app/api/chapel/submit-service';
 
 // State management
 const state = {
