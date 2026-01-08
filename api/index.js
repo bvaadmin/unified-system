@@ -29,7 +29,8 @@ import envCheck from '../lib/api/diagnostic/env-check.js';
 // import testPg from '../lib/api/diagnostic/test-pg.js';
 // import oracleSelftest from '../lib/api/diagnostic/oracle-selftest.js';
 // import oraclePing from '../lib/api/diagnostic/oracle-ping.js';
-import testOracle from '../lib/api/diagnostic/test-oracle.js';
+// Oracle disabled - Notion-only backend
+// import testOracle from '../lib/api/diagnostic/test-oracle.js';
 
 // Route mapping - ALL API endpoints must be defined here
 // Format: 'METHOD /path': handlerFunction
@@ -57,7 +58,8 @@ const routes = {
   'OPTIONS /api/health': health,
   // check-db-url removed - use env-check instead
   'GET /api/diagnostic/env-check': envCheck,
-  'GET /api/diagnostic/test-oracle': testOracle, // New Oracle test route
+  // Oracle disabled - Notion-only backend
+  // 'GET /api/diagnostic/test-oracle': testOracle,
   // Oracle diagnostics disabled - using Notion-only mode
   // 'GET /api/diagnostic/test-pg': testPg,
   // 'GET /api/diagnostic/oracle-health': oracleHealth,
