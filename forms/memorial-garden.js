@@ -5,10 +5,10 @@ const API_URL = 'https://unified-system.vercel.app/api/memorial/submit-garden';
 
 // Fee tiers
 const fees = Object.freeze({
-  single_member: 400.0,
-  single_nonMember: 1500.0,
-  double_member: 800.0,
-  double_nonMember: 3000.0
+  single_member: 300.0,
+  single_nonMember: 1200.0,
+  double_member: 600.0,
+  double_nonMember: 2400.0
 });
 
 // Declarative UI state configuration
