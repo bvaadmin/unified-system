@@ -79,7 +79,7 @@ function computeFee(){
   }
   const isMember = currentState.isMember === 'Yes';
   
-  // For immediate placement, determine fee based on number of people
+  // For scheduled placement, determine fee based on number of people
   if (currentState.applicationType === 'immediate') {
     // Count the number of person forms added (not just ones with data)
     const personCount = immediatePlacementList.length;
@@ -192,7 +192,7 @@ function updateRequiredFields(appType){
   // Contact always required
   fieldGroups.contact.forEach(id => markRequired(id));
   if(appType === 'immediate'){
-    // Required fields are handled dynamically in the immediate placement list
+    // Required fields are handled dynamically in the scheduled placement list
     fieldGroups.service.forEach(id=> markRequired(id));
   } else if(appType === 'future') {
     // Prepayment names are now handled dynamically
@@ -341,7 +341,7 @@ function buildStructuredPayload(submissionId, memberValue){
   console.log('Memorial Garden JS: Application type:', appType);
   let placementType = '';
   
-  // Collect immediate placement data if applicable
+  // Collect scheduled placement data if applicable
   let primary = {};
   let secondary = null;
   let immediatePeopleCount = 0;
@@ -442,7 +442,7 @@ function legacyTransform(payload){
     result['Middle Name'] = payload.persons.primary.middleName || '';
     result['Maiden Name'] = payload.persons.primary.maidenName || '';
     
-    // Add Personal History JSON for immediate placements
+    // Add Personal History JSON for scheduled placements
     result['Personal History JSON'] = JSON.stringify({
       firstName: payload.persons.primary.firstName || '',
       lastName: payload.persons.primary.lastName || '',
@@ -476,7 +476,7 @@ function legacyTransform(payload){
     // No Personal History JSON for prepayments
   }
   
-  // Add service details for immediate placement
+  // Add service details for scheduled placement
   if (payload.service) {
     result['Requested Service Date'] = payload.service.requestedDate || '';
     result['Requested Service Time'] = payload.service.requestedTime || '';
@@ -647,14 +647,14 @@ function updateAddNameButton() {
 // Make removePrepaymentName globally accessible
 window.removePrepaymentName = removePrepaymentName;
 
-// ---- Immediate Placement Names Management ----
+// ---- Scheduled Placement Names Management ----
 let immediatePlacementList = [];
 
 function initImmediatePlacementList() {
   const addBtn = byId('addImmediateNameBtn');
   if (addBtn) {
     addBtn.addEventListener('click', addImmediatePlacementName);
-    // Don't add an entry by default - wait for user to select immediate placement
+    // Don't add an entry by default - wait for user to select scheduled placement
     // addImmediatePlacementName();
   }
 }
@@ -739,7 +739,7 @@ function addImmediatePlacementName() {
   // Update fee display when people are added
   console.log('Memorial Garden JS: After adding person, list length:', immediatePlacementList.length);
   console.log('Memorial Garden JS: Current application type:', currentState.applicationType);
-  // Always update fee display when adding/removing people for immediate placement
+  // Always update fee display when adding/removing people for scheduled placement
   updateFeeDisplay();
 }
 

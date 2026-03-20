@@ -498,7 +498,7 @@
                     </label>
                     <label>
                         <input type="radio" name="applicationType" value="immediate" required>
-                        Payment for immediate placement of ashes
+                        Payment for scheduled placement of ashes
                     </label>
                 </div>
             </div>
@@ -526,7 +526,7 @@
                     </div>
                 </div>
                 
-                <!-- Immediate Placement Options -->
+                <!-- Scheduled Placement Options -->
                 <div id="immediatePlacementOptions" style="display: none;">
                     <p style="margin-bottom: 15px; color: #666;">How many people will this placement be for?</p>
                     <div class="radio-group">
@@ -653,7 +653,7 @@
                 <input id="prepayment_names" name="prepayment_names" type="hidden"/>
             </div>
 
-            <!-- Service Planning Section (only for immediate placement) -->
+            <!-- Service Planning Section (only for scheduled placement) -->
             <div class="form-section service-planning-section" id="servicePlanningSection">
                 <h2>Planning a memorial service?</h2>
                 <div class="two-column">
@@ -966,7 +966,7 @@
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Application Type:</span>
-                    <span class="detail-value" id="confirmationType">Immediate Placement</span>
+                    <span class="detail-value" id="confirmationType">Scheduled Placement</span>
                 </div>
                 <div class="detail-row">
                     <span class="detail-label">Contact Name:</span>
@@ -1204,7 +1204,7 @@
             
         } else if (this.value === 'immediate') {
             // IMMEDIATE PLACEMENT SETUP
-            console.log('Setting up for immediate placement');
+            console.log('Setting up for scheduled placement');
             
             // Show immediate options
             futurePlacementOptions.style.display = 'none';
@@ -1221,7 +1221,7 @@
             prepaymentInfoSection.style.display = 'none';
             
             // Update payment note
-            paymentTimingNote.innerHTML = 'For immediate placement, <strong>payment is due upon approval</strong>.';
+            paymentTimingNote.innerHTML = 'For scheduled placement, <strong>payment is due upon approval</strong>.';
             
             // Add required fields
             document.getElementById('first_name').setAttribute('required', 'required');
@@ -1492,7 +1492,7 @@
                 formData['Deceased Name'] = '';
                 
             } else {
-                // For immediate placements, collect full data
+                // For scheduled placements, collect full data
                 formData['Contact Name'] = document.getElementById('contact_name').value;
                 formData['Contact Phone'] = document.getElementById('contact_phone').value;
                 formData['Contact Email'] = document.getElementById('contact_email').value || '';
@@ -1596,7 +1596,7 @@
         });
         
         const applicationType = submittedData['Application Type'];
-        document.getElementById('confirmationType').textContent = applicationType === 'future' ? 'Prepayment' : 'Immediate Placement';
+        document.getElementById('confirmationType').textContent = applicationType === 'future' ? 'Prepayment' : 'Scheduled Placement';
         document.getElementById('confirmationContact').textContent = submittedData['Contact Name'];
         document.getElementById('confirmationFee').textContent = `$${parseFloat(submittedData['Fee Amount']).toFixed(2)}`;
         
