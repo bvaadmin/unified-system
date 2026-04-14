@@ -166,41 +166,40 @@ function attachEventListeners() {
       
       try {
         const formData = new FormData(form);
-        const data = {
-          formType: 'wedding',
+        const fields = {
           // Service details
           serviceDate: formData.get('weddingDate'),
           serviceTime: formData.get('weddingTime'),
           rehearsalDate: formData.get('rehearsalDate'),
           rehearsalTime: formData.get('rehearsalTime'),
-          
+
           // Couple information
           coupleNames: formData.get('coupleNames'),
           brideArrivalTime: formData.get('brideArrival'),
           guestCount: parseInt(formData.get('guestCount') || '0'),
           dressingAtChapel: formData.get('dressingAtChapel') === 'yes',
-          
+
           // Contact person
           contactName: formData.get('contactName'),
           contactEmail: formData.get('contactEmail'),
           contactPhone: formData.get('contactPhone'),
           contactAddress: formData.get('contactAddress'),
           contactRelationship: formData.get('contactRelationship'),
-          
+
           // Clergy
           clergyName: formData.get('clergyName'),
           clergyDenomination: formData.get('clergyDenomination'),
           clergyPhone: formData.get('clergyPhone'),
           clergyEmail: formData.get('clergyEmail'),
           clergyAddress: formData.get('clergyAddress'),
-          
+
           // Music
           hasMusic: hasMusic?.checked || false,
           needsPiano: formData.get('needsPiano') === 'on',
           needsOrgan: formData.get('needsOrgan') === 'on',
           performSanctuary: formData.get('performSanctuary') === 'on',
           performBalcony: formData.get('performBalcony') === 'on',
-          
+
           // Equipment
           standMic: formData.get('standMic') === 'on',
           wirelessMic: formData.get('wirelessMic') === 'on',
@@ -213,35 +212,37 @@ function attachEventListeners() {
           ropedSeating: formData.get('ropedSeating') === 'on',
           rowsLeft: parseInt(formData.get('rowsLeft') || '0'),
           rowsRight: parseInt(formData.get('rowsRight') || '0'),
-          
-          // Membership
-          isMember: formData.get('isMember') === 'yes',
+
+          // Membership — API expects isBayViewMember as 'yes'/'no' string
+          isBayViewMember: formData.get('isMember') === 'yes' ? 'yes' : 'no',
           memberName: formData.get('memberName'),
           memberRelationship: formData.get('memberRelationship'),
-          
+
           // Policies
-          policyAgreement: formData.get('policyAgreement') === 'on',
-          
+          policyAgreement: formData.get('policyAgreement') === 'on' ? 'on' : '',
+
           // Additional info
           whyBayView: formData.get('whyBayView'),
           specialRequests: formData.get('specialRequests'),
-          
+
           // Fee calculation
           weddingFee: calculateTotalFee()
         };
-        
+
         // Collect musicians if any
         if (currentState.hasMusic && currentState.musicianCount > 0) {
-          data.musicians = [];
+          fields.musicians = [];
           for (let i = 1; i <= currentState.musicianCount; i++) {
             const name = formData.get(`musicians[${i}][name]`);
             const instrument = formData.get(`musicians[${i}][instrument]`);
             if (name || instrument) {
-              data.musicians.push({ name, instrument });
+              fields.musicians.push({ name, instrument });
             }
           }
         }
-        
+
+        const data = { formType: 'wedding', data: fields };
+
         // Submit to API
         const response = await fetch(API_URL, {
           method: 'POST',
