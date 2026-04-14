@@ -26,6 +26,7 @@ import health from '../lib/api/health.js';
 // import oracleHealth from '../lib/api/diagnostic/oracle-health.js';
 // checkDbUrl removed - use env-check instead
 import envCheck from '../lib/api/diagnostic/env-check.js';
+import emailSendBatch from '../lib/api/email/send-batch.js';
 // import testPg from '../lib/api/diagnostic/test-pg.js';
 // import oracleSelftest from '../lib/api/diagnostic/oracle-selftest.js';
 // import oraclePing from '../lib/api/diagnostic/oracle-ping.js';
@@ -58,6 +59,10 @@ const routes = {
   'OPTIONS /api/health': health,
   // check-db-url removed - use env-check instead
   'GET /api/diagnostic/env-check': envCheck,
+
+  // Email batch processing (Vercel cron + manual trigger)
+  'GET /api/email/send-batch': emailSendBatch,
+  'POST /api/email/send-batch': emailSendBatch,
   // Oracle disabled - Notion-only backend
   // 'GET /api/diagnostic/test-oracle': testOracle,
   // Oracle diagnostics disabled - using Notion-only mode
