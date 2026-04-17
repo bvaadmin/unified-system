@@ -1,5 +1,5 @@
 /* crouse-chapel-wedding.css */
-/* Styles for Crouse Chapel Wedding Application Form */
+/* Styles for Crouse Chapel Wedding Application Form - Aligned with Memorial Garden */
 
 * {
   margin: 0;
@@ -8,52 +8,51 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
   line-height: 1.6;
   color: #333;
-  background: #f5f7fa;
+  background: #f5f5f5;
+  padding: 0;
 }
 
 .container {
   max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
+  margin: 20px auto;
+  background: #fff;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 #applicationForm {
   background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 40px;
-  margin-top: 20px;
 }
 
 .header {
   text-align: center;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
   padding-bottom: 20px;
-  border-bottom: 3px solid #8B4513;
+  border-bottom: 2px solid #2c5aa0;
 }
 
 .header h1 {
-  color: #8B4513;
-  font-size: 2.2em;
+  color: #2c5aa0;
+  font-size: 2em;
   margin-bottom: 10px;
-  font-family: 'Georgia', 'Times New Roman', serif;
 }
 
 .header h2 {
-  color: #666;
-  font-size: 1.3em;
+  color: #2c5aa0;
+  font-size: 1.5em;
+  margin-bottom: 5px;
   font-weight: normal;
 }
 
 .section-title {
-  color: #00457c;
-  font-size: 1.3em;
-  margin: 30px 0 15px 0;
-  padding-bottom: 8px;
-  border-bottom: 2px solid #e0e0e0;
+  color: #2c5aa0;
+  font-size: 1.4em;
+  margin-bottom: 15px;
+  font-weight: 700;
 }
 
 .form-group {
@@ -63,13 +62,12 @@ body {
 .form-group label {
   display: block;
   margin-bottom: 5px;
-  font-weight: 500;
+  font-weight: 600;
   color: #555;
 }
 
 .required {
-  color: #dc3545;
-  font-weight: bold;
+  color: red;
 }
 
 input[type="text"],
@@ -81,10 +79,11 @@ input[type="number"],
 select,
 textarea {
   width: 100%;
-  padding: 10px;
+  padding: 10px 12px;
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 16px;
+  font-size: 14px;
+  background: #fff;
   transition: border-color 0.3s;
 }
 
@@ -92,34 +91,32 @@ input:focus,
 select:focus,
 textarea:focus {
   outline: none;
-  border-color: #00457c;
-  box-shadow: 0 0 0 2px rgba(0, 69, 124, 0.1);
+  border-color: #2c5aa0;
+  box-shadow: 0 0 0 2px rgba(44, 90, 160, 0.1);
 }
 
 textarea {
+  min-height: 80px;
   resize: vertical;
-  min-height: 100px;
 }
 
 .radio-group,
 .checkbox-group {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 10px;
+  margin: 10px 0;
+}
+
+.radio-group input[type="radio"],
+.checkbox-group input[type="checkbox"] {
+  width: auto;
+  margin-right: 8px;
 }
 
 .radio-group label,
 .checkbox-group label {
-  display: flex;
-  align-items: center;
-  font-weight: normal;
+  display: inline;
+  margin-right: 20px;
+  font-weight: 400;
   cursor: pointer;
-}
-
-.radio-group input,
-.checkbox-group input {
-  margin-right: 8px;
 }
 
 .two-col {
@@ -156,39 +153,48 @@ textarea {
 }
 
 button[type="submit"] {
-  background-color: #00457c;
-  color: white;
-  padding: 12px 30px;
-  border: none;
-  border-radius: 4px;
+  background: #2c5aa0;
+  color: #fff;
+  padding: 15px 40px;
   font-size: 16px;
-  font-weight: bold;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  display: block;
   transition: background-color 0.3s;
 }
 
 button[type="submit"]:hover {
-  background-color: #003356;
+  background: #1e3d6f;
+}
+
+button[type="submit"]:disabled {
+  background: #ccc;
+  cursor: not-allowed;
 }
 
 .info-note {
   background: #f0f8ff;
-  border-left: 4px solid #00457c;
+  border-left: 4px solid #2c5aa0;
   padding: 12px;
   margin: 15px 0;
   color: #333;
+  border-radius: 4px;
 }
 
 .policy-box {
   background: #f0f8ff;
-  border: 1px solid #b0d4ff;
-  border-radius: 4px;
+  border-left: 4px solid #2c5aa0;
   padding: 20px;
   margin: 20px 0;
+  border-radius: 4px;
 }
 
 .policy-box h4 {
-  color: #00457c;
+  color: #2c5aa0;
   margin-bottom: 10px;
 }
 
@@ -269,8 +275,8 @@ button[type="submit"]:hover {
 .fee-breakdown.total {
   font-weight: bold;
   font-size: 1.1em;
-  border-bottom: 2px solid #00457c;
-  border-top: 2px solid #00457c;
+  border-bottom: 2px solid #2c5aa0;
+  border-top: 2px solid #2c5aa0;
   margin-top: 10px;
   padding-top: 10px;
 }
@@ -284,12 +290,13 @@ button[type="submit"]:hover {
 .btn-secondary {
   background-color: #6c757d;
   color: white;
-  padding: 8px 16px;
+  padding: 10px 20px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-size: 14px;
   margin: 5px;
+  transition: background-color 0.3s;
 }
 
 .btn-secondary:hover {
@@ -301,11 +308,33 @@ button[type="submit"]:hover {
   cursor: not-allowed;
 }
 
-/* Accessibility improvements */
-input:invalid:not(:focus):not(:placeholder-shown),
-select:invalid:not(:focus):not(:placeholder-shown),
-textarea:invalid:not(:focus):not(:placeholder-shown) {
-  border-color: #dc3545;
+/* Accessibility utility */
+.sr-only {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  border: 0 !important;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .container {
+    padding: 20px;
+  }
+
+  .two-col,
+  .three-col,
+  .four-col {
+    grid-template-columns: 1fr;
+  }
+
+  #applicationForm {
+    padding: 20px;
+  }
 }
 
 /* Print styles */
@@ -313,17 +342,17 @@ textarea:invalid:not(:focus):not(:placeholder-shown) {
   body {
     background: white;
   }
-  
+
   .container {
     max-width: 100%;
     padding: 0;
-  }
-  
-  #applicationForm {
     box-shadow: none;
+  }
+
+  #applicationForm {
     padding: 20px;
   }
-  
+
   button,
   .btn-secondary {
     display: none;
