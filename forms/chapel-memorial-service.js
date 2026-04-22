@@ -72,17 +72,21 @@ function updateFeeDisplay() {
     const memberFeeInfo = document.getElementById('memberFeeInfo');
     const nonMemberFeeInfo = document.getElementById('nonMemberFeeInfo');
 
+    const feePrompt = document.getElementById('feePrompt');
+
     if (memberFeeInfo && nonMemberFeeInfo) {
         if (state.isBayViewMember === true) {
             memberFeeInfo.classList.remove('hidden');
             nonMemberFeeInfo.classList.add('hidden');
+            if (feePrompt) feePrompt.classList.add('hidden');
         } else if (state.isBayViewMember === false) {
             memberFeeInfo.classList.add('hidden');
             nonMemberFeeInfo.classList.remove('hidden');
+            if (feePrompt) feePrompt.classList.add('hidden');
         } else {
-            // Hide both if no selection made yet
             memberFeeInfo.classList.add('hidden');
             nonMemberFeeInfo.classList.add('hidden');
+            if (feePrompt) feePrompt.classList.remove('hidden');
         }
     }
 }
