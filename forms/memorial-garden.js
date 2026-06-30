@@ -363,13 +363,26 @@ function buildStructuredPayload(submissionId, memberValue){
         lastName: immediatePeople[0].lastName || '',
         middleName: immediatePeople[0].middleName || '',
         maidenName: immediatePeople[0].maidenName || '',
-        deceasedName: immediatePeople[0].memorialName || ''
+        deceasedName: immediatePeople[0].memorialName || '',
+        birthDate: immediatePeople[0].birthDate || '',
+        deathDate: immediatePeople[0].deathDate || '',
+        motherName: immediatePeople[0].motherName || '',
+        fatherName: immediatePeople[0].fatherName || '',
+        bayviewHistory: immediatePeople[0].bayviewHistory || ''
       };
     }
     if (immediatePeople.length > 1) {
       secondary = {
         firstName: immediatePeople[1].firstName || '',
-        lastName: immediatePeople[1].lastName || ''
+        lastName: immediatePeople[1].lastName || '',
+        middleName: immediatePeople[1].middleName || '',
+        maidenName: immediatePeople[1].maidenName || '',
+        deceasedName: immediatePeople[1].memorialName || '',
+        birthDate: immediatePeople[1].birthDate || '',
+        deathDate: immediatePeople[1].deathDate || '',
+        motherName: immediatePeople[1].motherName || '',
+        fatherName: immediatePeople[1].fatherName || '',
+        bayviewHistory: immediatePeople[1].bayviewHistory || ''
       };
     }
   } else {
@@ -448,8 +461,17 @@ function legacyTransform(payload){
       lastName: payload.persons.primary.lastName || '',
       middleName: payload.persons.primary.middleName || '',
       maidenName: payload.persons.primary.maidenName || '',
-      // Add other fields as needed for the database
+      birthDate: payload.persons.primary.birthDate || '',
+      deathDate: payload.persons.primary.deathDate || '',
+      motherName: payload.persons.primary.motherName || '',
+      fatherName: payload.persons.primary.fatherName || '',
+      bayviewHistory: payload.persons.primary.bayviewHistory || ''
     });
+
+    // Bay View History to its own Notion column (certificate-facing)
+    if (payload.persons.primary.bayviewHistory) {
+      result['Bay View History'] = payload.persons.primary.bayviewHistory;
+    }
     
     if (payload.persons.secondary) {
       // Map to 'Other' fields for first additional person
@@ -467,7 +489,12 @@ function legacyTransform(payload){
         firstName: payload.persons.secondary.firstName || '',
         lastName: payload.persons.secondary.lastName || '',
         middleName: payload.persons.secondary.middleName || '',
-        maidenName: payload.persons.secondary.maidenName || ''
+        maidenName: payload.persons.secondary.maidenName || '',
+        birthDate: payload.persons.secondary.birthDate || '',
+        deathDate: payload.persons.secondary.deathDate || '',
+        motherName: payload.persons.secondary.motherName || '',
+        fatherName: payload.persons.secondary.fatherName || '',
+        bayviewHistory: payload.persons.secondary.bayviewHistory || ''
       });
     }
   } else if (payload.meta.applicationType === 'future') {
@@ -725,6 +752,31 @@ function addImmediatePlacementName() {
              required
              style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
     </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:15px;">
+      <div>
+        <label style="display:block; margin-bottom:5px;">Date of Birth</label>
+        <input type="date" id="immediate_dob_${index}" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+      </div>
+      <div>
+        <label style="display:block; margin-bottom:5px;">Date of Death</label>
+        <input type="date" id="immediate_dod_${index}" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-top:15px;">
+      <div>
+        <label style="display:block; margin-bottom:5px;">Mother's Name</label>
+        <input type="text" id="immediate_mother_${index}" placeholder="Mother's full name" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+      </div>
+      <div>
+        <label style="display:block; margin-bottom:5px;">Father's Name</label>
+        <input type="text" id="immediate_father_${index}" placeholder="Father's full name" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px;">
+      </div>
+    </div>
+    <div style="margin-top:15px;">
+      <label style="display:block; margin-bottom:5px;">Bay View History</label>
+      <p style="margin:0 0 5px 0; color:#666; font-size:14px;">Family connection, committees served, role in the community, etc.</p>
+      <textarea id="immediate_bvhistory_${index}" rows="4" placeholder="Briefly describe this person's connection to Bay View" style="width:100%; padding:8px; border:1px solid #ddd; border-radius:4px; font-family:inherit;"></textarea>
+    </div>
   `;
   
   container.appendChild(personDiv);
@@ -816,6 +868,11 @@ function collectImmediatePlacementData() {
     const middleName = byId(`immediate_middle_${item.index}`)?.value || '';
     const maidenName = byId(`immediate_maiden_${item.index}`)?.value || '';
     const memorialName = byId(`immediate_memorial_${item.index}`)?.value || '';
+    const birthDate = byId(`immediate_dob_${item.index}`)?.value || '';
+    const deathDate = byId(`immediate_dod_${item.index}`)?.value || '';
+    const motherName = byId(`immediate_mother_${item.index}`)?.value || '';
+    const fatherName = byId(`immediate_father_${item.index}`)?.value || '';
+    const bayviewHistory = byId(`immediate_bvhistory_${item.index}`)?.value || '';
     
     if (firstName || lastName) {
       people.push({
@@ -823,7 +880,12 @@ function collectImmediatePlacementData() {
         lastName,
         middleName,
         maidenName,
-        memorialName: memorialName || `${firstName} ${lastName}`.trim()
+        memorialName: memorialName || `${firstName} ${lastName}`.trim(),
+        birthDate,
+        deathDate,
+        motherName,
+        fatherName,
+        bayviewHistory
       });
     }
   });
