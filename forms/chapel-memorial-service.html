@@ -128,26 +128,16 @@
             </div>
           </div>
 
-          <div id="bayViewMemberDetails" class="hidden">
+          <div id="bayViewMemberDetails">
             <div class="form-group">
               <label for="memberName">Bay View Member Name <span class="required">*</span></label>
-              <input type="text" id="memberName" name="memberName">
+              <p class="field-hint">If you are not a Bay View member, enter the name of your sponsoring Bay View member.</p>
+              <input type="text" id="memberName" name="memberName" required>
             </div>
 
             <div class="form-group">
-              <label for="memberRelationship">Relationship to Member <span class="required">*</span></label>
-              <select id="memberRelationship" name="memberRelationship">
-                <option value="">Select relationship...</option>
-                <option value="self">Self (I am the member)</option>
-                <option value="spouse">Spouse</option>
-                <option value="child">Child</option>
-                <option value="parent">Parent</option>
-                <option value="sibling">Sibling</option>
-                <option value="grandchild">Grandchild</option>
-                <option value="grandparent">Grandparent</option>
-                <option value="friend">Family Friend</option>
-                <option value="other">Other</option>
-              </select>
+              <label for="memberRelationship">Relationship to the Deceased <span class="required">*</span></label>
+              <input type="text" id="memberRelationship" name="memberRelationship" required>
             </div>
           </div>
         </section>

@@ -55,6 +55,12 @@ body {
     margin-bottom: 20px;
 }
 
+.field-hint {
+    color: #666;
+    font-size: 0.9em;
+    margin-bottom: 8px;
+}
+
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;

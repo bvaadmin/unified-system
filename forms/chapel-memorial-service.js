@@ -45,26 +45,15 @@ function initializeBayViewMemberToggle() {
     });
 }
 
-// Update visibility of Bay View Member details section
+// Bay View Member Name and Relationship to Member are always required —
+// on the paper form these were unconditional fields (self if a member,
+// sponsor if not), regardless of the Yes/No membership answer above.
 function updateBayViewMemberSectionVisibility() {
-    const bayViewMemberDetails = document.getElementById('bayViewMemberDetails');
     const memberNameInput = document.getElementById('memberName');
-    const memberRelationshipSelect = document.getElementById('memberRelationship');
+    const memberRelationshipInput = document.getElementById('memberRelationship');
 
-    if (bayViewMemberDetails) {
-        if (state.isBayViewMember) {
-            bayViewMemberDetails.classList.remove('hidden');
-            if (memberNameInput) memberNameInput.required = true;
-            if (memberRelationshipSelect) memberRelationshipSelect.required = true;
-        } else {
-            bayViewMemberDetails.classList.add('hidden');
-            if (memberNameInput) memberNameInput.required = false;
-            if (memberRelationshipSelect) memberRelationshipSelect.required = false;
-            // Clear fields if hidden
-            if (memberNameInput) memberNameInput.value = '';
-            if (memberRelationshipSelect) memberRelationshipSelect.value = '';
-        }
-    }
+    if (memberNameInput) memberNameInput.required = true;
+    if (memberRelationshipInput) memberRelationshipInput.required = true;
 }
 
 // Update fee display based on membership
