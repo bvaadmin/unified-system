@@ -32,7 +32,9 @@ textarea { min-height:80px; resize:vertical; }
 .payment-section { background:#f0f8ff; padding:15px; border-radius:5px; margin:15px 0; }
 .payment-info-display { background:#f8f9fa; padding:15px; border-radius:5px; margin-top:15px; border-left:4px solid #2c5aa0; }
 .payment-option { background:#fff; padding:12px; margin:8px 0; border-radius:4px; border:1px solid #dee2e6; }
-#memberDetails { margin-top:15px; padding:15px; background:#f8f9fa; border-radius:5px; border-left:4px solid #2c5aa0; display:none; }
+/* #memberDetails - removed display:none, using .hidden class instead. The ID
+   selector outranked .hidden being removed, so the block could never be shown. */
+#memberDetails { margin-top:15px; padding:15px; background:#f8f9fa; border-radius:5px; border-left:4px solid #2c5aa0; }
 /* #feeDisplay - removed inline display:none, using .hidden class instead */
 #prepaymentSection { margin-top:15px; padding:15px; background:#f0f8ff; border-radius:5px; border-left:4px solid #2c5aa0; }
 .service-planning-section { background:#f0f8ff; border-left:4px solid #2c5aa0; display:none; }
