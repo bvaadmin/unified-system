@@ -207,6 +207,16 @@ function updateRequiredFields(appType){
       }
     });
   }
+  // Sponsor fields are required for non-members only. aria-required is set without
+  // .required so validateForm's generic required-loop doesn't also report them by
+  // raw id; validateForm checks them explicitly with readable labels.
+  const sponsorRequired = currentState.isMember === 'No';
+  ['member_name','member_relationship'].forEach(id => {
+    const el = byId(id);
+    if(!el) return;
+    if(sponsorRequired) el.setAttribute('aria-required','true');
+    else el.removeAttribute('aria-required');
+  });
 }
 
 function markRequired(id){ const el = byId(id); if(!el) return; el.required = true; el.setAttribute('aria-required','true'); }
@@ -519,9 +529,19 @@ function validateForm(){
   console.log('Memorial Garden JS: Starting validation...');
   const issues = [];
   
-  // Sponsor fields are optional for both members and non-members
-  // No validation required for sponsor fields
-  
+  // Non-members must name a Bay View member sponsor. The block is only shown
+  // when the answer is No, so members are never asked. Checked explicitly rather
+  // than via the required-loop below so the message reads as a label, not an id.
+  const memberValue = qs('input[name="is_member"]:checked')?.value;
+  if(memberValue === 'No'){
+    if(!byId('member_name')?.value.trim()){
+      issues.push('Sponsor Member Name is required');
+    }
+    if(!byId('member_relationship')?.value.trim()){
+      issues.push('Your Relationship to Sponsor is required');
+    }
+  }
+
   // Required element validation (only check visible elements)
   qsa('input, textarea, select').forEach(el=>{
     // Skip validation for elements in hidden sections
