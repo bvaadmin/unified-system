@@ -14,7 +14,9 @@ const fees = Object.freeze({
 // Declarative UI state configuration
 const uiStateConfig = Object.freeze({
   elements: {
-    memberDetails: { showWhen: (state) => state.isMember === 'Yes' },
+    // Sponsor fields are for NON-members: "As a non-member, you must have a
+    // Bay View member sponsor your application." (The id is a misnomer.)
+    memberDetails: { showWhen: (state) => state.isMember === 'No' },
     inPersonOption: { showWhen: (state) => state.isMember === 'Yes' },
     prepaymentInfoSection: { showWhen: (state) => state.applicationType === 'future' },
     immediatePlacementSection: { showWhen: (state) => state.applicationType === 'immediate' },
