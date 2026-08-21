@@ -194,8 +194,9 @@ function updateRequiredFields(appType){
   // Contact always required
   fieldGroups.contact.forEach(id => markRequired(id));
   if(appType === 'immediate'){
-    // Required fields are handled dynamically in the scheduled placement list
-    fieldGroups.service.forEach(id=> markRequired(id));
+    // Required fields are handled dynamically in the scheduled placement list.
+    // Service date and time stay optional: families routinely apply before they
+    // have settled on a date, and the office holds the application until they do.
   } else if(appType === 'future') {
     // Prepayment names are now handled dynamically
     // Mark dynamic inputs as required
@@ -524,6 +525,17 @@ function legacyTransform(payload){
   return result;
 }
 
+// The visible label for a field, so validation messages read the way the form
+// does rather than naming raw element ids.
+function fieldLabel(el){
+  const byFor = el.id && document.querySelector(`label[for="${el.id}"]`);
+  const wrapper = el.closest('.form-group') || el.parentElement;
+  const nearby = wrapper && wrapper.querySelector('label');
+  const label = byFor || nearby;
+  const text = label ? label.textContent.replace('*', '').trim() : '';
+  return text || el.name || el.id;
+}
+
 function validateForm(){
   console.log('Memorial Garden JS: Starting validation...');
   const issues = [];
@@ -551,7 +563,7 @@ function validateForm(){
     }
     
     if(el.required && !el.value.trim()){
-      issues.push(`${el.name || el.id} is required`);
+      issues.push(`${fieldLabel(el)} is required`);
     }
   });
   // Policy agreement
