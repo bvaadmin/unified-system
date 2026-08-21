@@ -234,6 +234,27 @@ function injectAriaLiveRegions(){
 }
 function announce(msg){ const region = byId('ariaLive'); if(region){ region.textContent = msg; }}
 
+// Surfaces a failed submission: re-enables the form, shows the banner, and brings
+// it into view. The submit button sits far below the banner, so without the scroll
+// the applicant sees no response to their click at all.
+function failSubmission(message){
+  const loading = byId('loading');
+  const errorMessage = byId('errorMessage');
+  const errorText = byId('errorText');
+  const submitButton = byId('submitButton');
+  if (loading) loading.classList.add('hidden');
+  if (errorText) errorText.textContent = message;
+  if (errorMessage) {
+    errorMessage.classList.remove('hidden');
+    errorMessage.scrollIntoView({ behavior:'smooth', block:'center' });
+  }
+  if (submitButton) {
+    submitButton.disabled = false;
+    submitButton.textContent = 'Submit Memorial Garden Application';
+  }
+  announce(message);
+}
+
 function handleSubmit(e){
   console.log('Memorial Garden JS: Submit button clicked');
   e.preventDefault();
@@ -274,23 +295,13 @@ function handleSubmit(e){
     console.log('Memorial Garden JS: Validation issues:', validationIssues);
   } catch (error) {
     console.error('Memorial Garden JS: Error in validateForm:', error);
-    if (errorMessage) errorMessage.classList.remove('hidden');
-    if (errorText) errorText.textContent = 'Error during validation: ' + error.message;
-    if (submitButton) {
-      submitButton.disabled=false;
-      submitButton.textContent='Submit Memorial Garden Application';
-    }
+    failSubmission('Error during validation: ' + error.message);
     return;
   }
   
   if(validationIssues.length){
     console.log('Memorial Garden JS: Form validation failed');
-    if (errorMessage) errorMessage.classList.remove('hidden');
-    if (errorText) errorText.textContent = 'Please fix: ' + validationIssues.join('; ');
-    if (submitButton) {
-      submitButton.disabled=false;
-      submitButton.textContent='Submit Memorial Garden Application';
-    }
+    failSubmission('Please fix: ' + validationIssues.join('; '));
     return;
   }
   console.log('Memorial Garden JS: Validation passed');
@@ -305,13 +316,7 @@ function handleSubmit(e){
     submittedData = formData;
   } catch (error) {
     console.error('Memorial Garden JS: Error building payload:', error);
-    if (errorMessage) errorMessage.classList.remove('hidden');
-    if (errorText) errorText.textContent = 'Error preparing submission: ' + error.message;
-    if (submitButton) {
-      submitButton.disabled=false;
-      submitButton.textContent='Submit Memorial Garden Application';
-    }
-    if (loading) loading.classList.add('hidden');
+    failSubmission('Error preparing submission: ' + error.message);
     return;
   }
 
@@ -334,13 +339,7 @@ function handleSubmit(e){
     })
     .catch(err=>{
       console.error('Memorial Garden JS: Error during submission:', err);
-      if (loading) loading.classList.add('hidden');
-      if (errorMessage) errorMessage.classList.remove('hidden');
-      if (errorText) errorText.textContent = err.message || 'An error occurred while submitting your application.';
-      if (submitButton) {
-        submitButton.disabled=false;
-        submitButton.textContent='Submit Memorial Garden Application';
-      }
+      failSubmission(err.message || 'An error occurred while submitting your application.');
     });
 }
 

@@ -39,11 +39,11 @@ textarea { min-height:80px; resize:vertical; }
 #prepaymentSection { margin-top:15px; padding:15px; background:#f0f8ff; border-radius:5px; border-left:4px solid #2c5aa0; }
 .service-planning-section { background:#f0f8ff; border-left:4px solid #2c5aa0; display:none; }
 .celebrant-info { background:#e8f0ff; padding:12px; border-radius:4px; margin-top:10px; font-size:.9em; color:#555; }
-.loading { display:none; text-align:center; padding:20px; }
+.loading { text-align:center; padding:20px; }
 .loading::after { content:""; display:inline-block; width:20px; height:20px; border:3px solid #f3f3f3; border-top:3px solid #2c5aa0; border-radius:50%; animation:spin 1s linear infinite; }
 @keyframes spin { 0% { transform:rotate(0deg);} 100% { transform:rotate(360deg);} }
 .success-message { display:none; background:#d4edda; border:1px solid #c3e6cb; color:#155724; padding:20px; border-radius:5px; margin:20px 0; text-align:center; }
-.error-message { display:none; background:#f8d7da; border:1px solid #f5c6cb; color:#721c24; padding:20px; border-radius:5px; margin:20px 0; text-align:center; }
+.error-message { background:#f8d7da; border:1px solid #f5c6cb; color:#721c24; padding:20px; border-radius:5px; margin:20px 0; text-align:center; }
 .thank-you-page { display:none; }
 .checkmark { display:inline-block; width:80px; height:80px; background:#28a745; border-radius:50%; margin:20px auto; position:relative; }
 .checkmark::after { content:'\2713'; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); color:#fff; font-size:50px; font-weight:700; }
@@ -70,6 +70,9 @@ textarea { min-height:80px; resize:vertical; }
 .btn-secondary:hover { background:#545b62; }
 /* Accessibility utility */
 .sr-only { position:absolute !important; width:1px !important; height:1px !important; padding:0 !important; margin:-1px !important; overflow:hidden !important; clip:rect(0 0 0 0) !important; border:0 !important; }
+/* .hidden is the only display toggle on this form. Never give an element a
+   display:none of its own as well — removing .hidden then leaves the base
+   rule in force and the element can never be shown. */
 .hidden { display:none !important; }
 @media (max-width:600px){ .two-column{ grid-template-columns:1fr;} .container{ padding:20px;} .detail-row{ flex-direction:column;} .detail-label{ margin-bottom:5px;} }
 /* End extracted styles */
