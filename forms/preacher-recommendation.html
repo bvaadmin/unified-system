@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Visiting Preacher Recommendation - Bay View Association</title>
+  <link rel="icon" type="image/png" href="https://www.bayviewassociation.org/wp-content/uploads/2020/12/new-full-logo-300x62.png" />
+  <link rel="stylesheet" href="chapel-memorial-service.css" />
+</head>
+<body>
+  <div style="background-color: #00457c; padding: 20px; text-align: center; width: 100%; box-sizing: border-box; min-height: 100px;">
+    <img alt="Bay View Association - A Chautauqua Community on Little Traverse Bay" src="https://www.bayviewassociation.org/wp-content/uploads/2020/12/new-full-logo-300x62.png" style="max-width: 300px; height: auto; display: inline-block;" onerror="this.style.display='none'; this.parentElement.innerHTML += '<span style=\'color: white; font-size: 24px; font-weight: bold;\'>Bay View Association</span>'"/>
+  </div>
+
+  <main class="container">
+    <div id="applicationForm">
+      <div class="header">
+        <h1>Visiting Preacher Recommendation</h1>
+        <p>Recommend a preacher for a Sunday at Bay View</p>
+        <p>Bay View Association • Petoskey, Michigan</p>
+      </div>
+
+      <div class="note">
+        <p>Bay View welcomes suggestions for visiting preachers from members and friends of the community. Every recommendation is reviewed by the Director of Worship and Religious Life as the preaching roster is planned. Prefer paper? <a href="worship-forms/visiting-preacher-recommendation-form.pdf">Download the printable form</a>.</p>
+      </div>
+
+      <div id="errorMessage" class="error hidden">
+        <h3>Submission Error</h3>
+        <p id="errorText">An error occurred while submitting your recommendation. Please try again.</p>
+      </div>
+
+      <div id="loading" class="loading hidden">Submitting…</div>
+
+      <form id="preacherRecommendationForm" novalidate>
+        <input type="hidden" name="formType" value="preacher-recommendation">
+
+        <section aria-labelledby="preacherHeading">
+          <h2 id="preacherHeading" class="section-title">Recommended Preacher</h2>
+
+          <div class="form-group">
+            <label for="preacherName">Name of Recommended Preacher <span class="required">*</span></label>
+            <input type="text" id="preacherName" name="preacherName" required autocomplete="off">
+          </div>
+
+          <div class="form-group">
+            <label for="preacherTitle">Title / Position</label>
+            <p class="field-hint">For example: Senior Pastor, First United Methodist Church of Ann Arbor</p>
+            <input type="text" id="preacherTitle" name="preacherTitle">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="preacherEmail">Preacher's Email</label>
+              <input type="email" id="preacherEmail" name="preacherEmail">
+            </div>
+            <div class="form-group">
+              <label for="preacherPhone">Preacher's Phone</label>
+              <input type="tel" id="preacherPhone" name="preacherPhone">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="preacherAddress">Preacher's Address</label>
+            <textarea id="preacherAddress" name="preacherAddress" rows="2"></textarea>
+          </div>
+        </section>
+
+        <section aria-labelledby="recommendationHeading">
+          <h2 id="recommendationHeading" class="section-title">Your Recommendation</h2>
+
+          <div class="form-group">
+            <label for="whyBayView">Why do you believe this individual would be a good choice for Bay View? <span class="required">*</span></label>
+            <textarea id="whyBayView" name="whyBayView" required rows="5"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="onlineSources">Online informational sources</label>
+            <p class="field-hint">Links to sermons, a bio, a church website, recordings, etc.</p>
+            <textarea id="onlineSources" name="onlineSources" rows="3"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="relationship">Your relationship with this individual <span class="required">*</span></label>
+            <textarea id="relationship" name="relationship" required rows="3"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="additionalMaterials">Additional materials</label>
+            <p class="field-hint">Anything else pertinent to this preacher (vita, testimonials). Documents can be emailed to <a href="mailto:worshipservices@bayviewassociation.org">worshipservices@bayviewassociation.org</a> after you submit — please include your confirmation ID.</p>
+            <textarea id="additionalMaterials" name="additionalMaterials" rows="4"></textarea>
+          </div>
+        </section>
+
+        <section aria-labelledby="recommenderHeading">
+          <h2 id="recommenderHeading" class="section-title">About You</h2>
+
+          <div class="form-group">
+            <label for="recommenderName">Your Name <span class="required">*</span></label>
+            <input type="text" id="recommenderName" name="recommenderName" required autocomplete="name">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="recommenderEmail">Your Email <span class="required">*</span></label>
+              <input type="email" id="recommenderEmail" name="recommenderEmail" required autocomplete="email">
+            </div>
+            <div class="form-group">
+              <label for="recommenderPhone">Your Phone</label>
+              <input type="tel" id="recommenderPhone" name="recommenderPhone" autocomplete="tel">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="recommenderAddress">Your Address</label>
+            <textarea id="recommenderAddress" name="recommenderAddress" rows="2" autocomplete="street-address"></textarea>
+          </div>
+        </section>
+
+        <div class="form-actions">
+          <button type="submit" id="submitBtn">Submit Recommendation</button>
+          <p style="margin-top: 15px; color: #666;">
+            Questions? Bay View Worship · <a href="mailto:worshipservices@bayviewassociation.org">worshipservices@bayviewassociation.org</a> · 231.881.9771
+          </p>
+        </div>
+      </form>
+    </div>
+
+    <div id="thankYouPage" class="hidden" aria-labelledby="thankYouHeading">
+      <div class="header">
+        <h1 id="thankYouHeading">Thank You</h1>
+        <p>Your recommendation has been received</p>
+      </div>
+      <div class="confirmation-summary">
+        <p><strong>Confirmation ID:</strong> <span id="confirmationId"></span></p>
+        <p><strong>Date:</strong> <span id="confirmationDate"></span></p>
+        <p><strong>Recommended Preacher:</strong> <span id="confirmationPreacher"></span></p>
+      </div>
+      <div id="thankYouDynamic" class="thank-you-dynamic"></div>
+      <button type="button" onclick="location.reload()">Recommend Another Preacher</button>
+    </div>
+  </main>
+
+  <script src="preacher-recommendation.js" defer></script>
+</body>
+</html>

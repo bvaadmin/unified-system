@@ -21,6 +21,7 @@ import fixChapelFunction from '../lib/handlers/admin/fix-chapel-function.js';
 import memorialSubmitGarden from '../lib/api/memorial/submit-garden.js';
 import verifyPrepayment from '../lib/api/memorial/verify-prepayment.js';
 import usePrepayment from '../lib/api/memorial/use-prepayment.js';
+import preacherSubmitRecommendation from '../lib/api/preachers/submit-recommendation.js';
 import health from '../lib/api/health.js';
 // Oracle diagnostics disabled - using Notion-only mode
 // import oracleHealth from '../lib/api/diagnostic/oracle-health.js';
@@ -49,7 +50,10 @@ const routes = {
   'OPTIONS /api/memorial/verify-prepayment': verifyPrepayment,
   'POST /api/memorial/use-prepayment': usePrepayment,
   'OPTIONS /api/memorial/use-prepayment': usePrepayment,
-  
+
+  // Preacher endpoints
+  'POST /api/preachers/submit-recommendation': preacherSubmitRecommendation,
+
   // Admin endpoints
   'POST /api/admin/fix-chapel-function': fixChapelFunction,
   

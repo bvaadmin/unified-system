@@ -12,6 +12,7 @@
             --gradient-2: linear-gradient(135deg, #f5d0fe 0%, #fbbf24 100%);
             --gradient-3: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);
             --gradient-4: linear-gradient(135deg, #fccb90 0%, #d57eeb 100%);
+            --gradient-5: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
         }
         
         * {
@@ -73,7 +74,8 @@
         .form-card:nth-child(2) { animation-delay: 0.2s; }
         .form-card:nth-child(3) { animation-delay: 0.3s; }
         .form-card:nth-child(4) { animation-delay: 0.4s; }
-        
+        .form-card:nth-child(5) { animation-delay: 0.5s; }
+
         .form-card::before {
             content: '';
             position: absolute;
@@ -87,7 +89,8 @@
         .form-card:nth-child(2)::before { background: var(--gradient-2); }
         .form-card:nth-child(3)::before { background: var(--gradient-3); }
         .form-card:nth-child(4)::before { background: var(--gradient-4); }
-        
+        .form-card:nth-child(5)::before { background: var(--gradient-5); }
+
         .form-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
@@ -108,7 +111,8 @@
         .form-card:nth-child(2) .form-icon { background: var(--gradient-2); }
         .form-card:nth-child(3) .form-icon { background: var(--gradient-3); }
         .form-card:nth-child(4) .form-icon { background: var(--gradient-4); }
-        
+        .form-card:nth-child(5) .form-icon { background: var(--gradient-5); }
+
         .form-title {
             font-size: 1.5rem;
             font-weight: 600;
@@ -297,6 +301,26 @@
                 </a>
             </div>
             
+            <div class="form-card">
+                <div class="form-icon">🎙️</div>
+                <h2 class="form-title">Recommend a Preacher</h2>
+                <p class="form-description">
+                    Suggest a visiting preacher for a Sunday at Bay View.
+                </p>
+                <ul class="form-features">
+                    <li>Open to members and friends</li>
+                    <li>Reviewed by the Director of Worship</li>
+                    <li>Share sermons, bio, and links</li>
+                    <li>Printable version available</li>
+                </ul>
+                <a href="preacher-recommendation.html" class="form-link">
+                    Recommend Now
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                        <path d="M7 4L13 10L7 16" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                </a>
+            </div>
+
             <div class="form-card">
                 <div class="form-icon">📋</div>
                 <h2 class="form-title">Legacy Forms</h2>
