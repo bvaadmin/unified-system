@@ -68,9 +68,6 @@ cp .env.example .env
 
 - `DATABASE_URL` - PostgreSQL connection string with SSL
 - `DATABASE_URL_CLEAN` - PostgreSQL connection without SSL params
-- `GRAPH_TENANT_ID`, `GRAPH_CLIENT_ID`, `GRAPH_CLIENT_SECRET` - Entra app registration used to mirror every submission into the SharePoint "Worship Applications" list. Unset = SharePoint write skipped. Check with `node scripts/sharepoint/check-app-permissions.js --write`.
-- `GRAPH_REFRESH_TOKEN` - optional. Delegated refresh token from `npm run oauth-login` in sharepoint-mcp-server; writes then run as that user (needs only the user-consented delegated scope `Sites.ReadWrite.All`). Without it the app-only client-credentials flow is used, which needs the admin-consented application permission `Sites.ReadWrite.All`.
-- `SHAREPOINT_SITE_URL`, `SHAREPOINT_APPLICATIONS_LIST` - optional overrides for the target site and list
 - `NOTION_API_KEY` - Notion integration API key
 - `CHAPEL_NOTION_DB_ID` - Chapel services Notion database ID
 - `MEMORIAL_NOTION_DB_ID` - Memorial garden Notion database ID
