@@ -4,10 +4,10 @@
 const API_URL = 'https://unified-system.vercel.app/api/chapel/submit-service';
 
 // Fee structure - aligned with config system
+// Vow renewals are 3/4 of the wedding fee (set June 2026 with the Director of Worship)
 const fees = Object.freeze({
-  member: 300.0,
-  nonMember: 750.0,
-  audioSupport: 25.0
+  wedding: { member: 300.0, nonMember: 750.0 },
+  vowRenewal: { member: 225.0, nonMember: 560.0 }
 });
 
 // DOM helper functions
@@ -20,7 +20,7 @@ let currentState = {
   isMember: null,
   hasMusic: false,
   musicianCount: 0,
-  hasAudioSupport: false
+  ceremonyType: 'wedding'
 };
 
 function init() {
@@ -129,14 +129,13 @@ function attachEventListeners() {
     });
   }
 
-  // Audio support checkbox
-  const audioSupport = byId('audioSupport');
-  if (audioSupport) {
-    audioSupport.addEventListener('change', function() {
-      currentState.hasAudioSupport = this.checked;
+  // Ceremony type (wedding or renewal of vows) changes the fee
+  qsa('input[name="ceremonyType"]').forEach(radio => {
+    radio.addEventListener('change', function() {
+      currentState.ceremonyType = this.value;
       updateFeeDisplay();
     });
-  }
+  });
 
   // Member radio buttons for fee calculation
   const memberRadios = qsa('input[name="isMember"]');
@@ -168,6 +167,7 @@ function attachEventListeners() {
         const formData = new FormData(form);
         const fields = {
           // Service details
+          ceremonyType: formData.get('ceremonyType') || 'wedding',
           serviceDate: formData.get('weddingDate'),
           serviceTime: formData.get('weddingTime'),
           rehearsalDate: formData.get('rehearsalDate'),
@@ -216,6 +216,7 @@ function attachEventListeners() {
           // Membership — API expects isBayViewMember as 'yes'/'no' string
           isBayViewMember: formData.get('isMember') === 'yes' ? 'yes' : 'no',
           memberName: formData.get('memberName'),
+          memberContact: formData.get('memberContact'),
           memberRelationship: formData.get('memberRelationship'),
 
           // Policies
@@ -261,7 +262,7 @@ function attachEventListeners() {
             isMember: null,
             hasMusic: false,
             musicianCount: 0,
-            hasAudioSupport: false
+            ceremonyType: 'wedding'
           };
           updateFeeDisplay();
           
@@ -307,21 +308,10 @@ function attachEventListeners() {
 }
 
 function calculateTotalFee() {
-  let total = 0;
-  
-  // Base wedding fee
-  if (currentState.isMember === 'Yes') {
-    total += fees.member;
-  } else if (currentState.isMember === 'No') {
-    total += fees.nonMember;
-  }
-  
-  // Audio support fee
-  if (currentState.hasAudioSupport) {
-    total += fees.audioSupport;
-  }
-  
-  return total;
+  const schedule = currentState.ceremonyType === 'vow-renewal' ? fees.vowRenewal : fees.wedding;
+  if (currentState.isMember === 'Yes') return schedule.member;
+  if (currentState.isMember === 'No') return schedule.nonMember;
+  return 0;
 }
 
 function updateFeeDisplay() {
@@ -337,15 +327,11 @@ function updateFeeDisplay() {
   }
   
   const total = calculateTotalFee();
-  const isMember = currentState.isMember === 'Yes';
-  
-  let noteText = `Wedding fee: $${isMember ? fees.member : fees.nonMember}`;
-  if (currentState.hasAudioSupport) {
-    noteText += ` + Audio support: $${fees.audioSupport}`;
-  }
-  
-  feeNote.textContent = noteText;
-  feeAmount.textContent = `Total: $${total.toFixed(2)}`;
+  const label = currentState.ceremonyType === 'vow-renewal' ? 'Renewal of vows' : 'Wedding';
+  const who = currentState.isMember === 'Yes' ? 'Bay View member' : 'non-member';
+
+  feeNote.textContent = `${label} fee (${who}):`;
+  feeAmount.textContent = `$${total.toFixed(2)}`;
   feeAmount.style.fontWeight = 'bold';
   feeAmount.style.fontSize = '1.1em';
   feeAmount.style.color = '#00457c';

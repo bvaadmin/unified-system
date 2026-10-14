@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Crouse Chapel Wedding Application - Bay View Association</title>
+  <title>Crouse Chapel Wedding or Vow Renewal Application - Bay View Association</title>
   <link rel="icon" type="image/png" href="https://www.bayviewassociation.org/wp-content/uploads/2020/12/new-full-logo-300x62.png" />
   <link rel="stylesheet" href="crouse-chapel-wedding.css" />
 </head>
@@ -20,12 +20,15 @@
     <div id="applicationForm">
       <div class="header">
         <h1>Crouse Memorial Chapel</h1>
-        <h2>Application for Wedding Ceremony</h2>
+        <h2>Application for Wedding or Renewal of Vows</h2>
+      </div>
+      <div class="chapel-about" style="background:#f4f8fb; border-left:4px solid #00457c; padding:12px 16px; margin:0 0 24px;">
+        <strong>About Crouse Chapel.</strong> Located within Bay View, a National Historic Landmark community, Crouse Chapel is a beloved summer gathering place. With beautiful stained-glass windows and an intimate setting, it offers a special backdrop for life's meaningful moments.
       </div>
 
       <div id="successMessage" class="success-message hidden">
         <h3>Application Submitted Successfully!</h3>
-        <p>Your wedding application has been received. The Director of Worship will review your application and contact you within 2-3 business days.</p>
+        <p>Your application has been received. The Director of Worship will review your application and contact you within 2-3 business days.</p>
         <div style="margin-top: 20px;">
           <p><strong>Confirmation Number:</strong> <span id="confirmationNumber"></span></p>
           <p><strong>Submission Date:</strong> <span id="confirmationDate"></span></p>
@@ -53,13 +56,20 @@
         <!-- Ceremony Details -->
         <section aria-labelledby="ceremonyHeading">
           <h3 id="ceremonyHeading" class="section-title">Ceremony Details</h3>
+          <div class="form-group">
+            <label>Type of Ceremony <span class="required">*</span></label>
+            <div class="radio-group">
+              <label><input type="radio" name="ceremonyType" value="wedding" checked> Wedding</label>
+              <label><input type="radio" name="ceremonyType" value="vow-renewal"> Renewal of Vows</label>
+            </div>
+          </div>
           <div class="two-col">
             <div class="form-group">
-              <label for="serviceDate">Wedding Date <span class="required">*</span></label>
+              <label for="serviceDate">Ceremony Date <span class="required">*</span></label>
               <input type="date" id="serviceDate" name="weddingDate" required autocomplete="off" />
             </div>
             <div class="form-group">
-              <label for="serviceTime">Wedding Time <span class="required">*</span></label>
+              <label for="serviceTime">Ceremony Time <span class="required">*</span></label>
               <input type="time" id="serviceTime" name="weddingTime" required />
             </div>
           </div>
@@ -107,12 +117,17 @@
           <h3 id="membershipHeading" class="section-title">Bay View Membership</h3>
           
           <div class="info-note">
-            All Chapel services must be sponsored by a Bay View Association member.
+            All chapel services must be sponsored by a Bay View Association member in good standing.
           </div>
           
           <div class="form-group">
             <label for="memberName">Bay View Member Sponsor <span class="required">*</span></label>
             <input type="text" id="memberName" name="memberName" placeholder="Full name of sponsoring member" required autocomplete="name" />
+          </div>
+
+          <div class="form-group">
+            <label for="memberContact">Member Contact Information <span class="required">*</span></label>
+            <input type="text" id="memberContact" name="memberContact" placeholder="Phone or email for the sponsoring member" required />
           </div>
           
           <div class="form-group">
@@ -157,6 +172,10 @@
           <div class="form-group">
             <label for="clergyAddress">Mailing Address</label>
             <textarea id="clergyAddress" name="clergyAddress" placeholder="Full mailing address"></textarea>
+          </div>
+
+          <div class="info-note">
+            <strong>Note:</strong> All clergy must be approved by the Director of Worship before the service. New clergy will be submitted for approval as part of the reservation process.
           </div>
         </section>
 
@@ -222,16 +241,6 @@
         <!-- Equipment & Setup -->
         <section aria-labelledby="equipmentHeading">
           <h3 id="equipmentHeading" class="section-title">Equipment & Setup</h3>
-          
-          <div class="form-group">
-            <label>
-              <input type="checkbox" id="audioSupport" name="audioSupport" checked> 
-              <strong>Professional Audio Support ($25 fee)</strong>
-            </label>
-            <p style="margin-left: 25px; margin-top: 5px; color: #666; font-size: 0.9em;">
-              Includes audio technician for your ceremony (required for all services)
-            </p>
-          </div>
           
           <div class="form-group">
             <label>Audio Equipment:</label>
@@ -323,17 +332,19 @@
           <h3 id="feeHeading" class="section-title">Fee Information</h3>
           
           <div class="fee-info">
-            <h4>Wedding Ceremony Fees</h4>
+            <h4>Chapel Fees &amp; Payment</h4>
+            <p style="margin-bottom: 10px;">Chapel fees vary based on Bay View Association membership. Your applicable fee will be confirmed as part of the reservation process.</p>
             <p id="feeNote" style="margin-bottom: 10px; color: #666;"></p>
             <div id="feeAmount" style="margin-bottom: 15px;"></div>
-            <div id="feeBreakdown">
-              <!-- Fees will be calculated based on membership status -->
-            </div>
-            <p style="margin-top: 15px; font-style: italic; color: #666;">
-              The audio support fee covers professional audio technician services for your ceremony.
+            <p style="margin-top: 15px;">
+              Payment may be made by check mailed to:<br>
+              Bay View Association<br>
+              P.O. Box 583<br>
+              Petoskey, MI 49770<br>
+              Attn: Chapel
             </p>
             <p style="margin-top: 10px; font-weight: bold; color: #8B4513;">
-              Full payment is required to secure your date.
+              Full payment is required to secure your reservation date.
             </p>
           </div>
           
@@ -358,16 +369,19 @@
           <h3 id="policyHeading" class="section-title">Policies & Agreement</h3>
           
           <div class="policy-box">
-            <h4>Crouse Memorial Chapel Wedding Policies</h4>
+            <h4>By submitting this reservation, I acknowledge and agree to the following:</h4>
             <ul>
-              <li>The chapel has a maximum capacity of 108 guests; comfortable seating for 80</li>
-              <li>No alcohol is permitted on chapel premises</li>
-              <li>Photography is allowed during the ceremony with restrictions</li>
-              <li>Rice, birdseed, and confetti are not permitted</li>
-              <li>Decorations must be approved by the Director of Worship</li>
-              <li>The chapel is available from May through October</li>
-              <li>Cancellations must be made at least 30 days in advance for refund</li>
+              <li><strong>Sponsorship:</strong> All chapel services must be sponsored by a Bay View Association member in good standing.</li>
+              <li><strong>Clergy:</strong> All clergy must be approved by the Director of Worship prior to the service.</li>
+              <li><strong>Payment:</strong> Full payment is required to secure your reservation date.</li>
+              <li><strong>Access:</strong> Setup may begin one hour before the scheduled service time. The chapel must be vacated within one hour following the service.</li>
+              <li><strong>Capacity:</strong> The chapel has a maximum capacity of 108 guests, with comfortable seating for approximately 80.</li>
+              <li><strong>Alcohol &amp; Decorations:</strong> Alcohol is not permitted on Bay View grounds. Rice, birdseed, and confetti are not permitted on the grounds. Florals are welcome on the table behind the altar and should be no more than 12 inches deep and 3 feet tall. Other floral arrangements are subject to approval by the Director of Worship.</li>
+              <li><strong>Season &amp; Climate:</strong> The chapel is available May through October. Please note that the chapel does not have climate control, and portable climate-control units are not permitted.</li>
+              <li><strong>Cancellations:</strong> Cancellations made at least 30 days in advance are eligible for a full refund.</li>
+              <li><strong>Restrooms:</strong> Two restrooms are available in the Crouse Chapel, and additional restrooms are available in the building east of the chapel entrance.</li>
             </ul>
+            <p style="margin-top: 10px;">Full policies: <a href="crouse-chapel-policies.html" target="_blank">Crouse Memorial Chapel Policies</a></p>
           </div>
           
           <div class="form-group" style="margin-top: 20px;">
@@ -382,9 +396,13 @@
         </section>
 
         <div class="form-actions">
-          <button type="submit">Submit Wedding Application</button>
+          <button type="submit">Submit Application</button>
         </div>
       </form>
+
+      <p class="chapel-questions" style="text-align: center; margin-top: 24px; color: #444;">
+        Questions? Call 231.347.6225 or email <a href="mailto:WorshipServices@BayViewAssociation.org">WorshipServices@BayViewAssociation.org</a>
+      </p>
     </div>
   </main>
 

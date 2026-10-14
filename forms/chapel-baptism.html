@@ -204,6 +204,10 @@
             <p>Application for Baptism Service</p>
         </div>
 
+        <div class="chapel-about" style="background:#f4f8fb; border-left:4px solid #00457c; padding:12px 16px; margin:0 0 24px;">
+            <strong>About Crouse Chapel.</strong> Located within Bay View, a National Historic Landmark community, Crouse Chapel is a beloved summer gathering place. With beautiful stained-glass windows and an intimate setting, it offers a special backdrop for life's meaningful moments.
+        </div>
+
         <div id="successMessage" class="success-message">
             Your application has been submitted successfully! You will receive a confirmation email shortly.
         </div>
@@ -212,6 +216,10 @@
             <!-- Service Information -->
             <div class="section">
                 <h2 class="section-title">Service Information</h2>
+
+                <div class="info-box">
+                    <p>Baptisms are held in Crouse Chapel as their own service, not during Sunday morning worship. Please choose a day other than Sunday, or a Sunday afternoon.</p>
+                </div>
                 
                 <div class="form-row">
                     <div class="form-group">
@@ -300,6 +308,10 @@
                         <input type="email" id="clergyEmail" name="clergyEmail">
                     </div>
                 </div>
+
+                <div class="info-box">
+                    <p><strong>Note:</strong> All clergy must be approved by the Director of Worship before the service. New clergy will be submitted for approval as part of the reservation process.</p>
+                </div>
             </div>
 
             <!-- Bay View Member Information -->
@@ -320,6 +332,12 @@
                     <label for="memberRelationship" class="required">Relationship to the person being baptized</label>
                     <input type="text" id="memberRelationship" name="memberRelationship" required>
                     <span class="error-message">Please enter relationship</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="memberContact" class="required">Member contact information</label>
+                    <input type="text" id="memberContact" name="memberContact" placeholder="Phone or email for the Bay View member" required>
+                    <span class="error-message">Please enter the member's phone or email</span>
                 </div>
             </div>
 
@@ -463,9 +481,40 @@
                 </div>
             </div>
 
+            <!-- Fees & Payment -->
+            <div class="section">
+                <h2 class="section-title">Chapel Fees &amp; Payment</h2>
+                <p>Chapel fees vary based on Bay View Association membership. Your applicable fee will be confirmed as part of the reservation process.</p>
+                <p style="margin-top: 10px;">
+                    Payment may be made by check mailed to:<br>
+                    Bay View Association<br>
+                    P.O. Box 583<br>
+                    Petoskey, MI 49770<br>
+                    Attn: Chapel
+                </p>
+                <p style="margin-top: 10px;"><strong>Full payment is required to secure your reservation date.</strong></p>
+
+                <div class="info-box" style="margin-top: 15px;">
+                    <p><strong>Important Note About Clergy and Musicians:</strong> The chapel fee covers facilities use only. No honorarium is expected for the minister who officiates a baptism. If you would like music, musicians are arranged and paid directly by the family; please discuss fees with the musician when booking. Bay View is happy to provide contact information for local musicians upon request.</p>
+                </div>
+            </div>
+
             <!-- Policy Agreement -->
             <div class="section">
                 <h2 class="section-title">Policy Agreement</h2>
+
+                <p style="margin-bottom: 10px;"><strong>By submitting this reservation, I acknowledge and agree to the following:</strong></p>
+                <ul style="margin: 0 0 15px 20px;">
+                    <li><strong>Sponsorship:</strong> All chapel services must be sponsored by a Bay View Association member in good standing.</li>
+                    <li><strong>Clergy:</strong> All clergy must be approved by the Director of Worship prior to the service.</li>
+                    <li><strong>Payment:</strong> Full payment is required to secure your reservation date.</li>
+                    <li><strong>Access:</strong> Setup may begin one hour before the scheduled service time. The chapel must be vacated within one hour following the service.</li>
+                    <li><strong>Capacity:</strong> The chapel has a maximum capacity of 108 guests, with comfortable seating for approximately 80.</li>
+                    <li><strong>Alcohol &amp; Decorations:</strong> Alcohol is not permitted on Bay View grounds. Rice, birdseed, and confetti are not permitted on the grounds. Florals are welcome on the table behind the altar and should be no more than 12 inches deep and 3 feet tall. Other floral arrangements are subject to approval by the Director of Worship.</li>
+                    <li><strong>Season &amp; Climate:</strong> The chapel is available May through October. Please note that the chapel does not have climate control, and portable climate-control units are not permitted.</li>
+                    <li><strong>Cancellations:</strong> Cancellations made at least 30 days in advance are eligible for a full refund.</li>
+                    <li><strong>Restrooms:</strong> Two restrooms are available in the Crouse Chapel, and additional restrooms are available in the building east of the chapel entrance.</li>
+                </ul>
                 
                 <div class="checkbox-group">
                     <input type="checkbox" id="policyAgreement" name="policyAgreement" required>
@@ -485,6 +534,10 @@
                 </p>
             </div>
         </form>
+
+        <p class="chapel-questions" style="text-align: center; margin-top: 24px; color: #444;">
+            Questions? Call 231.347.6225 or email <a href="mailto:WorshipServices@BayViewAssociation.org">WorshipServices@BayViewAssociation.org</a>
+        </p>
     </div>
 
     <script>
@@ -558,6 +611,7 @@
                 // Bay View member sponsorship
                 memberName: get('memberName'),
                 memberRelationship: get('memberRelationship'),
+                memberContact: get('memberContact'),
                 isBayViewMember: 'no',
 
                 // Clergy
