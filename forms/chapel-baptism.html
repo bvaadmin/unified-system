@@ -321,6 +321,15 @@
                 <div class="info-box">
                     <p>All chapel services require sponsorship by a Bay View Association member in good standing.</p>
                 </div>
+
+                <div class="form-group" id="membershipGroup">
+                    <label class="required">Is the person being baptized, or one of their parents, a Bay View member?</label>
+                    <div style="display: flex; gap: 24px; margin-top: 6px;">
+                        <label style="font-weight: normal;"><input type="radio" name="isBayViewMember" value="yes"> Yes</label>
+                        <label style="font-weight: normal;"><input type="radio" name="isBayViewMember" value="no"> No</label>
+                    </div>
+                    <span class="error-message">Please answer yes or no</span>
+                </div>
                 
                 <div class="form-group">
                     <label for="memberName" class="required">Bay View Member</label>
@@ -575,6 +584,12 @@
                 }
             });
 
+            // Membership determines the chapel fee, so it must be answered
+            if (!this.querySelector('input[name="isBayViewMember"]:checked')) {
+                document.querySelector('#membershipGroup .error-message').style.display = 'block';
+                isValid = false;
+            }
+
             // Validate email
             const email = document.getElementById('contactEmail');
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -612,7 +627,7 @@
                 memberName: get('memberName'),
                 memberRelationship: get('memberRelationship'),
                 memberContact: get('memberContact'),
-                isBayViewMember: 'no',
+                isBayViewMember: get('isBayViewMember') === 'yes' ? 'yes' : 'no',
 
                 // Clergy
                 clergyName: get('clergyName'),
@@ -655,9 +670,6 @@
                 policyAgreement: checked('policyAgreement')
             };
 
-            if (/^self$/i.test(fields.memberRelationship)) {
-                fields.isBayViewMember = 'yes';
-            }
 
             const payload = { formType: 'baptism', data: fields };
 
