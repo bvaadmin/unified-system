@@ -1,164 +1,47 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+Guidance for Claude Code when working in this repository.
 
-## Project Overview
+## What this is
 
-Bay View Association administrative system — chapel services and memorial garden applications for a 150-year-old National Historic Landmark Chautauqua community in Petoskey, Michigan. PostgreSQL for data storage, Notion for workflow management, APIs on Vercel, forms on GitHub Pages.
+Bay View Association's worship web forms (Crouse Chapel applications, Memorial Garden placements and prepayments, Visiting Preacher Recommendations). The forms are static pages on GitHub Pages (`forms/`); each one posts to a small API on Vercel, which saves the submission as an item in a SharePoint List on the Worship site (`bayviewassociation.sharepoint.com/sites/worship`). The Lists are the system of record.
 
-### Domain Context
-- **Leaseholding, not ownership** — Properties use perpetual leases, not deeds
-- **Block & Lot system** — Properties identified as "Block 12 Lot 7"
-- **Member sponsorship required** — Non-members need member sponsors for events
-- Use authentic Bay View terminology (leaseholder not owner, etc.)
+Notion, PostgreSQL, Oracle and SendGrid are retired: no code path or Vercel setting uses them. The forms send no email; applicant confirmations and office alerts are an open item (handoff tracker F7).
 
-## CRITICAL: Unified API Pattern
+## API
 
-Due to Vercel's 12-function hobby plan limit:
-- **Only ONE file in `/api/`**: `index.js` — the unified router
-- **ALL handlers go in `/lib/api/` or `/lib/handlers/`** with subdirectories by feature
-- **ALL routes registered in `/api/index.js`**
+Vercel's hobby plan allows few functions, so `api/index.js` is the only function. It applies CORS for every route, answers OPTIONS, and dispatches by `METHOD /path`:
 
-```bash
-# ❌ WRONG: Creates separate function — will break deployment
-touch api/my-endpoint.js
+| Route | Handler | List |
+|---|---|---|
+| `POST /api/chapel/submit-service` | `lib/handlers/chapel/submit-service.js` | Chapel Services |
+| `POST /api/memorial/submit-garden` | `lib/api/memorial/submit-garden.js` | Memorial Garden Applications |
+| `POST /api/preachers/submit-recommendation` | `lib/api/preachers/submit-recommendation.js` | Visiting Preacher Recommendations |
+| `GET /api/health` | `lib/api/health.js` | none (reports whether the Graph settings exist) |
 
-# ✅ CORRECT: Handler in lib, registered in router
-touch lib/api/my-feature/my-endpoint.js
-# Then import and add to routes object in /api/index.js
+To add an endpoint, put the handler under `lib/` and register it in the `routes` object. Never add files to `api/`.
 
-# Verify: must always output 1
-ls api/*.js | wc -l
+`lib/sharepoint.js` holds the Graph client, the List ids (`WORSHIP_LISTS`), field helpers (`spText`, `spNote`, `spDate`, `spNumber`, `spChoice`) and `saveSubmission`, which throws if the item is not saved so the form shows the applicant an error.
+
+## Conventions
+
+- List column internal names are PascalCase (Chapel "Type" is `ServiceType`). Check a List's columns before writing a new field; Graph rejects unknown columns and off-list choice values.
+- Date-only values are written at 12:00 UTC on the intended day (`spDate`) so they show as that day in Michigan.
+- Item titles are readable ("Wedding: Bethany Drier and Mikah Hobson, 7/7/2028", "James Lynn Frick (placement)"); the form's code (`CHAPEL-…`, `MG-…`, `PREACHER-…`) goes in the `SubmissionID` / `RecommendationID` column, because applicants are told to quote it with payment.
+- Memorial Garden person details (birth and death dates, place of birth, maiden name, parents, second person) have their own columns; the old `PersonalHistoryJSON` / `OtherPersonJSON` columns hold only pre-November 2026 data.
+- Fees live in the chapel handler: wedding $300 member / $750 non-member; vow renewal $225 / $560 (3/4 of the wedding fee); baptism $75 / $150 chapel-use fee; memorial $150 / $325; general use set by staff.
+
+## Environment (Vercel production)
+
+```
+GRAPH_TENANT_ID, GRAPH_CLIENT_ID, GRAPH_CLIENT_SECRET   # app registration "Worship Forms – SharePoint Access"
+SHAREPOINT_SITE_URL                                       # optional; defaults to the Worship site
 ```
 
-Read `API-ARCHITECTURE.md` and `CONTRIBUTING.md` before making API changes.
+The app has Microsoft Graph `Sites.Selected` with a Write grant on the Worship site only. The client secret expires 2027-10-27; renew it through Zach and Centaris, then replace `GRAPH_CLIENT_SECRET` in Vercel and redeploy (Vercel reads env vars only at deploy time). `scripts/sharepoint/diagnose.mjs` prints the token's claims and the result of each Graph step (`op run --env-file=<refs> -- node scripts/sharepoint/diagnose.mjs --write`).
 
-## Common Commands
+## Deploying
 
-```bash
-npm run dev                    # Vercel dev server (hot reload)
-npm run test-connection        # Test PostgreSQL connectivity
-npm run pre-commit             # validate-constraints + lint + typecheck
-npm run validate               # Validate configuration system
-npm run smoke                  # Smoke check (scripts/diagnostic/smoke-check.js)
-npm run health-check           # curl production /api/health
-npm run deploy                 # Deploy to Vercel
-
-# Database initialization
-npm run init-chapel-db         # Chapel service tables
-npm run init-forms-db          # Forms registry tables
-npm run init-memorial-db       # Memorial garden tables
-
-# Test submissions
-npm run test-chapel-submission
-npm run test-memorial-submission
-npm run check-submissions      # Check recent submissions
-
-# Forms management
-npm run insert-forms / list-forms / check-duplicates / forms-summary
-```
-
-Note: `lint` and `typecheck` are currently placeholder echo commands.
-
-## Architecture
-
-### Handler Locations (two directories, both valid)
-- `/lib/handlers/` — Chapel and admin handlers (older convention)
-- `/lib/api/` — Memorial, config, diagnostic, health handlers (newer convention)
-- Both are imported by `/api/index.js` — check actual imports there for the source of truth
-
-### Shared Utilities (`/lib/`)
-- `db.js` — `createPgClient()`, `withDatabase()`, `withTransaction()`
-- `db-pool.js` — Connection pooling
-- `cors.js` — `applyCors()`, `withCors()`
-- `notion.js` — `createNotionPage()`, `toNotionProperty()`
-- `error-tracking.js` — Error tracking utilities
-- `database/dual-write-manager.js` — Dual-write to PostgreSQL + Notion
-
-### Dual Storage Pattern
-All submissions write to both PostgreSQL (queries/constraints) and Notion (workflow management). New features must save to both systems.
-
-### Database Schemas
-- `bayview.*` — Memorial garden, forms management
-- `crouse_chapel.*` — Chapel service applications
-- `core.*` — Unified persons, members, committees
-- `property.*` — Block/lot system with leaseholds
-- `finance.*` — Accounts, transactions, payments
-- `events.*` — Programs, facilities, bookings
-- `config.*` — Runtime configuration with audit trail
-- `migration.*` — Schema version tracking
-
-### Critical Schema Gotchas
-- `members` uses `membership_type` (NOT `member_type`), no `good_standing` column
-- `persons` has `person_type` (NOT `person_status`), no `is_active` column
-- No unique constraint on committee names — check existence before insert
-- `btree_gist` extension required for exclusion constraints
-- All timestamps: `TIMESTAMP WITH TIME ZONE`
-
-### Oracle: Disabled
-Oracle support was removed (commit `07aa612`). The backend is Notion-only for workflow. PostgreSQL remains the primary data store.
-
-## Key File Locations
-
-| What | Where |
-|------|-------|
-| API router (ONLY file in api/) | `api/index.js` |
-| Handler modules | `lib/handlers/` and `lib/api/` |
-| Migrations | `scripts/migrations/00X_*.sql` |
-| Test/utility scripts | `scripts/` |
-| HTML forms (GitHub Pages) | `forms/` |
-| Documentation | `docs/` |
-
-## Environment Variables
-
-```bash
-DATABASE_URL            # PostgreSQL with ?sslmode=require
-DATABASE_URL_CLEAN      # PostgreSQL without SSL params
-NOTION_API_KEY          # Notion integration key
-CHAPEL_NOTION_DB_ID     # Chapel Notion database
-MEMORIAL_NOTION_DB_ID   # Memorial garden Notion database
-ADMIN_TOKEN             # Admin endpoint authentication
-```
-
-## Database Connection Pattern
-
-```javascript
-const pgClient = new Client({
-  connectionString: DATABASE_URL.replace('?sslmode=require', ''),
-  ssl: { rejectUnauthorized: false }
-});
-```
-
-Always call `client.end()` in finally blocks. Use `ssl: { rejectUnauthorized: false }` for DigitalOcean PostgreSQL.
-
-## CORS
-
-Allowed origins: `https://bvaadmin.github.io`, `https://vercel.com`, `http://localhost:3000`, `http://127.0.0.1:5500`. The unified router in `api/index.js` applies CORS globally and handles OPTIONS preflight.
-
-## Common Pitfalls
-
-- **"Function limit exceeded"**: You created a file in `/api/`. Move to `/lib/api/` and register in router.
-- **404 on new endpoint**: Forgot to register route in `/api/index.js` routes object.
-- **SQL quote escaping**: Use `'Women''s Council'` not `"Women's Council"`
-- **Vercel timeout**: 10s max (`vercel.json` maxDuration setting)
-- **Environment variables**: Use `DATABASE_URL.replace('?sslmode=require', '')` pattern
-
-## Testing
-
-No test framework. Testing is done via custom scripts in `scripts/`, direct database queries, and manual API testing. Run `npm run dev` locally, then test with scripts or curl.
-
-## Deployment
-
-- APIs: Vercel (auto-deploy)
-- Forms: GitHub Pages (push to main)
-- Database: DigitalOcean PostgreSQL
-- Cron: Daily email batch at midnight (`/api/email/send-batch` via `vercel.json`)
-
-## Business Rules
-
-- Chapel form types: `wedding` or `memorial-funeral-service`
-- Chapel fees: $300 (members) / $750 (non-members)
-- Service date/time uniqueness enforced by DB constraint
-- Availability checking includes blackout dates and 2-hour buffer
-- Clergy approval workflow: `pending` → `approved` / `rejected`
-- Memorial garden records are permanent historical records
+- API: push to `main` of `bvaadmin/unified-system`; Vercel deploys it. Pushing needs the bvaadmin GitHub account.
+- Forms: the same push publishes `forms/` to GitHub Pages.
+- There is no test suite. Test a change with a stubbed `fetch` against the handlers, then one live submission per affected form, and delete the test items from the List afterwards.

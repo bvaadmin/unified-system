@@ -9,11 +9,5 @@
       "source": "/api/:path*",
       "destination": "/api/index"
     }
-  ],
-  "crons": [
-    {
-      "path": "/api/email/send-batch",
-      "schedule": "0 0 * * *"
-    }
   ]
 }

@@ -14,79 +14,18 @@
  */
 
 // Import API handlers
-import testDb from '../lib/handlers/test-db.js';
-import chapelCheckAvailability from '../lib/handlers/chapel/check-availability.js';
 import chapelSubmitService from '../lib/handlers/chapel/submit-service.js';
-import fixChapelFunction from '../lib/handlers/admin/fix-chapel-function.js';
 import memorialSubmitGarden from '../lib/api/memorial/submit-garden.js';
-import verifyPrepayment from '../lib/api/memorial/verify-prepayment.js';
-import usePrepayment from '../lib/api/memorial/use-prepayment.js';
 import preacherSubmitRecommendation from '../lib/api/preachers/submit-recommendation.js';
 import health from '../lib/api/health.js';
-// Oracle diagnostics disabled - using Notion-only mode
-// import oracleHealth from '../lib/api/diagnostic/oracle-health.js';
-// checkDbUrl removed - use env-check instead
-import envCheck from '../lib/api/diagnostic/env-check.js';
-import emailSendBatch from '../lib/api/email/send-batch.js';
-// import testPg from '../lib/api/diagnostic/test-pg.js';
-// import oracleSelftest from '../lib/api/diagnostic/oracle-selftest.js';
-// import oraclePing from '../lib/api/diagnostic/oracle-ping.js';
-// Oracle disabled - Notion-only backend
-// import testOracle from '../lib/api/diagnostic/test-oracle.js';
 
 // Route mapping - ALL API endpoints must be defined here
 // Format: 'METHOD /path': handlerFunction
 const routes = {
-  // Chapel endpoints
-  'GET /api/chapel/check-availability': chapelCheckAvailability,
-  'OPTIONS /api/chapel/check-availability': chapelCheckAvailability,
   'POST /api/chapel/submit-service': chapelSubmitService,
-  'OPTIONS /api/chapel/submit-service': chapelSubmitService,
-
-  // Memorial garden endpoints
   'POST /api/memorial/submit-garden': memorialSubmitGarden,
-  'OPTIONS /api/memorial/submit-garden': memorialSubmitGarden,
-  'GET /api/memorial/verify-prepayment': verifyPrepayment,
-  'OPTIONS /api/memorial/verify-prepayment': verifyPrepayment,
-  'POST /api/memorial/use-prepayment': usePrepayment,
-  'OPTIONS /api/memorial/use-prepayment': usePrepayment,
-
-  // Preacher endpoints
   'POST /api/preachers/submit-recommendation': preacherSubmitRecommendation,
-
-  // Admin endpoints
-  'POST /api/admin/fix-chapel-function': fixChapelFunction,
-  
-  // Utility endpoints
-  'GET /api/test-db': testDb,
-  'GET /api/health': health,
-  'OPTIONS /api/health': health,
-  // check-db-url removed - use env-check instead
-  'GET /api/diagnostic/env-check': envCheck,
-
-  // Email batch processing (Vercel cron + manual trigger)
-  'GET /api/email/send-batch': emailSendBatch,
-  'POST /api/email/send-batch': emailSendBatch,
-  // Oracle disabled - Notion-only backend
-  // 'GET /api/diagnostic/test-oracle': testOracle,
-  // Oracle diagnostics disabled - using Notion-only mode
-  // 'GET /api/diagnostic/test-pg': testPg,
-  // 'GET /api/diagnostic/oracle-health': oracleHealth,
-  // 'OPTIONS /api/diagnostic/oracle-health': oracleHealth,
-  // 'POST /api/diagnostic/oracle-selftest': oracleSelftest,
-  // 'OPTIONS /api/diagnostic/oracle-selftest': oracleSelftest,
-  // 'GET /api/diagnostic/oracle-ping': oraclePing,
-  // 'OPTIONS /api/diagnostic/oracle-ping': oraclePing,
-  
-  // Temporary deployment test
-  'GET /api/deployment-test': (req, res) => {
-    return res.status(200).json({
-      message: 'Direct deployment test',
-      timestamp: new Date().toISOString(),
-      version: '2025-08-06-21:50-direct',
-      hasCleanUrl: !!process.env.DATABASE_URL_CLEAN
-    });
-  }
+  'GET /api/health': health
 };
 
 export default async function handler(req, res) {
